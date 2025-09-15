@@ -9,7 +9,6 @@ static void print_tokens(t_token *list)
     }
 }
 
-// Test
 int main(void)
 {
     char *input;

@@ -33,12 +33,20 @@ typedef struct s_token
     struct s_token  *next;
 }   t_token;
 
+// Lexer
 t_token *tokenize(const char *input);
+void    add_or_concat(t_token **head, const char *value, t_token_type type);
+void    add_token(t_token **tokens, const char *value, t_token_type type);
+
+
+// Lexer_utils
 void    free_tokens(t_token *list);
+int     extract_word(t_token **tokens, const char *input, int start);
+int     extract_quoted(t_token **tokens, const char *input, int start, int join);
+int     handle_redirects(t_token **tokens, const char *input, int i);
+int     handle_quotes(t_token **tokens, const char *input, int i);
 
-
-
-// Utilis
+// Utils
 int ft_is_space(char c);
 
 

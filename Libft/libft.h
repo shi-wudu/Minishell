@@ -108,4 +108,6 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 
 char	*ft_itoa(int n);
 
+char	*ft_strndup(const char *s, size_t n);
+
 #endif

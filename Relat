@@ -1,10 +1,4 @@
-1 Fazer token "" e ''
-2 Mudar funcoes para libft
-3 Fazer $var
-4 Parser
+1 Fazer $var
+2 Parser
 
-Para MARTA:
-- como funciona fazes make e dps ./minishell 
-
-- Aquilo vai ler o input com readline(funcao permitida) e dps vai classificar cada palavra como algum token.
-  Isto vai servir para ajudar a fazer o parser e torna o projeto mais facil
+colocar titulo(42) em ft_strndup e outros src

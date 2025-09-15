@@ -7,98 +7,81 @@ static t_token *new_token(const char *value, t_token_type type)
     token = malloc(sizeof(t_token));
     if (!token)
         return NULL;
-    token->value = strdup(value); //substituir libft
+    token->value = ft_strdup(value);
     token->type = type;
     token->next = NULL;
     return token;
 }
 
-static void add_token(t_token **head, const char *value, t_token_type type)
+void add_token(t_token **tokens, const char *value, t_token_type type)
 {
     t_token *new;
     t_token *tmp;
 
     new = new_token(value, type);
-    if (!new)
+    if (!new)                                       //criar error leaks?
         return;
-    if (!*head)
+    if (!*tokens)
     {
-        *head = new;
+        *tokens = new;
         return;
     }
-    tmp = *head;
+    tmp = *tokens;
     while (tmp->next)
         tmp = tmp->next;
     tmp->next = new;
 }
 
-static int extract_word(const char *input, int start, t_token **tokens)
+void add_or_concat(t_token **tokens, const char *value, t_token_type type)
 {
-    int     i;
-    char    *str;
-    
-    i = start;
-    while (input[i] && !ft_is_space((unsigned char)input[i])
-        && input[i] != '|' && input[i] != '<' && input[i] != '>')
-        i++;
-    str = strndup(input + start, i - start); //substituir libft
-    add_token(tokens, str, TOKEN_WORD);
-    free(str);
-    return i;
+    t_token *last;
+
+    if (!*tokens)
+    {
+        add_token(tokens, value, type);
+        return;
+    }
+    last = *tokens;
+    while (last->next)
+        last = last->next;
+    if (last->type == TOKEN_WORD || last->type == TOKEN_STRING)
+    {
+        char *joined = ft_strjoin(last->value, value);
+        free(last->value);
+        last->value = joined;
+    }
+    else
+        add_token(tokens, value, type);
 }
 
 t_token *tokenize(const char *input)
 {
     int i;
     t_token *tokens;
+    int next;
 
-    tokens = NULL;
     i = 0;
+    tokens = NULL;
     while (input[i])
     {
-        if (ft_is_space((unsigned char)input[i]))
+        if (ft_is_space(input[i]))
             i++;
         else if (input[i] == '|')
         {
             add_token(&tokens, "|", TOKEN_PIPE);
-            i++;
+            i ++;
         }
-        else if (input[i] == '>' && input[i + 1] == '>')
+        else if ((next = handle_redirects(&tokens, input, i)) != -1)
+            i = next;
+        else if (input[i] == '"' || input[i] == '\'')
         {
-            add_token(&tokens, ">>", TOKEN_APPEND);
-            i += 2;
+            i = handle_quotes(&tokens, input, i);
+            if (i == -1)
+                return NULL;
         }
-        else if (input[i] == '>')
-        {
-            add_token(&tokens, ">", TOKEN_REDIRECT_OUT);
-            i++;
-        }
-        else if (input[i] == '<' && input[i + 1] == '<')
-        {
-            add_token(&tokens, "<<", TOKEN_HEREDOC);
-            i += 2;
-        }
-        else if (input[i] == '<')
-        {
-            add_token(&tokens, "<", TOKEN_REDIRECT_IN);
-            i++;
-        }
-        //else if (input[i] == '"' || input[i] == '\'')   //    <---------  
         else
-            i = extract_word(input, i, &tokens);
+            i = extract_word(&tokens, input, i);
     }
     add_token(&tokens, "END", TOKEN_END);
     return tokens;
-}
-
-void free_tokens(t_token *list)
-{
-    t_token *tmp;
-    while (list)
-    {
-        tmp = list;
-        list = list->next;
-        free(tmp->value);
-        free(tmp);
-    }
 }
