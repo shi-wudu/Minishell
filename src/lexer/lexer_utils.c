@@ -1,4 +1,4 @@
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 void free_tokens(t_token *list)
 {
@@ -27,7 +27,7 @@ int extract_word(t_token **tokens, const char *input, int start)
     return i;
 }
 
-int extract_quoted(t_token **tokens, const char *input, int start, int join)
+int extract_quoted(t_token **tokens, const char *input, int start)
 {
     int     i;
     char    quote;
@@ -43,10 +43,7 @@ int extract_quoted(t_token **tokens, const char *input, int start, int join)
         return -1;
     }
     str = ft_strndup(input + start + 1, i - start - 1);
-    if (join)
-        add_or_concat(tokens, str, TOKEN_STRING);
-    else
-        add_token(tokens, str, TOKEN_STRING);
+    add_token(tokens, str, TOKEN_STRING);
     free(str);
     return i + 1;
 }
@@ -67,11 +64,9 @@ int handle_redirects(t_token **tokens, const char *input, int i)
 
 int handle_quotes(t_token **tokens, const char *input, int i)
 {
-    int join;
     int next;
 
-    join = (i > 0 && !ft_is_space(input[i - 1]));
-    next = extract_quoted(tokens, input, i, join);
+    next = extract_quoted(tokens, input, i);
     if (next == -1)
     {
         free_tokens(*tokens);

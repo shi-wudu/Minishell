@@ -8,9 +8,11 @@ LIBFT = $(LIBFT_DIR)/libft.a
 LIBS = -lreadline
 
 SRC = src/main.c \
-	src/lexer_utils.c \
-	src/lexer.c \
-	src/utils.c
+	src/lexer/lexer_utils.c \
+	src/lexer/lexer.c \
+	src/parser/parser_utils.c \
+	src/parser/parser.c \
+	src/utils/utils.c
 
 OBJS = $(SRC:.c=.o)
 

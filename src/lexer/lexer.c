@@ -1,4 +1,4 @@
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static t_token *new_token(const char *value, t_token_type type)
 {
@@ -32,27 +32,6 @@ void add_token(t_token **tokens, const char *value, t_token_type type)
     tmp->next = new;
 }
 
-void add_or_concat(t_token **tokens, const char *value, t_token_type type)
-{
-    t_token *last;
-
-    if (!*tokens)
-    {
-        add_token(tokens, value, type);
-        return;
-    }
-    last = *tokens;
-    while (last->next)
-        last = last->next;
-    if (last->type == TOKEN_WORD || last->type == TOKEN_STRING)
-    {
-        char *joined = ft_strjoin(last->value, value);
-        free(last->value);
-        last->value = joined;
-    }
-    else
-        add_token(tokens, value, type);
-}
 
 t_token *tokenize(const char *input)
 {

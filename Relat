@@ -1,4 +1,6 @@
 1 Fazer $var
 2 Parser
 
-colocar titulo(42) em ft_strndup e outros src
+Erros:
+- > << >> < sozinhos;
+- tratar:   dasdasd"dasdasd / dasda"sadasd"das
