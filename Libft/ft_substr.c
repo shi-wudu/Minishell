@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 15:00:55 by marleand          #+#    #+#             */
-/*   Updated: 2024/11/29 15:00:55 by marleand         ###   ########.fr       */
+/*   Created: 2024/11/05 12:27:12 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/11 16:11:16 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,36 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	szofs;
-	size_t	sublen;
-	char	*substring;
+	char	*p;
+	size_t	i;
+	size_t	s_len;
 
 	if (!s)
 		return (NULL);
-	szofs = ft_strlen(s);
-	if (start >= szofs)
+	s_len = ft_strlen(s);
+	if (start >= s_len)
 		return (ft_strdup(""));
-	sublen = szofs - start;
-	if (sublen > len)
-		sublen = len;
-	substring = malloc(sizeof(char) * (sublen + 1));
-	if (!substring)
+	if (len > s_len - start)
+		len = s_len - start;
+	p = (char *)malloc((len + 1) * sizeof(char));
+	if (!p)
 		return (NULL);
-	ft_strlcpy(substring, s + start, sublen + 1);
-	return (substring);
+	i = 0;
+	while (i < len && s[start + i])
+	{
+		p[i] = s[start + i];
+		i++;
+	}
+	p[i] = '\0';
+	return (p);
 }
+
+/*#include <stdio.h>
+int	main(void)
+{
+	char *s = "ola mundo 123!";
+	char *a = ft_substr(s, 5, 6);
+	printf("%s\n", a);
+	free(a);
+	return (0);
+}*/

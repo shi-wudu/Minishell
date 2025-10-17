@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          #+#  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-16 00:30:50 by marleand          #+#    #+#             */
-/*   Updated: 2024-11-16 00:30:50 by marleand         ###   ########.fr       */
+/*   Created: 2024/11/11 12:11:22 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/11 12:19:15 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,32 @@
 
 int	ft_lstsize(t_list *lst)
 {
-	int	len;
+	size_t	n;
 
-	len = 0;
+	n = 0;
 	while (lst)
 	{
 		lst = lst->next;
-		len++;
+		n++;
 	}
-	return (len);
+	return (n);
 }
+/*#include <stdio.h>
+int	main(void)
+{
+	t_list *node1 = ft_lstnew("Primeiro");
+	t_list *node2 = ft_lstnew("Segundo");
+	t_list *node3 = ft_lstnew("Terceiro");
+
+	node1->next = node2;
+	node2->next = node3;
+
+	int size = ft_lstsize(node1);
+
+	printf("Tamanho da lista: %d\n", size);
+	free(node1);
+	free(node2);
+	free(node3);
+
+	return (0);
+}*/

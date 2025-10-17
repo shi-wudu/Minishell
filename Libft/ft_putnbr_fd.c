@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 14:59:19 by marleand          #+#    #+#             */
-/*   Updated: 2024/11/29 14:59:19 by marleand         ###   ########.fr       */
+/*   Created: 2024/11/05 12:24:51 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/05 15:53:06 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,24 @@
 
 void	ft_putnbr_fd(int n, int fd)
 {
-	if (n == -2147483648)
-	{
-		write(fd, "-2147483648", 11);
-		return ;
-	}
-	if (n < 0)
+	long	nbr;
+	char	a;
+
+	nbr = n;
+	if (nbr < 0)
 	{
 		write(fd, "-", 1);
-		n = -n;
+		nbr = -nbr;
 	}
-	if (n > 9)
-		ft_putnbr_fd(n / 10, fd);
-	write(fd, &"0123456789"[n % 10], 1);
+	if (nbr > 9)
+	{
+		ft_putnbr_fd(nbr / 10, fd);
+	}
+	a = (nbr % 10) + '0';
+	write(fd, &a, 1);
 }
+
+/*int	main(void)
+{
+	ft_putnbr_fd(4444444, 1);
+}*/

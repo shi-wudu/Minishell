@@ -3,100 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 14:59:43 by marleand          #+#    #+#             */
-/*   Updated: 2024/11/29 14:59:43 by marleand         ###   ########.fr       */
+/*   Created: 2024/11/05 15:52:14 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/11 16:01:35 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	**ftsplot(char *stri, char **split, const char *s, int c)
+static char	**free_all(char **dest, int counter)
 {
-	int	i;
-
-	i = 0;
-	while (*s)
-	{
-		if (*s == c)
-		{
-			if (stri != s)
-			{
-				*(split) = ft_substr(stri, 0, s - stri);
-				if (!*split++)
-				{
-					while (split[i])
-						free(split[i++]);
-					free(split);
-					return (NULL);
-				}
-			}
-			stri = (char *)s + 1;
-		}
-		s++;
-	}
-	if (stri != s)
-		*(split++) = ft_substr(stri, 0, s - stri);
-	return (split);
+	while (counter-- > 0)
+		free(dest[counter]);
+	free(dest);
+	return (NULL);
 }
 
-static size_t	ft_count(char const *s, char c)
+static int	count_words(const char *s, char c)
 {
-	unsigned int	i;
-	int				count;
+	int	counter;
+	int	i;
 
+	counter = 0;
 	i = 0;
-	count = 0;
 	while (s[i])
 	{
-		while (s[i] == c)
+		while (s[i] && s[i] == c)
 			i++;
-		if (s[i] != '\0')
-			count++;
-		while (s[i] && (s[i] != c))
+		if (s[i] == '\0')
+			break ;
+		while (s[i] && s[i] != c)
 			i++;
+		counter++;
 	}
-	return (count);
+	return (counter);
+}
+
+static char	**split(char const *s, char c, char **dest, int counter)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	i = 0;
+	while (s[i])
+	{
+		while (s[i] && s[i] == c)
+			i++;
+		if (s[i] == '\0')
+			break ;
+		j = i;
+		while (s[i] && s[i] != c)
+			i++;
+		dest[counter] = malloc(sizeof(char) * (i - j + 1));
+		if (!dest[counter])
+		{
+			free_all(dest, counter);
+			return (NULL);
+		}
+		ft_strlcpy(dest[counter], &s[j], (i - j + 1));
+		counter++;
+	}
+	dest[counter] = NULL;
+	return (dest);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**split;
-	char	*stri;
-	size_t	num;
+	char	**dest;
+	int		counter;
 
+	counter = 0;
 	if (!s)
 		return (NULL);
-	num = ft_count(s, c);
-	split = malloc(sizeof(char *) * (num + 1));
-	if (split == NULL)
+	dest = malloc(sizeof(char *) * (count_words(s, c) + 1));
+	if (!dest)
 		return (NULL);
-	stri = (char *)s;
-	split = ftsplot(stri, split, s, c);
-	if (!split)
-		return (NULL);
-	*split = 0;
-	return (split - num);
+	dest = split(s, c, dest, counter);
+	return (dest);
 }
-/*#include <stdio.h>
-void	printefree(char **result)
-{
-    int i = 0;
-    while (result[i] != NULL)
-    {
-        printf("String[%d]: %s\n", i, result[i]);
-        free(result[i]);
-        i++;
-    }
-    free(result);
-} 
 
- int	main(void)
-{
-    char **result = NULL;
-    result = ft_split("hello bom dia meow!",' ');
-    if (result)
-        printefree(result);
-    return (0);
+/*#include <stdio.h>
+int	main(void) {
+	char str1[] = "Hello world abc 32";
+	char delimiter1 = ' ';
+	char **result1 = ft_split(str1, delimiter1);
+
+	printf("Separando \"%s\" pelo delimitador '%c'\n", str1, delimiter1);
+	for (int i = 0; result1[i] != NULL; i++) {
+		printf("Palavra %d: %s\n", i + 1, result1[i]);
+		free(result1[i]);  // Liberar cada string alocada
+	}
+	free(result1);  // Liberar o array principal
+
+	return (0);
 }*/

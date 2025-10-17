@@ -3,27 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 15:00:44 by marleand          #+#    #+#             */
-/*   Updated: 2024/11/29 15:00:44 by marleand         ###   ########.fr       */
+/*   Created: 2024/11/05 12:26:45 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/11 16:14:28 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+// This function searches for the char c in the string str
+// It returns a pointer to the last char in finds
+
 char	*ft_strrchr(const char *s, int c)
 {
-	size_t	i;
+	const char	*p;
 
-	i = ft_strlen(s);
-	while (i > 0)
+	p = NULL;
+	while (*s)
 	{
-		if (s[i] == (char)c)
-			return ((char *)&s[i]);
-		i--;
+		if (*s == (unsigned char)c)
+		{
+			p = s;
+		}
+		s++;
 	}
-	if (s[0] == (char)c)
-		return ((char *)&s[0]);
-	return (NULL);
+	if ((unsigned char)c == '\0')
+	{
+		return ((char *)s);
+	}
+	return ((char *)p);
 }
+
+/*int	main(void)
+{
+	char *s = "Ol1a mundo123!";
+
+	printf("%s\n", ft_strrchr(s, '1'));
+	return (0);
+}*/

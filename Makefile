@@ -1,36 +1,51 @@
-NAME = minishell
+NAME        = minishell
+CC          = cc
+CFLAGS      = -Wall -Wextra -Werror -Iinclude
+RM          = rm -f
+SRC_DIR     = src
+OBJ_DIR     = obj
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
+SRC_FILES := \
+	main.c \
+	parser/parse_user_input.c \
+	parser/parser_pipe.c \
+	parser/parser_redirects.c \
+	parser/parser_utils.c \
+	parser/parser_word.c \
+	parser/parser.c \
+	lexer/tokenize.c \
+	lexer/lexer_utils.c \
+	lexer/lexer_words.c \
+	lexer/lexer_redirects.c \
+	lexer/lexer_quotes.c \
+	lexer/tokens/tokens_list.c \
+	lexer/tokens/tokens_check.c \
+	utils/utils_string.c \
+	utils/utils_error.c
 
-LIBFT_DIR = ./Libft
-LIBFT = $(LIBFT_DIR)/libft.a
-LIBS = -lreadline
+SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))
+OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-SRC = src/main.c \
-	src/lexer/lexer_utils.c \
-	src/lexer/lexer.c \
-	src/parser/parser_utils.c \
-	src/parser/parser.c \
-	src/utils/utils.c
-
-OBJS = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) $(LIBS)
+$(NAME): $(OBJ)
+	@$(MAKE) -C libft --no-print-directory
+	@$(CC) $(CFLAGS) $(OBJ) -Llibft -lft -lreadline -o $(NAME)
+	@echo "Build complete: $(NAME)"
 
-$(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
-	$(MAKE) -C $(LIBFT_DIR) clean
+	@$(RM) -r $(OBJ_DIR)
+	@echo "Cleaned object files"
 
 fclean: clean
-	rm -f $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(MAKE) -C Libft fclean --no-print-directory
+	@$(RM) $(NAME)
+	@echo "Full clean done"
 
 re: fclean all
 

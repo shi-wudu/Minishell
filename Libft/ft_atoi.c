@@ -1,36 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   atoi.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 13:29:47 by marleand          #+#    #+#             */
-/*   Updated: 2024/11/22 10:13:31 by marleand         ###   ########.fr       */
+/*   Created: 2024/11/05 11:05:11 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/05 11:05:11 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *s)
+int	ft_atoi(const char *nptr)
 {
-	int		flag;
-	long	nbr;
+	int	i;
+	int	signal;
+	int	result;
 
-	nbr = 0;
-	flag = 1;
-	while (*s == 32 || (*s >= 9 && *s <= 13))
-		s++;
-	if (*s == '-' || *s == '+')
+	i = 0;
+	signal = 1;
+	result = 0;
+	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
+		i++;
+	if (nptr[i] == '+' || nptr[i] == '-')
 	{
-		if (*s == '-')
-			flag = -1;
-		s++;
+		if (nptr[i] == '-')
+			signal = -1;
+		i++;
 	}
-	while (*s <= '9' && *s >= '0')
+	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
-		nbr = nbr * 10 + (*s - '0');
-		s++;
+		result = (result * 10) + (nptr[i] - '0');
+		i++;
 	}
-	return (nbr * flag);
+	return (signal * result);
 }

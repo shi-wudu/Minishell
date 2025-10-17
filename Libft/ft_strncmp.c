@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 15:00:31 by marleand          #+#    #+#             */
-/*   Updated: 2024/11/29 15:00:31 by marleand         ###   ########.fr       */
+/*   Created: 2024/11/05 12:26:25 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/05 15:48:57 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,28 @@
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	size_t	i;
-
-	i = 0;
 	if (n == 0)
+	{
 		return (0);
-	while (s1[i] && s2[i] && s1[i] == s2[i] && i < n - 1)
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	}
+	while ((*s1 || *s2) && n > 0)
+	{
+		if (*s1 != *s2)
+		{
+			return ((unsigned char)*s1 - (unsigned char)*s2);
+		}
+		s1++;
+		s2++;
+		n--;
+	}
+	return (0);
 }
+
+/*int	main(void)
+{
+	char *s1 = "olo";
+	char *s2 = "ola";
+
+	printf("%d", ft_strncmp(s1, s2, 1));
+	return (0);
+}*/

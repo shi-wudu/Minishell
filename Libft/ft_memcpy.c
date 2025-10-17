@@ -3,29 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 14:58:57 by marleand          #+#    #+#             */
-/*   Updated: 2024/11/29 14:58:57 by marleand         ###   ########.fr       */
+/*   Created: 2024/10/30 11:31:36 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/11 16:22:10 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+// This functions copies n bytes from src into dest
+// It doesn't take care of overlaping memory
+// It returns a pointer to n the start of dest
+
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	char		*dest1;
-	const char	*src1;
+	const char	*s;
+	char		*d;
 
-	dest1 = dest;
-	src1 = src;
 	if (!dest && !src)
 		return (NULL);
-	while (n--)
+	s = (const char *)src;
+	d = (char *)dest;
+	while (n > 0)
 	{
-		*dest1 = *src1;
-		dest1++;
-		src1++;
+		*d = *s;
+		s++;
+		d++;
+		n--;
 	}
 	return (dest);
 }

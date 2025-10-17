@@ -3,40 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 14:13:45 by marleand          #+#    #+#             */
-/*   Updated: 2024/11/17 15:33:56 by marleand         ###   ########.fr       */
+/*   Created: 2024/10/29 15:19:25 by seilkiv           #+#    #+#             */
+/*   Updated: 2024/11/14 15:11:26 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memset(void *s, int filler, size_t n)
-{
-	size_t			i;
-	unsigned char	*s1;
+//This function will set n number of bytes of the string str to the ascci char c
+// It returns a pointer to the start of str
 
-	i = 0;
-	s1 = (unsigned char *)s;
-	while (i < n)
-		s1[i++] = (unsigned char)filler;
+void	*ft_memset(void *s, int c, size_t n)
+{
+	char	*p;
+
+	p = s;
+	while (n > 0)
+	{
+		*p = c;
+		n--;
+		p++;
+	}
 	return (s);
 }
-
-/* Uncomment the main function for testing
-int	main(void)
+/*int main()
 {
-	char	s[];
-	char	s1[];
+	char buffer[10] = "123456789";
 
-    s[] = "Hello Bom Dia";
-    s1[] = "Hello Bom Dia";
-    printf("String before memset: %s\n", s);
-    ft_memset(s, 77, 4);
-    printf("String after ft_memset: %s\n", s);
-    memset(s1, 77, 4);
-    printf("String after memset: %s\n", s1);
-    return (0);
-}
-*/
+	// Preenche o buffer com o caractere 'A'
+	ft_memset(buffer, 'A', 3);
+
+	// Adiciona o terminador nulo no final da string
+	buffer[9] = '\0';
+
+	printf("Buffer preenchido: %s\n", buffer);
+	return (0);
+}*/
