@@ -18,6 +18,10 @@ bool	has_syntax_error(t_token *list)
 			errmsg("syntax error near unexpected token", tmp->next->value, true);
 			return (true);
 		}
+		//pipe inicio ou fim
+		//redirec sem ficheiro
+		//pipi + redirect
+		//redirect + string
 		tmp = tmp->next;
 	}
 	return (false);

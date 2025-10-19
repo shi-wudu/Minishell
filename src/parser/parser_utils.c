@@ -1,10 +1,17 @@
 #include "../../include/minishell.h"
 
-t_cmd *last_cmd(t_cmd *cmd)
+static void free_str_tab(char **tab)
 {
-    while (cmd && cmd->next)
-        cmd = cmd->next;
-    return cmd;
+    int i = 0;
+
+    if (!tab)
+        return;
+    while (tab[i])
+    {
+        free(tab[i]);
+        i++;
+    }
+    free(tab);
 }
 
 void free_commands(t_cmd *cmd)
@@ -23,18 +30,4 @@ void free_commands(t_cmd *cmd)
         free(cmd);
         cmd = tmp;
     }
-}
-
-void free_str_tab(char **tab)
-{
-    int i = 0;
-
-    if (!tab)
-        return;
-    while (tab[i])
-    {
-        free(tab[i]);
-        i++;
-    }
-    free(tab);
 }

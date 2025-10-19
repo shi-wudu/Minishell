@@ -10,7 +10,7 @@ t_cmd *parse_pipe(t_cmd *cmd, t_token **tk)
         return (NULL);
     init_cmd(new_cmd);
     cmd->next = new_cmd;
-    new_cmd->prev = cmd;
+    //new_cmd->prev = cmd;
     *tk = (*tk)->next;
     return (new_cmd);
 }

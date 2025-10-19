@@ -5,9 +5,9 @@ static void	set_command(t_cmd *cmd, t_token **tk)
 	if (!cmd->command)
 	{
 		if ((*tk)->value)
-			cmd->command = ft_strdup((*tk)->value);
+			cmd->command = ft_strdup((*tk)->value);													//free
 		else
-			cmd->command = ft_strdup("");
+			cmd->command = ft_strdup("");															//free
 		*tk = (*tk)->next;
 	}
 }
@@ -35,7 +35,7 @@ void	parse_word(t_cmd *cmd, t_token **tk)
 	argc = count_args(*tk);
 	cmd->args = malloc(sizeof(char *) * (argc + 2));
 	if (!cmd->args)
-		return;
+		return;																						//free
 	if (cmd->command)
 		cmd->args[0] = ft_strdup(cmd->command);
 	else

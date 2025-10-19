@@ -40,7 +40,7 @@ typedef struct s_token
 {
 	char			*value;
 	t_token_type	type;
-	struct s_token	*prev;
+	//struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
 
@@ -48,8 +48,6 @@ typedef struct s_io
 {
 	char	*infile;
 	char	*outfile;
-	int		fd_in;
-	int		fd_out;
 	bool	append;
 	bool	heredoc;
 	char    *heredoc_delimiter;
@@ -62,15 +60,14 @@ typedef struct s_command
 	t_io				io;
 	bool				pipe_output;
 	struct s_command	*next;
-	struct s_command	*prev;
+	//struct s_command	*prev;
 }	t_cmd;
 
 typedef struct s_data
 {
-	char		**env;
 	char		*user_input;
 	t_token		*token;
-	t_cmd	*cmd;
+	t_cmd		*cmd;
 }	t_data;
 
 /*=============================*/
@@ -96,7 +93,6 @@ t_cmd	*parser(t_token *tokens);
 void	parse_word(t_cmd *cmd, t_token **tk);
 t_cmd	*parse_pipe(t_cmd *cmd, t_token **tk);
 void	parse_redirect(t_cmd *cmd, t_token **tk);
-t_cmd	*last_cmd(t_cmd *cmd);
 void	free_commands(t_cmd *cmd);
 void	init_cmd(t_cmd *cmd);
 
@@ -104,6 +100,5 @@ void	init_cmd(t_cmd *cmd);
 /* utils */
 int		ft_is_space(char c);
 void	errmsg(const char *msg, const char *arg, bool newline);
-void	free_str_tab(char **tab);
 
 #endif

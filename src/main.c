@@ -33,7 +33,7 @@ static void	print_tokens(t_token *list)
 {
 	t_token	*tmp = list;
 
-	ft_printf("\n🔹 Tokens:\n");
+	ft_printf("\n Tokens:\n");
 	while (tmp)
 	{
 		ft_printf("  [%d] \"%s\"\n", tmp->type, tmp->value);
@@ -42,14 +42,13 @@ static void	print_tokens(t_token *list)
 	ft_printf("\n");
 }
 
-int	main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv)
 {
 	t_data	data;
 	t_cmd	*cmds;
 
 	(void)argc;
 	(void)argv;
-	data.env = envp;
 	data.token = NULL;
 
 	while (1)

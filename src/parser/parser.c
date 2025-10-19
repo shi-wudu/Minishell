@@ -7,10 +7,8 @@ void	init_cmd(t_cmd *cmd)
 	cmd->command = NULL;
 	cmd->args = NULL;
 	cmd->next = NULL;
-	cmd->prev = NULL;
+	//cmd->prev = NULL;
 	cmd->pipe_output = false;
-	cmd->io.fd_in = -1;
-	cmd->io.fd_out = -1;
 	cmd->io.infile = NULL;
 	cmd->io.outfile = NULL;
 	cmd->io.heredoc_delimiter = NULL;
@@ -31,7 +29,7 @@ t_cmd *parser(t_token *tokens)
         {
             current = calloc(1, sizeof(t_cmd));
             if (!current)
-                return (NULL);
+                return (NULL);                                              // free?
             init_cmd(current);
             head = current;
         }
