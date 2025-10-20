@@ -43,7 +43,7 @@ clean:
 	@echo "Cleaned object files"
 
 fclean: clean
-	@$(MAKE) -C Libft fclean --no-print-directory
+	@$(MAKE) -C libft fclean --no-print-directory
 	@$(RM) $(NAME)
 	@echo "Full clean done"
 
