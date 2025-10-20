@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/20 13:18:58 by seilkiv           #+#    #+#             */
+/*   Updated: 2025/10/20 13:18:58 by seilkiv          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/minishell.h"
 
 void	init_cmd(t_cmd *cmd)
@@ -27,7 +39,7 @@ t_cmd *parser(t_token *tokens)
     {
         if (!current)
         {
-            current = calloc(1, sizeof(t_cmd));
+            current = ft_calloc(1, sizeof(t_cmd));
             if (!current)
                 return (NULL);                                              // free?
             init_cmd(current);

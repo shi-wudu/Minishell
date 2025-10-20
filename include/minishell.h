@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/20 13:17:15 by seilkiv           #+#    #+#             */
+/*   Updated: 2025/10/20 13:17:15 by seilkiv          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -40,7 +52,7 @@ typedef struct s_token
 {
 	char			*value;
 	t_token_type	type;
-	//struct s_token	*prev;
+	struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
 

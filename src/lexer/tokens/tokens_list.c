@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokens_list.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/20 13:19:45 by seilkiv           #+#    #+#             */
+/*   Updated: 2025/10/20 13:19:45 by seilkiv          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../include/minishell.h"
 
 t_token	*new_token(const char *value, t_token_type type)
@@ -9,7 +21,7 @@ t_token	*new_token(const char *value, t_token_type type)
 		return (NULL);
 	token->value = ft_strdup(value);
 	token->type = type;
-	//token->prev = NULL;
+	token->prev = NULL;
 	token->next = NULL;
 	return (token);
 }
@@ -31,7 +43,7 @@ void	add_token(t_token **tokens, const char *value, t_token_type type)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
-	//new->prev = tmp;
+	new->prev = tmp;
 }
 
 void	free_tokens(t_token *list)

@@ -49,4 +49,10 @@ fclean: clean
 
 re: fclean all
 
+v:		$(NAME)
+	clear && valgrind --show-leak-kinds=all --leak-check=full --track-fds=all --track-origins=yes --suppressions=readline.supp ./minishell
+
+ch:		$(NAME)
+	valgrind --show-leak-kinds=all --leak-check=full --track-fds=all --track-origins=yes --suppressions=readline.supp --trace-children=yes ./minishell
+
 .PHONY: all clean fclean re
