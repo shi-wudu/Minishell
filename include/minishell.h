@@ -26,8 +26,6 @@
 # include <sys/wait.h>
 # include "../libft/libft.h"
 
-
-
 /*=============================*/
 /*         ENUMS               */
 /*=============================*/
@@ -62,7 +60,7 @@ typedef struct s_io
 	char	*outfile;
 	bool	append;
 	bool	heredoc;
-	char    *heredoc_delimiter;
+	char	*heredoc_delimiter;
 }	t_io;
 
 typedef struct s_command
@@ -98,7 +96,6 @@ t_token	*new_token(const char *value, t_token_type type);
 void	free_tokens(t_token *list);
 bool	has_syntax_error(t_token *list);
 
-
 /* parser */
 bool	parse_user_input(t_data *data);
 t_cmd	*parser(t_token *tokens);
@@ -107,7 +104,6 @@ t_cmd	*parse_pipe(t_cmd *cmd, t_token **tk);
 void	parse_redirect(t_cmd *cmd, t_token **tk);
 void	free_commands(t_cmd *cmd);
 void	init_cmd(t_cmd *cmd);
-
 
 /* utils */
 int		ft_is_space(char c);

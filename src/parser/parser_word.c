@@ -17,17 +17,18 @@ static void	set_command(t_cmd *cmd, t_token **tk)
 	if (!cmd->command)
 	{
 		if ((*tk)->value)
-			cmd->command = ft_strdup((*tk)->value);													//free
+			cmd->command = ft_strdup((*tk)->value); // free
 		else
-			cmd->command = ft_strdup("");															//free
+			cmd->command = ft_strdup(""); // free
 		*tk = (*tk)->next;
 	}
 }
 
 static int	count_args(t_token *tk)
 {
-	int	count = 0;
+	int	count;
 
+	count = 0;
 	while (tk && (tk->type == WORD || tk->type == STRING))
 	{
 		count++;
@@ -38,21 +39,20 @@ static int	count_args(t_token *tk)
 
 void	parse_word(t_cmd *cmd, t_token **tk)
 {
-	int		i;
-	int		argc;
+	int	i;
+	int	argc;
 
 	if (!cmd || !tk || !*tk)
-		return;
+		return ;
 	set_command(cmd, tk);
 	argc = count_args(*tk);
 	cmd->args = malloc(sizeof(char *) * (argc + 2));
 	if (!cmd->args)
-		return;																						//free
+		return ; // free
 	if (cmd->command)
 		cmd->args[0] = ft_strdup(cmd->command);
 	else
 		cmd->args[0] = ft_strdup("");
-
 	i = 1;
 	while (*tk && ((*tk)->type == WORD || (*tk)->type == STRING))
 	{
@@ -64,4 +64,3 @@ void	parse_word(t_cmd *cmd, t_token **tk)
 	}
 	cmd->args[i] = NULL;
 }
-

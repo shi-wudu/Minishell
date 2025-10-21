@@ -6,56 +6,56 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:18:58 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/20 13:18:58 by seilkiv          ###   ########.fr       */
+/*   Updated: 2025/10/21 22:01:09 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	init_cmd(t_cmd *cmd)
+static t_cmd	*init_new_cmd(t_cmd **head)
 {
-	if (!cmd)
-		return;
-	cmd->command = NULL;
-	cmd->args = NULL;
-	cmd->next = NULL;
-	//cmd->prev = NULL;
-	cmd->pipe_output = false;
-	cmd->io.infile = NULL;
-	cmd->io.outfile = NULL;
-	cmd->io.heredoc_delimiter = NULL;
-	cmd->io.append = false;
-	cmd->io.heredoc = false;
+	t_cmd	*new;
+
+	new = ft_calloc(1, sizeof(t_cmd));
+	if (!new)
+		return (NULL);
+	init_cmd(new);
+	if (!*head)
+		*head = new;
+	return (new);
 }
 
-
-t_cmd *parser(t_token *tokens)
+static void	handle_token(t_cmd **current, t_token **tk)
 {
-    t_cmd *head = NULL;
-    t_cmd *current = NULL;
-    t_token *tk = tokens;
+	if ((*tk)->type == WORD)
+		parse_word(*current, tk);
+	else if ((*tk)->type == PIPE)
+		*current = parse_pipe(*current, tk);
+	else if ((*tk)->type == INPUT || (*tk)->type == TRUNC
+		|| (*tk)->type == APPEND || (*tk)->type == HEREDOC)
+		parse_redirect(*current, tk);
+	else
+		*tk = (*tk)->next;
+}
 
-    while (tk && tk->type != END)
-    {
-        if (!current)
-        {
-            current = ft_calloc(1, sizeof(t_cmd));
-            if (!current)
-                return (NULL);                                              // free?
-            init_cmd(current);
-            head = current;
-        }
+t_cmd	*parser(t_token *tokens)
+{
+	t_cmd	*head;
+	t_cmd	*current;
+	t_token	*tk;
 
-        if (tk->type == WORD)
-            parse_word(current, &tk);
-        else if (tk->type == PIPE)
-            current = parse_pipe(current, &tk);
-        else if (tk->type == INPUT || tk->type == TRUNC ||
-                 tk->type == APPEND || tk->type == HEREDOC)
-            parse_redirect(current, &tk);
-        else
-            tk = tk->next;
-    }
-
-    return (head);
+	head = NULL;
+	current = NULL;
+	tk = tokens;
+	while (tk && tk->type != END)
+	{
+		if (!current)
+		{
+			current = init_new_cmd(&head);
+			if (!current)
+				return (NULL);
+		}
+		handle_token(&current, &tk);
+	}
+	return (head);
 }

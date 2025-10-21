@@ -6,40 +6,57 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:09 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/20 13:19:09 by seilkiv          ###   ########.fr       */
+/*   Updated: 2025/10/21 22:00:37 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static void free_str_tab(char **tab)
+void	init_cmd(t_cmd *cmd)
 {
-    int i = 0;
-
-    if (!tab)
-        return;
-    while (tab[i])
-    {
-        free(tab[i]);
-        i++;
-    }
-    free(tab);
+	if (!cmd)
+		return ;
+	cmd->command = NULL;
+	cmd->args = NULL;
+	cmd->next = NULL;
+	// cmd->prev = NULL;
+	cmd->pipe_output = false;
+	cmd->io.infile = NULL;
+	cmd->io.outfile = NULL;
+	cmd->io.heredoc_delimiter = NULL;
+	cmd->io.append = false;
+	cmd->io.heredoc = false;
 }
 
-void free_commands(t_cmd *cmd)
+static void	free_str_tab(char **tab)
 {
-    t_cmd *tmp;
+	int	i;
 
-    while (cmd)
-    {
-        tmp = cmd->next;
-        free(cmd->command);
-        free_str_tab(cmd->args);
-        if (cmd->io.infile)
-            free(cmd->io.infile);
-        if (cmd->io.outfile)
-            free(cmd->io.outfile);
-        free(cmd);
-        cmd = tmp;
-    }
+	i = 0;
+	if (!tab)
+		return ;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
+void	free_commands(t_cmd *cmd)
+{
+	t_cmd	*tmp;
+
+	while (cmd)
+	{
+		tmp = cmd->next;
+		free(cmd->command);
+		free_str_tab(cmd->args);
+		if (cmd->io.infile)
+			free(cmd->io.infile);
+		if (cmd->io.outfile)
+			free(cmd->io.outfile);
+		free(cmd);
+		cmd = tmp;
+	}
 }
