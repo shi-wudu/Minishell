@@ -78,6 +78,8 @@ typedef struct s_data
 	char		*user_input;
 	t_token		*token;
 	t_cmd		*cmd;
+	char		**envp;
+	int			last_exit_status;
 }	t_data;
 
 /*=============================*/
@@ -108,5 +110,20 @@ void	init_cmd(t_cmd *cmd);
 /* utils */
 int		ft_is_space(char c);
 void	errmsg(const char *msg, const char *arg, bool newline);
+
+/* built ins */
+int		is_builtin(char *cmd);
+int		exec_builtin(char **argv, char **env);
+int		builtin_echo(char **argv);
+int		builtin_cd(char **argv, char **env);
+int		builtin_pwd(void);
+int		builtin_export(char **argv, char **env);
+int		builtin_env(char **env);
+int		builtin_exit(char **argv);
+int		echo_nnn_handler(char *str);
+int		builtin_unset(char **argv, char **env);
+
+/* Environment Util*/
+char	*get_env_value(char **env, char *key);
 
 #endif

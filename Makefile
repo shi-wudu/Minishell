@@ -7,6 +7,10 @@ OBJ_DIR     = obj
 
 SRC_FILES := \
 	main.c \
+	builtin/builtin.c \
+	builtin/echo_cd_pwd.c \
+    builtin/exit_export.c \
+	builtin/env_utils.c \
 	parser/parse_user_input.c \
 	parser/parser_pipe.c \
 	parser/parser_redirects.c \

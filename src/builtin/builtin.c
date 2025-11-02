@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	is_builtin(char *cmd)
 {
@@ -41,27 +41,23 @@ int	exec_builtin(char **argv, char **env)
 		return (builtin_exit(argv));
 	return (1);
 }
-
-int	builtin_echo(char **argv)  
+int builtin_export(char **argv, char **env)
 {
-	int	i;
-	int	flag;
-
-	i = 1;
-	flag = 1;
-	if (argv[1] && argv[1][0] == '-' && echo_nnn_hander(argv[1]))
-	{
-		flag = 0;
-		i = 2;
-	}
-	while (argv[i])
-	{
-		printf("%s", argv[i++]);
-		if (argv[i])
-			printf(" ");
-	}
-	if (flag)
-		printf("\n");
+	(void)argv;
+	(void)env;
+	printf("export: not implemented yet\n");
 	return (0);
 }
 
+int builtin_env(char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env[i])
+	{
+		printf("%s\n", env[i]);
+		i++;
+	}
+	return (0);
+}

@@ -10,22 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "minishell.h"
 
 
-static int echo_nnn_handler(char *str)
+int echo_nnn_handler(char *str)
 {
-	if (*str == '-')
-		str++;
-    else
-        return (0);
-	while (*str)
+	if (!str || str[0] != '-')
+		return (0);
+
+    str++;
+
+	if (!*str)  // Just "-" with nothing after
+		return (0);
+    
+    while (*str)
 	{
-		if (*str == 'n')
-			str++;
-		else
+		if (*str != 'n')
 			return (0);
+		str++;
 	}
+    
 	return (1);
 }
 
@@ -52,10 +56,43 @@ int	builtin_echo(char **argv)
 	return (0);
 }
 
-int builtin_cd(char **argv, )
-
-int main(int ac, char **argv)
+int builtin_cd(char **argv, char **env)
 {
-    builtin_echo(argv);
-    return 0;
+	char *path;
+	if (!argv[1])
+	{
+		path = get_env_value(env, "HOME");
+		if (!path)
+		{
+			ft_putendl_fd("minishell> cd: HOME not set", 2);
+			return (1);
+		}
+	}
+	else
+	{
+		path = argv[1];
+	}
+
+	if (chdir(path) != 0)
+	{
+		ft_putstr_fd("minishell> cd: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd(": ", 1);
+		perror(NULL);
+		return (1);
+	}
+	return (0);
+}
+
+int	builtin_pwd(void)
+{
+	char buffer[4096];
+
+	if (getcwd(buffer, sizeof(buffer)) == NULL)
+	{
+		perror("minishell > pwd");
+		return (1);
+	}
+	printf("%s\n", buffer);
+	return (0);
 }
