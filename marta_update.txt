@@ -1,0 +1,55 @@
+tldr
+shell runs builtins now. pwd, cd, echo, env, and exit all work for real.  
+export and unset are just stubs for now.  
+need your help with env handling.
+
+---
+
+what works
+- echo: prints text, supports -n  
+- pwd: shows current directory  
+- cd: changes directories, defaults to home  
+- env: prints all environment variables  
+- exit: exits properly, errors like bash  
+
+what’s half-done
+- export: only lists vars, doesn’t change them  
+- unset: stub, doesn’t crash  
+
+---
+
+files changed
+new:
+- src/builtin/env_utils.c — env helpers  
+- src/builtin/exit_export.c — exit, export, unset  
+
+modified:
+- src/builtin/builtin.c — routes commands  
+- src/builtin/echo_cd_pwd.c — builtins code  
+- src/main.c — actually runs commands now  
+- include/minishell.h — new declarations  
+- makefile — added new files  
+
+---
+
+what’s next
+- external commands (ls, cat, etc.) with fork/execve  
+- pipes and redirections  
+- signals (ctrl-c, etc.)  
+- variable expansion ($path, $?)  
+- finish export/unset logic  
+- add cd -  
+
+---
+
+help needed: env handling
+need some help with the env stuff for builtins.
+
+export and unset work as basic stubs but don’t modify the environment yet.  
+the problem is envp from main() is read-only, so we can’t change it directly.
+
+what we need:
+- env manager lel 
+
+i started on helper functions (set_env_var, unset_env_var) but wanna make sure it fits with how everything’s structured.  
+we’ll also need this env copy later for variable expansion ($path, $home, etc)
