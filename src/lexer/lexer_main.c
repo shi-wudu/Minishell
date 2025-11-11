@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
-bool	parse_user_input(t_data *data)
+bool	lexer(t_data *data)
 {
 	if (!data->user_input || ft_strcmp(data->user_input, "") == 0)
 		return (false);

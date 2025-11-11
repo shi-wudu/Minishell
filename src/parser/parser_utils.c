@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 void	init_cmd(t_cmd *cmd)
 {
@@ -19,7 +19,7 @@ void	init_cmd(t_cmd *cmd)
 	cmd->command = NULL;
 	cmd->args = NULL;
 	cmd->next = NULL;
-	// cmd->prev = NULL;
+	cmd->prev = NULL;
 	cmd->pipe_output = false;
 	cmd->io.infile = NULL;
 	cmd->io.outfile = NULL;
@@ -52,10 +52,14 @@ void	free_commands(t_cmd *cmd)
 		tmp = cmd->next;
 		free(cmd->command);
 		free_str_tab(cmd->args);
+
 		if (cmd->io.infile)
 			free(cmd->io.infile);
 		if (cmd->io.outfile)
 			free(cmd->io.outfile);
+		if (cmd->io.heredoc_delimiter)
+			free(cmd->io.heredoc_delimiter);
+
 		free(cmd);
 		cmd = tmp;
 	}

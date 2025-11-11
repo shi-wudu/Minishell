@@ -33,7 +33,8 @@
 typedef enum e_token_type
 {
 	WORD,
-	STRING,
+	STRING_DQUOTE,
+	STRING_SQUOTE,
 	PIPE,
 	INPUT,
 	TRUNC,
@@ -41,6 +42,7 @@ typedef enum e_token_type
 	HEREDOC,
 	END
 }	t_token_type;
+
 
 /*=============================*/
 /*         STRUCTS             */
@@ -70,7 +72,7 @@ typedef struct s_command
 	t_io				io;
 	bool				pipe_output;
 	struct s_command	*next;
-	//struct s_command	*prev;
+	struct s_command	*prev;
 }	t_cmd;
 
 typedef struct s_data
@@ -86,6 +88,11 @@ typedef struct s_data
 /*            FILES            */
 /*=============================*/
 
+/* debug */
+void	execute_commands(t_cmd *cmds, char **envp);
+void	print_tokens(t_token *list);
+void	print_commands(t_cmd *cmd);
+
 /* lexer */
 t_token	*tokenize(const char *input);
 int		is_redirect(char c);
@@ -97,9 +104,18 @@ void	add_token(t_token **tokens, const char *value, t_token_type type);
 t_token	*new_token(const char *value, t_token_type type);
 void	free_tokens(t_token *list);
 bool	has_syntax_error(t_token *list);
+int		handle_quote_case(t_token **tokens, const char *input, int i);
+
+/* expander */
+char	*join_and_expand_double(char *result, char *str, int *i, t_data *data);
+char	*join_and_expand_dollar(char *result, char *str, int *i, t_data *data);
+char	*expand_string(char *str, t_data *data);
+void	expand_tokens(t_token *tokens, t_data *data);
+char	*append_char(char *s, char c);
+char	*join_and_skip(char *result, char *str, int *i, char quote);
 
 /* parser */
-bool	parse_user_input(t_data *data);
+bool	lexer(t_data *data);
 t_cmd	*parser(t_token *tokens);
 void	parse_word(t_cmd *cmd, t_token **tk);
 t_cmd	*parse_pipe(t_cmd *cmd, t_token **tk);

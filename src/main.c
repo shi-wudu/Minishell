@@ -10,72 +10,54 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
-//debug
-static void print_commands(t_cmd *cmd)
+static void minishell_loop(t_data *data)
 {
-	int i = 1;
-
-	while (cmd)
+	while (1)
 	{
-		ft_printf("\nCMD #%d\n", i++);
-		ft_printf("  command: %s\n", cmd->command ? cmd->command : "(null)");
-		if (cmd->args)
+		data->user_input = readline("minishell> ");
+		if (!data->user_input)
+			break;
+
+		if (*data->user_input)
+			add_history(data->user_input);
+
+		if (lexer(data))
 		{
-			ft_printf("  args: ");
-			for (int j = 0; cmd->args[j]; j++)
-				ft_printf("[%s] ", cmd->args[j]);
-			ft_printf("\n");
+			//print_tokens(data->token); // debug
+			expand_tokens(data->token, data);
+			data->cmd = parser(data->token);
+			//print_commands(data->cmd); // debug
+			execute_commands(data->cmd, data->envp);
 		}
-		if (cmd->io.infile)
-			ft_printf("  infile: %s\n", cmd->io.infile);
-		if (cmd->io.heredoc && cmd->io.heredoc_delimiter)
-			printf("  heredoc: %s\n", cmd->io.heredoc_delimiter);
-		if (cmd->io.outfile)
-			ft_printf("  outfile: %s%s\n", cmd->io.outfile, cmd->io.append ? " (append)" : "");
-		if (cmd->pipe_output)
-			ft_printf("  pipes to next command\n");
-		cmd = cmd->next;
-	}
-	ft_printf("\n");
-}
 
-static void	print_tokens(t_token *list)
-{
-	t_token	*tmp = list;
-
-	ft_printf("\n Tokens:\n");
-	while (tmp)
-	{
-		ft_printf("  [%d] \"%s\"\n", tmp->type, tmp->value);
-		tmp = tmp->next;
-	}
-	ft_printf("\n");
-}
-
-static void execute_commands(t_cmd *cmds, char **envp)
-{
-	t_cmd	*cmd;
-	int		exit_status;
-
-	cmd = cmds;
-	while (cmd)
-	{
-		if (is_builtin(cmd->command))
-		{
-			exit_status = exec_builtin(cmd->args, envp);
-			(void)exit_status;
-		}
-		else
-		{
-			ft_printf("%s: command not found\n", cmd->command);
-		}
-		cmd = cmd->next;
+		free_tokens(data->token);
+		data->token = NULL;
+		free_commands(data->cmd);
+		data->cmd = NULL;
+		free(data->user_input);
 	}
 }
 
-int	main(int argc, char **argv, char **envp) //main da marta
+int	main(int argc, char **argv, char **envp)
+{
+	t_data	data;
+
+	(void)argc;
+	(void)argv;
+	data.token = NULL; 
+	data.cmd = NULL; 
+	data.envp = envp;
+
+	minishell_loop(&data);
+
+	ft_printf("Exiting minishell.\n");
+	rl_clear_history();
+	return (0);
+}
+
+/*int	main(int argc, char **argv, char **envp) //main da marta
 {
 	t_data	data;
 	t_cmd	*cmds;
@@ -94,13 +76,7 @@ int	main(int argc, char **argv, char **envp) //main da marta
 		if (data.user_input[0] != '\0')
 			add_history(data.user_input);
 
-		if (ft_strcmp(data.user_input, "exit") == 0)
-		{
-			free(data.user_input);
-			break ;
-		}
-
-		if (parse_user_input(&data))
+		if (lexer(&data))
 		{
 			print_tokens(data.token);
 			cmds = parser(data.token);
@@ -121,45 +97,4 @@ int	main(int argc, char **argv, char **envp) //main da marta
 	ft_printf("Exiting minishell.\n");
 	rl_clear_history(); 
 	return (0);
-}
-
-/* int	main(int argc, char **argv)
-{
-	t_data	data;
-	t_cmd	*cmds;
-
-	(void)argc;
-	(void)argv;
-	data.token = NULL;
-
-	while (1)
-	{
-		data.user_input = readline("minishell> ");
-		if (!data.user_input)
-			break ;
-		if (ft_strcmp(data.user_input, "exit") == 0)
-		{
-			free(data.user_input);
-			break ;
-		}
-
-		if (parse_user_input(&data))
-		{
-			print_tokens(data.token);
-			cmds = parser(data.token);
-			print_commands(cmds);
-			free_commands(cmds);
-		}
-
-		if (data.token)
-		{
-			free_tokens(data.token);
-			data.token = NULL;
-		}
-		free(data.user_input);
-	}
-	ft_printf("Exiting minishell.\n");
-	rl_clear_history(); 
-	return (0);
-} */
-
+}*/

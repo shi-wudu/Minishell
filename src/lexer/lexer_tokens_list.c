@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/minishell.h"
+#include "minishell.h"
 
 t_token	*new_token(const char *value, t_token_type type)
 {
@@ -49,6 +49,9 @@ void	add_token(t_token **tokens, const char *value, t_token_type type)
 void	free_tokens(t_token *list)
 {
 	t_token	*tmp;
+
+	if (!list)
+        return;
 
 	while (list)
 	{

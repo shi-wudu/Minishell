@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 static void	set_command(t_cmd *cmd, t_token **tk)
 {
@@ -29,13 +29,16 @@ static int	count_args(t_token *tk)
 	int	count;
 
 	count = 0;
-	while (tk && (tk->type == WORD || tk->type == STRING))
+	while (tk && (tk->type == WORD
+		|| tk->type == STRING_SQUOTE
+		|| tk->type == STRING_DQUOTE))
 	{
 		count++;
 		tk = tk->next;
 	}
 	return (count);
 }
+
 
 void	parse_word(t_cmd *cmd, t_token **tk)
 {
@@ -44,17 +47,22 @@ void	parse_word(t_cmd *cmd, t_token **tk)
 
 	if (!cmd || !tk || !*tk)
 		return ;
+
 	set_command(cmd, tk);
 	argc = count_args(*tk);
 	cmd->args = malloc(sizeof(char *) * (argc + 2));
 	if (!cmd->args)
-		return ; // free
+		return ;
+
 	if (cmd->command)
 		cmd->args[0] = ft_strdup(cmd->command);
 	else
 		cmd->args[0] = ft_strdup("");
+
 	i = 1;
-	while (*tk && ((*tk)->type == WORD || (*tk)->type == STRING))
+	while (*tk && ((*tk)->type == WORD
+		|| (*tk)->type == STRING_SQUOTE
+		|| (*tk)->type == STRING_DQUOTE))
 	{
 		if ((*tk)->value)
 			cmd->args[i++] = ft_strdup((*tk)->value);

@@ -7,25 +7,30 @@ OBJ_DIR     = obj
 
 SRC_FILES := \
 	main.c \
+	debug.c \
 	builtin/builtin.c \
 	builtin/echo_cd_pwd.c \
     builtin/exit_export.c \
 	builtin/env_utils.c \
-	parser/parse_user_input.c \
 	parser/parser_pipe.c \
 	parser/parser_redirects.c \
 	parser/parser_utils.c \
 	parser/parser_word.c \
 	parser/parser.c \
-	lexer/tokenize.c \
+	lexer/lexer_main.c \
+	lexer/lexer_tokenize.c \
 	lexer/lexer_utils.c \
 	lexer/lexer_words.c \
 	lexer/lexer_redirects.c \
 	lexer/lexer_quotes.c \
-	lexer/tokens/tokens_list.c \
-	lexer/tokens/tokens_check.c \
+	lexer/lexer_tokens_list.c \
+	lexer/lexer_tokens_check.c \
 	utils/utils_string.c \
-	utils/utils_error.c
+	utils/utils_error.c \
+	expander/expander_join.c \
+	expander/expander_main.c \
+	expander/expander_utils.c 
+
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

@@ -10,20 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-
-static int	handle_quote_case(t_token **tokens, const char *input, int i)
-{
-	int	next;
-
-	next = extract_quoted(tokens, input, i);
-	if (next == -1)
-	{
-		free_tokens(*tokens);
-		return (-1);
-	}
-	return (next);
-}
+#include "minishell.h"
 
 static int	handle_token(t_token **tokens, const char *input, int i)
 {

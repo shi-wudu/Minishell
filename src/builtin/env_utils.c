@@ -25,7 +25,7 @@ char *get_env_value(char **env, char *key)
 	{
 		if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
 		{
-			return (&env[i][key_len + 1]);
+			//return (&env[i][key_len + 1]);
 			return (env[i] + key_len + 1);
 		}
 		i++;
@@ -33,7 +33,7 @@ char *get_env_value(char **env, char *key)
 	return (NULL);
 }
 
-char	*find_env_value(char **env, char *key)
+/*char	*find_env_value(char **env, char *key)
 {
 	int	i;
 	int	key_len;
@@ -49,4 +49,4 @@ char	*find_env_value(char **env, char *key)
 		i++;
 	}
 	return (NULL);
-}
+}*/
