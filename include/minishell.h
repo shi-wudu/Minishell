@@ -24,6 +24,7 @@
 # include <errno.h>
 # include <ctype.h>
 # include <sys/wait.h>
+# include <limits.h>
 # include "../libft/libft.h"
 
 /*=============================*/
@@ -70,6 +71,7 @@ typedef struct s_command
 	char				*command;
 	char				**args;
 	t_io				io;
+	int					exit_status;
 	bool				pipe_output;
 	struct s_command	*next;
 	struct s_command	*prev;
@@ -122,24 +124,34 @@ t_cmd	*parse_pipe(t_cmd *cmd, t_token **tk);
 void	parse_redirect(t_cmd *cmd, t_token **tk);
 void	free_commands(t_cmd *cmd);
 void	init_cmd(t_cmd *cmd);
-
+void	free_str_tab(char **tab);
 /* utils */
 int		ft_is_space(char c);
 void	errmsg(const char *msg, const char *arg, bool newline);
 
 /* built ins */
 int		is_builtin(char *cmd);
-int		exec_builtin(char **argv, char **env);
+int		exec_builtin(char **argv, char ***env);
 int		builtin_echo(char **argv);
 int		builtin_cd(char **argv, char **env);
 int		builtin_pwd(void);
-int		builtin_export(char **argv, char **env);
+int		builtin_export(char **argv, char ***env);
 int		builtin_env(char **env);
 int		builtin_exit(char **argv);
 int		echo_nnn_handler(char *str);
-int		builtin_unset(char **argv, char **env);
+int		builtin_unset(char **argv, char ***env);
+char	**expand_env(char **env, int *count);
+int		update_or_add_var(char ***env, char *var, int *count);
 
 /* Environment Util*/
 char	*get_env_value(char **env, char *key);
+
+/* Executing */
+char	*resolve_path(char *cmd, char **envp);
+int		apply_redirections(t_cmd *cmd);
+void	free_args(char **args);
+void	close_pipes(int *pipefd);
+void	close_all_fds(int *pipefd, int in_fd, int out_fd);
+int		create_pipe(int *pipefd);
 
 #endif

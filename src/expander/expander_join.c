@@ -6,13 +6,13 @@ static char	*expand_var(char *str, int *i, t_data *data)
 	char	*var_name;
 	char	*value;
 
-	(*i)++; // '$'
+	(*i)++; //'$'
 
-	/*if (str[*i] == '?')
+	if (str[*i] == '?')
 	{
 		(*i)++;
 		return (ft_itoa(data->last_exit_status));
-	}*/
+	}
 
 	start = *i;
 	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))

@@ -30,12 +30,28 @@ static int is_valid_number(char *str)
 	return (1);
 }
 
+static int	is_valid_identifier(char *str)
+{
+	int	i;
+
+	if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
+		return (0);
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int builtin_exit(char **argv)
 {
 	int exit_code;
-	printf("exit\n");
+	
 	if (!argv[1])
-		exit(0);
+		return (0);
 	
 	if (argv[2])
 	{
@@ -48,15 +64,36 @@ int builtin_exit(char **argv)
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(argv[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
-		exit(2);
+		return (2);
 	}
 	
 	exit_code = ft_atoi(argv[1]);
-	exit(exit_code % 256);
+	return (exit_code % 256);
 }
-int builtin_unset(char **argv, char **env)
+int	builtin_export(char **argv, char ***env)
 {
-	(void)argv;
-	(void)env;
+	int	i;
+	int	env_count;
+
+	if (!argv[1])
+		return (builtin_env(*env));
+	env_count = 0;
+	while ((*env)[env_count])
+		env_count++;
+	i = 1;
+	while (argv[i])
+	{
+		if (!is_valid_identifier(argv[i]))
+		{
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(argv[i], 2);
+			ft_putendl_fd("': not a valid identifier", 2);
+			return (1);
+		}
+		if (ft_strchr(argv[i], '='))
+			if (!update_or_add_var(env, argv[i], &env_count))
+				return (1);
+		i++;
+	}
 	return (0);
 }

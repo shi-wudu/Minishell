@@ -18,67 +18,69 @@ int echo_nnn_handler(char *str)
 	if (!str || str[0] != '-')
 		return (0);
 
-    str++;
+	str++;
 
 	if (!*str)  // Just "-" with nothing after
 		return (0);
-    
-    while (*str)
+	
+	while (*str)
 	{
 		if (*str != 'n')
 			return (0);
 		str++;
 	}
-    
+	
 	return (1);
 }
 
-int	builtin_echo(char **argv)  
+int	builtin_echo(char **argv)
 {
 	int	i;
-	int	flag;
+	int	newline;
 
+	newline = 1;
 	i = 1;
-	flag = 1;
-	if (argv[1] && argv[1][0] == '-' && echo_nnn_handler(argv[1]))
+	if (argv[i] && ft_strcmp(argv[i], "-n") == 0)
 	{
-		flag = 0;
-		i = 2;
+		newline = 0;
+		i++;
 	}
 	while (argv[i])
 	{
-		printf("%s", argv[i++]);
-		if (argv[i])
-			printf(" ");
+		ft_putstr_fd(argv[i], 1);
+		if (argv[i + 1])
+			ft_putstr_fd(" ", 1);
+		i++;
 	}
-	if (flag)
-		printf("\n");
+	if (newline)
+		ft_putstr_fd("\n", 1);
 	return (0);
 }
 
-int builtin_cd(char **argv, char **env)
+int	builtin_cd(char **argv, char **env)
 {
-	char *path;
-	if (!argv[1])
-	{
-		path = get_env_value(env, "HOME");
-		if (!path)
-		{
-			ft_putendl_fd("minishell> cd: HOME not set", 2);
-			return (1);
-		}
-	}
-	else
-	{
-		path = argv[1];
-	}
+	char	cwd[PATH_MAX];
+	char	*path;
 
+	path = argv[1];
+	if (!path)
+		path = get_env_value(env, "HOME");
+	if (!path)
+	{
+		ft_putendl_fd("minishell: cd: HOME not set", 2);
+		return (1);
+	}
 	if (chdir(path) != 0)
 	{
-		ft_putstr_fd("minishell> cd: ", 2);
+		ft_putstr_fd("minishell: cd: ", 2);
 		ft_putstr_fd(path, 2);
-		ft_putstr_fd(": ", 1);
-		perror(NULL);
+		ft_putstr_fd(": ", 2);
+		ft_putendl_fd(strerror(errno), 2);
+		return (1);
+	}
+	if (!getcwd(cwd, sizeof(cwd)))
+	{
+		ft_putendl_fd("minishell: pwd: getcwd failed", 2);
 		return (1);
 	}
 	return (0);
@@ -86,13 +88,13 @@ int builtin_cd(char **argv, char **env)
 
 int	builtin_pwd(void)
 {
-	char buffer[4096];
+	char	cwd[PATH_MAX];
 
-	if (getcwd(buffer, sizeof(buffer)) == NULL)
+	if (!getcwd(cwd, sizeof(cwd)))
 	{
-		perror("minishell > pwd");
+		ft_putendl_fd("minishell: pwd: getcwd failed", 2);
 		return (1);
 	}
-	printf("%s\n", buffer);
+	ft_putendl_fd(cwd, 1);
 	return (0);
 }

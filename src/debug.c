@@ -41,7 +41,7 @@ void	print_tokens(t_token *list)
 	ft_printf("\n");
 }
 
-void execute_commands(t_cmd *cmds, char **envp)
+/* void execute_commands(t_cmd *cmds, char **envp)
 {
 	t_cmd	*cmd;
 	int		exit_status;
@@ -60,4 +60,4 @@ void execute_commands(t_cmd *cmds, char **envp)
 		}
 		cmd = cmd->next;
 	}
-}
+} */

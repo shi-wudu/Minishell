@@ -8,10 +8,11 @@ OBJ_DIR     = obj
 SRC_FILES := \
 	main.c \
 	debug.c \
-	builtin/builtin.c \
-	builtin/echo_cd_pwd.c \
+    builtin/builtin.c \
+    builtin/echo_cd_pwd.c \
     builtin/exit_export.c \
-	builtin/env_utils.c \
+    builtin/env_utils.c \
+    builtin/unset.c \
 	parser/parser_pipe.c \
 	parser/parser_redirects.c \
 	parser/parser_utils.c \
@@ -29,7 +30,12 @@ SRC_FILES := \
 	utils/utils_error.c \
 	expander/expander_join.c \
 	expander/expander_main.c \
-	expander/expander_utils.c 
+	expander/expander_utils.c \
+	exec/executer.c \
+    exec/pathing.c \
+    exec/redirections.c \
+    exec/piping.c \
+    exec/piping_utils.c
 
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))

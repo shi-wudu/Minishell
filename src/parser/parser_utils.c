@@ -28,7 +28,7 @@ void	init_cmd(t_cmd *cmd)
 	cmd->io.heredoc = false;
 }
 
-static void	free_str_tab(char **tab)
+void	free_str_tab(char **tab)
 {
 	int	i;
 

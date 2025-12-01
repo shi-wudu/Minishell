@@ -29,9 +29,18 @@ static void minishell_loop(t_data *data)
 			expand_tokens(data->token, data);
 			data->cmd = parser(data->token);
 			//print_commands(data->cmd); // debug
-			execute_commands(data->cmd, data->envp);
+            execute_commands_piped(data->cmd, data->envp);
+            if (data->cmd)
+            {
+            execute_commands_piped(data->cmd, data->envp);
+            if (data->cmd)
+            {
+                t_cmd *last = data->cmd;
+                while (last->next)
+                    last = last->next;
+                data->last_exit_status = last->exit_status;
+			}
 		}
-
 		free_tokens(data->token);
 		data->token = NULL;
 		free_commands(data->cmd);
@@ -49,6 +58,7 @@ int	main(int argc, char **argv, char **envp)
 	data.token = NULL; 
 	data.cmd = NULL; 
 	data.envp = envp;
+	data.last_exit_status = 0;
 
 	minishell_loop(&data);
 
@@ -66,6 +76,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	data.token = NULL;
 	data.envp = envp;
+	data.last_exit_status = 0;
 
 	while (1)
 	{
