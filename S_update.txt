@@ -1,18 +1,63 @@
-what works
-- Variable expansion for $USER, $HOME and other environment variables.
-- Quoting system: single quotes prevent expansion, double quotes allow it.
+Add:
+1 - HEREDOC
+2 - SIGNALS
 
-what’s half-done
-- $? expansion (currently recognized but exit status handling still incomplete).
+-----------------------------------------------------------
 
-what changed
-- main.c:       Split main loop into a separate function (minishell_loop).
-- debug.c:      Added a new file for printing tokens and command structures.
-- lexer:        Updated to differentiate STRING_SQUOTE and STRING_DQUOTE tokens.
-- parser:       Updated to handle the new token types correctly.
-- expander:     Implemented variable expansion
-- builtin.c:    Added safety check for NULL command before is_builtin().
-- memory:       Fixed a small memory leak in parse_redirect()
+What works:
+-SIGNALS
+-HEREDOC
+-Continuar a fazer testes para ver se nao falha em nada
 
-what’s next
-env handling
+--------------------------------------------------------------
+
+Correcoes:
+"exit" tem de sair do minishell
+"echo hi | exit" , nao pode sair, porque é rodado em child processors e nao no father
+"Uma builtin deve rodar no SHELL PRINCIPAL só se não estiver envolvida em pipelines"
+
+1 - mudei o exit, para identificar se esta no father or child com boolean
+2 - mudei tb: "funcao(argumentos);" de algumas funcoes so para receber t_data em vez de varias variaveis; 
+3 - Comentei execute_comands pq n esta a ser usado o teu execute_comands_pipe faz ambos pelo que percebi
+4 - adicionei alguns pequenos promenores em algumas funcoes para poderem usar SIGNALS
+
+
+"exit_status esta a ser usado como pid"
+1 - fiz testes correu tudo bem mas podiamos separar. Criar uma cariavel PID na struct.
+
+
+"Estavamos a usar o env do sistema mesmo e precisavamos de o duplicar para nao estarmos a alterar diretamente do nosso sistema"
+1 - acrescentei dup_env, para duplicar env
+
+
+----------------------------------------------------------------------------------
+
+Corrigir:
+- Bash: echo "$!"
+n deve imprimir nada c/ double quotes ou sem quotes, pq expansao inv
+
+- $ echo "'quoted'"
+'quoted'
+
+- $ echo ""''""abc''
+abc
+
+...testar no bash da escola
+
+- cat
+^c
+tem so de sair e nao printar minishell 2x
+
+- minishell> echo ola > olat.txt
+ola
+minishell>
+Tem so de criar um txt com o ola la dentro o mesmo aplica -se para o >>
+
+
+funcoes repetidas no HEREDOC e expander tentar simplificar o max psossivel
+-----------------------------------------------------------------------------------
+
+Ainda n esta a funcionar:
+- > e >>
+
+Continuar a fazer testes para ver o que esta a faltar

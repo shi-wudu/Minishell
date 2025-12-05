@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdbool.h>
+#include <signal.h>
 # include <string.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -63,6 +64,7 @@ typedef struct s_io
 	char	*outfile;
 	bool	append;
 	bool	heredoc;
+	bool    heredoc_expand;
 	char	*heredoc_delimiter;
 }	t_io;
 
@@ -91,7 +93,7 @@ typedef struct s_data
 /*=============================*/
 
 /* debug */
-void	execute_commands(t_cmd *cmds, char **envp);
+//void	execute_commands(t_cmd *cmds, t_data *data);
 void	print_tokens(t_token *list);
 void	print_commands(t_cmd *cmd);
 
@@ -131,13 +133,13 @@ void	errmsg(const char *msg, const char *arg, bool newline);
 
 /* built ins */
 int		is_builtin(char *cmd);
-int		exec_builtin(char **argv, char ***env);
+int		exec_builtin(char **argv, char ***env, bool from_shell);
 int		builtin_echo(char **argv);
 int		builtin_cd(char **argv, char **env);
 int		builtin_pwd(void);
 int		builtin_export(char **argv, char ***env);
 int		builtin_env(char **env);
-int		builtin_exit(char **argv);
+int     builtin_exit(char **argv, bool from_shell);
 int		echo_nnn_handler(char *str);
 int		builtin_unset(char **argv, char ***env);
 char	**expand_env(char **env, int *count);
@@ -145,13 +147,34 @@ int		update_or_add_var(char ***env, char *var, int *count);
 
 /* Environment Util*/
 char	*get_env_value(char **env, char *key);
+char	**dup_env(char **envp);
+void	free_environment(char **env);
 
 /* Executing */
 char	*resolve_path(char *cmd, char **envp);
-int		apply_redirections(t_cmd *cmd);
+int		apply_redirections(t_cmd *cmd, char **envp, int last_exit_status);
 void	free_args(char **args);
 void	close_pipes(int *pipefd);
 void	close_all_fds(int *pipefd, int in_fd, int out_fd);
 int		create_pipe(int *pipefd);
+void	execute_commands_piped(t_cmd *cmd, t_data *data);
+void	execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data);
+
+/* signals */
+void    setup_signals_interactive(void);
+void    setup_signals_child(void);
+void    setup_signals_heredoc(void);
+void    sigint_handler(int sig);
+void    sigquit_handler(int sig);
+
+/* heredoc */
+char 	*gen_heredoc_filename(void);
+char 	*read_heredoc(char *delimiter, bool expand, char **envp, int last_exit_status);
+bool 	heredoc_should_stop(char *line, char *delimiter);
+void	write_heredoc_line(int fd, char *line, char **envp, bool expand, int last);
+char 	*expand_vars_no_quotes(const char *line, char **envp,  int last_exit_status);
+
+
+
 
 #endif

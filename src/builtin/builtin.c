@@ -24,7 +24,7 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-int	exec_builtin(char **argv, char ***env)
+int	exec_builtin(char **argv, char ***env, bool from_shell)
 {
 	if (ft_strcmp(argv[0], "echo") == 0)
 		return (builtin_echo(argv));
@@ -39,6 +39,6 @@ int	exec_builtin(char **argv, char ***env)
 	if (ft_strcmp(argv[0], "env") == 0)
 		return (builtin_env(*env));
 	if (ft_strcmp(argv[0], "exit") == 0)
-		return (builtin_exit(argv));
+		return (builtin_exit(argv, from_shell));
 	return (0);
 }

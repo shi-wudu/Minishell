@@ -79,31 +79,65 @@ int	var_exists(char **env, char *var, int *var_len)
 	return (0);
 }
 
-int	update_or_add_var(char ***env, char *var, int *count)
+int update_or_add_var(char ***env, char *var, int *count)
 {
-	char	**new_env;
-	int		var_len;
+    int i;
+    int var_len;
+    char *tmp;
 
-	if (var_exists(*env, var, &var_len))
-		return (1);
-	new_env = expand_env(*env, count);
-	if (!new_env)
-		return (0);
-	new_env[*count] = ft_strdup(var);
-	if (!new_env[*count])
-	{
-		while (*count > 0)
-		{
-			(*count)--;
-			free(new_env[*count]);
-		}
-		free(new_env);
-		return (0);
-	}
-	free(*env);
-	*env = new_env;
-	(*count)++;
-	return (1);
+    if (!env || !var || !count)
+        return 0;
+    var_len = 0;
+    while (var[var_len] && var[var_len] != '=')
+        var_len++;
+
+    i = 0;
+    while ((*env)[i])
+    {
+        if (ft_strncmp((*env)[i], var, var_len) == 0 && (*env)[i][var_len] == '=')
+        {
+            // substitui
+            tmp = ft_strdup(var);
+            if (!tmp)
+                return 0;
+            free((*env)[i]);
+            (*env)[i] = tmp;
+            return 1;
+        }
+        i++;
+    }
+
+    {
+        char **new_env = malloc(sizeof(char *) * (*count + 2));
+        if (!new_env)
+            return 0;
+        i = 0;
+        while ((*env)[i])
+        {
+            new_env[i] = ft_strdup((*env)[i]);
+            if (!new_env[i])
+            {
+                while (i-- > 0)
+                    free(new_env[i]);
+                free(new_env);
+                return 0;
+            }
+            i++;
+        }
+        new_env[i] = ft_strdup(var);
+        if (!new_env[i])
+        {
+            while (i-- > 0)
+                free(new_env[i]);
+            free(new_env);
+            return 0;
+        }
+        new_env[i + 1] = NULL;
+        free_environment(*env);
+        *env = new_env;
+        (*count)++;
+    }
+    return 1;
 }
 
 int	builtin_env(char **env)
@@ -120,4 +154,37 @@ int	builtin_env(char **env)
 		i++;
 	}
 	return (0);
+}
+
+char **dup_env(char **envp)
+{
+    int     count = 0;
+    char    **new_env;
+    int     i;
+
+    if (!envp)
+        return NULL;
+
+    while (envp[count])
+        count++;
+
+    new_env = malloc((count + 1) * sizeof(char *));
+    if (!new_env)
+        return NULL;
+
+    i = 0;
+    while (i < count)
+    {
+        new_env[i] = ft_strdup(envp[i]);
+        if (!new_env[i])
+        {
+            while (i-- > 0)
+                free(new_env[i]);
+            free(new_env);
+            return NULL;
+        }
+        i++;
+    }
+    new_env[count] = NULL;
+    return new_env;
 }

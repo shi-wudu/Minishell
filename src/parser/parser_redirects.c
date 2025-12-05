@@ -33,6 +33,11 @@ void	parse_redirect(t_cmd *cmd, t_token **tk)
 	}
 	else if ((*tk)->type == HEREDOC)
 	{
+		if ((*tk)->next->type == STRING_DQUOTE || (*tk)->next->type == STRING_SQUOTE)
+			cmd->io.heredoc_expand = false;
+		else
+			cmd->io.heredoc_expand = true;
+
 		cmd->io.heredoc_delimiter = ft_strdup(filename);
 		cmd->io.heredoc = true;
 	}

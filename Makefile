@@ -35,7 +35,12 @@ SRC_FILES := \
     exec/pathing.c \
     exec/redirections.c \
     exec/piping.c \
-    exec/piping_utils.c
+    exec/piping_utils.c \
+	signal/signals.c \
+	heredoc/heredoc.c \
+	heredoc/heredoc_utils.c \
+	heredoc/heredoc_expand.c \
+	heredoc/heredoc_write.c
 
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))

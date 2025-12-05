@@ -63,19 +63,49 @@ static int	redirect_output(char *outfile, int append)
 	return (0);
 }
 
-int	apply_redirections(t_cmd *cmd)
+int apply_redirections(t_cmd *cmd, char **envp, int last_exit_status)
 {
-	if (!cmd)
-		return (0);
-	if (cmd->io.infile)
-	{
-		if (redirect_input(cmd->io.infile) == -1)
-			return (-1);
-	}
-	if (cmd->io.outfile)
-	{
-		if (redirect_output(cmd->io.outfile, cmd->io.append) == -1)
-			return (-1);
-	}
-	return (0);
+    int fd;
+
+    if (!cmd)
+        return 0;
+
+    if (cmd->io.heredoc)
+    {
+        char *file = read_heredoc(cmd->io.heredoc_delimiter, cmd->io.heredoc_expand, envp, last_exit_status);
+        if (!file)
+            return -1;
+
+        fd = open(file, O_RDONLY);
+        if (fd == -1)
+        {
+            perror("open heredoc");
+            free(file);
+            return -1;
+        }
+        if (dup2(fd, STDIN_FILENO) == -1)
+        {
+            perror("dup2 heredoc");
+            close(fd);
+            unlink(file);
+            free(file);
+            return -1;
+        }
+        close(fd);
+        unlink(file);   // remove ficheiro temporário
+        free(file);
+    }
+    else if (cmd->io.infile)
+    {
+        if (redirect_input(cmd->io.infile) == -1)
+            return -1;
+    }
+
+    if (cmd->io.outfile)
+    {
+        if (redirect_output(cmd->io.outfile, cmd->io.append) == -1)
+            return -1;
+    }
+
+    return 0;
 }

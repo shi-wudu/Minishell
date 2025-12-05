@@ -12,11 +12,11 @@
 #include "minishell.h"
 
 
-static void	handle_child_process(t_cmd *cmd, int in_fd, int out_fd, char **envp)
+static void handle_child_process(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
 {
-    char	*path;
+    char    *path;
 
-    if (apply_redirections(cmd) == -1)
+    if (apply_redirections(cmd, data->envp, data->last_exit_status) == -1)
         exit(1);
     
     if (in_fd != STDIN_FILENO)
@@ -28,7 +28,7 @@ static void	handle_child_process(t_cmd *cmd, int in_fd, int out_fd, char **envp)
         }
         close(in_fd);
     }
-    
+
     if (out_fd != STDOUT_FILENO)
     {
         if (dup2(out_fd, STDOUT_FILENO) == -1)
@@ -38,11 +38,11 @@ static void	handle_child_process(t_cmd *cmd, int in_fd, int out_fd, char **envp)
         }
         close(out_fd);
     }
-    
+
     if (is_builtin(cmd->command))
-        exit(exec_builtin(cmd->args, (char ***)&envp));
-    
-    path = resolve_path(cmd->command, envp);
+        exit(exec_builtin(cmd->args, &data->envp, false));
+
+    path = resolve_path(cmd->command, data->envp);
     if (!path)
     {
         ft_putstr_fd("minishell: command not found: ", 2);
@@ -50,7 +50,7 @@ static void	handle_child_process(t_cmd *cmd, int in_fd, int out_fd, char **envp)
         exit(127);
     }
     
-    if (execve(path, cmd->args, envp) == -1)
+    if (execve(path, cmd->args, data->envp) == -1)
     {
         perror("execve");
         free(path);
@@ -58,9 +58,9 @@ static void	handle_child_process(t_cmd *cmd, int in_fd, int out_fd, char **envp)
     }
 }
 
-void	execute_child(t_cmd *cmd, int in_fd, int out_fd, char **envp)
+void execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
 {
-    handle_child_process(cmd, in_fd, out_fd, envp);
+    handle_child_process(cmd, in_fd, out_fd, data);
 }
 
 static void	wait_for_children(t_cmd *cmd)
@@ -76,12 +76,23 @@ static void	wait_for_children(t_cmd *cmd)
         {
             pid = waitpid(current->exit_status, &status, 0);
             if (pid == -1)
-                break ;
-            
+                break;
+
             if (WIFEXITED(status))
                 current->exit_status = WEXITSTATUS(status);
+
             else if (WIFSIGNALED(status))
-                current->exit_status = 128 + WTERMSIG(status);
+            {
+                int sig = WTERMSIG(status);
+
+                if (sig == SIGINT)       // ctrl-C
+                    write(1, "\n", 1);
+
+                else if (sig == SIGQUIT) // ctrl- 
+                    write(1, "Quit: 3\n", 8);
+
+                current->exit_status = 128 + sig;
+            }
             else
                 current->exit_status = 1;
         }
@@ -89,7 +100,7 @@ static void	wait_for_children(t_cmd *cmd)
     }
 }
 
-void	execute_commands_piped(t_cmd *cmd, char **envp)
+void execute_commands_piped(t_cmd *cmd, t_data *data)
 {
     t_cmd	*current;
     int		pipefd[2];
@@ -114,9 +125,9 @@ void	execute_commands_piped(t_cmd *cmd, char **envp)
             out_fd = pipefd[1];
         }
         
-        if (is_builtin(current->command) && !current->pipe_output)
+        if (is_builtin(current->command) && !current->pipe_output && current->prev == NULL)
         {
-            current->exit_status = exec_builtin(current->args, (char ***)&envp);
+            current->exit_status = exec_builtin(current->args, (char ***)&data->envp, true);
             if (in_fd != STDIN_FILENO)
                 close(in_fd);
         }
@@ -130,10 +141,13 @@ void	execute_commands_piped(t_cmd *cmd, char **envp)
             }
             
             if (pid == 0)
-                execute_child(current, in_fd, out_fd, envp);
+            {
+                setup_signals_child();
+                execute_child(current, in_fd, out_fd, data);
+            }
             else
                 current->exit_status = pid;
-            
+                            
             if (in_fd != STDIN_FILENO)
                 close(in_fd);
             if (out_fd != STDOUT_FILENO)

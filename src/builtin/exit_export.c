@@ -46,30 +46,39 @@ static int	is_valid_identifier(char *str)
 	return (1);
 }
 
-int builtin_exit(char **argv)
+int builtin_exit(char **argv, bool from_shell)
 {
-	int exit_code;
-	
-	if (!argv[1])
-		return (0);
-	
-	if (argv[2])
-	{
-		ft_putendl_fd("minishell: exit: too many arguments", 2);
-		return (1);
-	}
+    long exit_code;
 
-	if (!is_valid_number(argv[1]))
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(argv[1], 2);
-		ft_putendl_fd(": numeric argument required", 2);
-		return (2);
-	}
-	
-	exit_code = ft_atoi(argv[1]);
-	return (exit_code % 256);
+    if (from_shell)
+        ft_putendl_fd("exit", 1);
+
+    if (!argv[1])
+        exit(0);
+
+    if (!is_valid_number(argv[1]))
+    {
+        if (from_shell)
+        {
+            ft_putstr_fd("minishell: exit: ", 2);
+            ft_putstr_fd(argv[1], 2);
+            ft_putendl_fd(": numeric argument required", 2);
+        }
+        exit(255);
+    }
+
+    if (argv[2])
+    {
+        if (from_shell)
+            ft_putendl_fd("minishell: exit: too many arguments", 2);
+        return (1);
+    }
+
+    exit_code = ft_atoi(argv[1]);
+    exit(exit_code % 256);
 }
+
+
 int	builtin_export(char **argv, char ***env)
 {
 	int	i;

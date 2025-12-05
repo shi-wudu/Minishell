@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-static void	execute_external(t_cmd *cmd, char **envp)
+/*static void	execute_external(t_cmd *cmd, t_data *data)
 {
 	pid_t	pid;
 	int		status;
@@ -24,7 +24,7 @@ static void	execute_external(t_cmd *cmd, char **envp)
 		return ;
 	}
 	if (pid == 0)
-		execute_child(cmd, -1, -1, envp);
+		execute_child(cmd, -1, -1, data);
 	else
 	{
 		waitpid(pid, &status, 0);
@@ -33,9 +33,9 @@ static void	execute_external(t_cmd *cmd, char **envp)
 		else if (WIFSIGNALED(status))
 			cmd->exit_status = 128 + WTERMSIG(status);
 	}
-}
+}*/
 
-void	execute_commands(t_cmd *cmd, char **envp)
+/*void	execute_commands(t_cmd *cmd, t_data *data)
 {
 	t_cmd	*current;
 
@@ -45,9 +45,9 @@ void	execute_commands(t_cmd *cmd, char **envp)
 	while (current)
 	{
 		if (is_builtin(current->command))
-			current->exit_status = exec_builtin(current->args, &envp);
+			current->exit_status = exec_builtin(current->args, &data->envp, true);
 		else
-			execute_external(current, envp);
+			execute_external(current, data);
 		current = current->next;
 	}
-}
+}*/

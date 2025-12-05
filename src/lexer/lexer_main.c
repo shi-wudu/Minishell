@@ -16,7 +16,6 @@ bool	lexer(t_data *data)
 {
 	if (!data->user_input || ft_strcmp(data->user_input, "") == 0)
 		return (false);
-	add_history(data->user_input);
 	data->token = tokenize(data->user_input);
 	if (!data->token)
 	{

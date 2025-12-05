@@ -12,13 +12,19 @@
 
 #include "minishell.h"
 
+volatile sig_atomic_t g_signal = 0;
+
 static void minishell_loop(t_data *data)
 {
 	while (1)
 	{
+		setup_signals_interactive();
 		data->user_input = readline("minishell> ");
 		if (!data->user_input)
-			break;
+		{
+    		write(1, "exit\n", 5);
+    		break;
+		}
 
 		if (*data->user_input)
 			add_history(data->user_input);
@@ -29,16 +35,15 @@ static void minishell_loop(t_data *data)
 			expand_tokens(data->token, data);
 			data->cmd = parser(data->token);
 			//print_commands(data->cmd); // debug
-            execute_commands_piped(data->cmd, data->envp);
-            if (data->cmd)
-            {
-            execute_commands_piped(data->cmd, data->envp);
+            execute_commands_piped(data->cmd, data);
             if (data->cmd)
             {
                 t_cmd *last = data->cmd;
                 while (last->next)
                     last = last->next;
                 data->last_exit_status = last->exit_status;
+				//printf("EXIT CODE = %d\n", data->last_exit_status); //debug para ver exit ccode se esta certo
+
 			}
 		}
 		free_tokens(data->token);
@@ -57,13 +62,17 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	data.token = NULL; 
 	data.cmd = NULL; 
-	data.envp = envp;
+	data.envp = dup_env(envp);
+	if (!data.envp)
+	{
+    	ft_putendl_fd("minishell: failed to duplicate environment", 2);
+    	return (1);
+	}
 	data.last_exit_status = 0;
 
 	minishell_loop(&data);
-
-	ft_printf("Exiting minishell.\n");
 	rl_clear_history();
+	free_environment(data.envp);
 	return (0);
 }
 
