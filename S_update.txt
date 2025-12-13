@@ -42,16 +42,31 @@ n deve imprimir nada c/ double quotes ou sem quotes, pq expansao inv
 - $ echo ""''""abc''
 abc
 
-...testar no bash da escola
-
-- cat
-^c
-tem so de sair e nao printar minishell 2x
 
 - minishell> echo ola > olat.txt
 ola
 minishell>
 Tem so de criar um txt com o ola la dentro o mesmo aplica -se para o >>
+
+
+-env "argumento"
+n pode imprimir o env tem de dar caso seja algo que n existe ou mensagem
+
+
+-CTRL + c
+nao pode printar minishell 2x
+
+-echo "'$USER'"
+tem de ficar 'pyrosboss'
+
+
+echo "$HOME"'_suffix'
+/home/pyrosboss _suffix - nao pode ter espaço
+
+
+minishell> ""
+minishell: command not found: minishell> ''
+minishell: command not found: minishell> 
 
 
 funcoes repetidas no HEREDOC e expander tentar simplificar o max psossivel
@@ -61,3 +76,8 @@ Ainda n esta a funcionar:
 - > e >>
 
 Continuar a fazer testes para ver o que esta a faltar
+
+
+
+
+unclosed quotes tiro? ou deixo?
