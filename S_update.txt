@@ -30,16 +30,22 @@ Correcoes:
 1 - acrescentei dup_env, para duplicar env
 
 
+New:
+- Mudei sinais n sei se é a melhor abordagem
+- Quando "" e nao existe comando n deve imprimir nada 👍
+
 ----------------------------------------------------------------------------------
 
+👍 - corrigido
+
 Corrigir:
-- Bash: echo "$!"
+👍- Bash: echo "$!"
 n deve imprimir nada c/ double quotes ou sem quotes, pq expansao inv
 
-- $ echo "'quoted'"
+👍- $ echo "'quoted'"
 'quoted'
 
-- $ echo ""''""abc''
+👍- $ echo ""''""abc''
 abc
 
 
@@ -53,21 +59,25 @@ Tem so de criar um txt com o ola la dentro o mesmo aplica -se para o >>
 n pode imprimir o env tem de dar caso seja algo que n existe ou mensagem
 
 
--CTRL + c
+👍-CTRL + c
 nao pode printar minishell 2x
 
--echo "'$USER'"
+👍-echo "'$USER'"
 tem de ficar 'pyrosboss'
 
 
-echo "$HOME"'_suffix'
+👍-echo "$HOME"'_suffix'
 /home/pyrosboss _suffix - nao pode ter espaço
 
 
-minishell> ""
+👍-minishell> ""
 minishell: command not found: minishell> ''
 minishell: command not found: minishell> 
 
+- caregar 2x CTRL+\ da erro
+
+
+- sleep 10 e depois Ctrl+c
 
 funcoes repetidas no HEREDOC e expander tentar simplificar o max psossivel
 -----------------------------------------------------------------------------------

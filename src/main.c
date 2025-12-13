@@ -12,13 +12,14 @@
 
 #include "minishell.h"
 
-volatile sig_atomic_t g_signal = 0;
+volatile sig_atomic_t g_signal = SIG_IDLE;
 
 static void minishell_loop(t_data *data)
 {
 	while (1)
 	{
 		setup_signals_interactive();
+		g_signal = SIG_IDLE;
 		data->user_input = readline("minishell> ");
 		if (!data->user_input)
 		{
@@ -69,7 +70,6 @@ int	main(int argc, char **argv, char **envp)
     	return (1);
 	}
 	data.last_exit_status = 0;
-
 	minishell_loop(&data);
 	rl_clear_history();
 	free_environment(data.envp);

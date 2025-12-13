@@ -9,9 +9,7 @@ char	*expand_string(char *str, t_data *data)
 	result = ft_strdup("");
 	while (str[i])
 	{
-		if (str[i] == '\'')
-			result = join_and_skip(result, str, &i, '\'');
-		else if (str[i] == '"')
+		if (str[i] == '"')
 			result = join_and_expand_double(result, str, &i, data);
 		else if (str[i] == '$')
 			result = join_and_expand_dollar(result, str, &i, data);
@@ -21,11 +19,12 @@ char	*expand_string(char *str, t_data *data)
 	return (result);
 }
 
+
 void	expand_tokens(t_token *tokens, t_data *data)
 {
 	while (tokens)
 	{
-		if (tokens->type == STRING_DQUOTE || tokens->type == WORD)
+		if (tokens->type == STRING_DQUOTE)
 		{
 			char *expanded = expand_string(tokens->value, data);
 			free(tokens->value);

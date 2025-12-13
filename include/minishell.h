@@ -28,6 +28,11 @@
 # include <limits.h>
 # include "../libft/libft.h"
 
+#define SIG_IDLE   0
+#define SIG_CHILD  1
+#define SIG_HDOC   2
+
+
 /*=============================*/
 /*         ENUMS               */
 /*=============================*/
@@ -127,6 +132,8 @@ void	parse_redirect(t_cmd *cmd, t_token **tk);
 void	free_commands(t_cmd *cmd);
 void	init_cmd(t_cmd *cmd);
 void	free_str_tab(char **tab);
+char	*ft_strjoin_free(char *s1, const char *s2);
+
 /* utils */
 int		ft_is_space(char c);
 void	errmsg(const char *msg, const char *arg, bool newline);

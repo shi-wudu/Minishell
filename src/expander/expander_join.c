@@ -18,7 +18,10 @@ static char	*expand_var(char *str, int *i, t_data *data)
 	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
 		(*i)++;
 	if (start == *i)
-		return (ft_strdup("$"));
+	{
+    	(*i)++;
+    	return (ft_strdup(""));
+	}
 
 	var_name = ft_substr(str, start, *i - start);
 	value = get_env_value(data->envp, var_name);
