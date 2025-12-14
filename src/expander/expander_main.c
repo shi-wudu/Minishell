@@ -1,35 +1,74 @@
 #include "minishell.h"
 
-char	*expand_string(char *str, t_data *data)
+static void	handle_dollar(const char *str, char **envp, int *i, char **res, int last)
 {
-	int		i;
-	char	*result;
+	int		start;
+	char	*name;
+	char	*val;
+	char	*num;
 
-	i = 0;
-	result = ft_strdup("");
-	while (str[i])
+	if (str[*i + 1] == '?')
 	{
-		if (str[i] == '"')
-			result = join_and_expand_double(result, str, &i, data);
-		else if (str[i] == '$')
-			result = join_and_expand_dollar(result, str, &i, data);
-		else
-			result = append_char(result, str[i++]);
+		num = ft_itoa(last);
+		*res = ft_strjoin_free(*res, num);
+		free(num);
+		*i += 2;
+		return ;
 	}
-	return (result);
+	start = ++(*i);
+	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
+		(*i)++;
+	if (start == *i)
+		*res = ft_strjoin_free(*res, "$");
+	else
+	{
+		name = ft_substr(str, start, *i - start);
+		val = get_env_value(envp, name);
+		*res = ft_strjoin_free(*res, val ? val : "");
+		free(name);
+	}
 }
 
-
-void	expand_tokens(t_token *tokens, t_data *data)
+char	*expand_dollar_only(const char *str, char **envp, int last)
 {
-	while (tokens)
+	int		i;
+	char	*res;
+
+	i = 0;
+	res = ft_strdup("");
+	while (str && str[i])
 	{
-		if (tokens->type == STRING_DQUOTE)
+		if (str[i] == '$')
+			handle_dollar(str, envp, &i, &res, last);
+		else
 		{
-			char *expanded = expand_string(tokens->value, data);
-			free(tokens->value);
-			tokens->value = expanded;
+			res = append_char(res, str[i]);
+			i++;
 		}
-		tokens = tokens->next;
 	}
+	return (res);
+}
+
+void expand_tokens(t_token *tokens, t_data *data)
+{
+    while (tokens)
+    {
+        if (tokens->type == HEREDOC && tokens->next)
+        {
+            tokens = tokens->next->next;
+            continue;
+        }
+
+        if (tokens->type == WORD || tokens->type == STRING_DQUOTE)
+        {
+            char *expanded = expand_dollar_only(
+                tokens->value,
+                data->envp,
+                data->last_exit_status
+            );
+            free(tokens->value);
+            tokens->value = expanded;
+        }
+        tokens = tokens->next;
+    }
 }

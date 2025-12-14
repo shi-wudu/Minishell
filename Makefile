@@ -26,9 +26,7 @@ SRC_FILES := \
 	lexer/lexer_quotes.c \
 	lexer/lexer_tokens_list.c \
 	lexer/lexer_tokens_check.c \
-	utils/utils_string.c \
-	utils/utils_error.c \
-	expander/expander_join.c \
+	utils/utils.c \
 	expander/expander_main.c \
 	expander/expander_utils.c \
 	exec/executer.c \
@@ -39,7 +37,6 @@ SRC_FILES := \
 	signal/signals.c \
 	heredoc/heredoc.c \
 	heredoc/heredoc_utils.c \
-	heredoc/heredoc_expand.c \
 	heredoc/heredoc_write.c
 
 

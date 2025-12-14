@@ -4,7 +4,7 @@ static void write_heredoc_line_expanded(int fd, char *line, char **envp, int las
 {
     char *out;
 
-    out = expand_vars_no_quotes(line, envp, last);
+    out = expand_dollar_only(line, envp, last);
     write(fd, out, ft_strlen(out));
     write(fd, "\n", 1);
     free(out);

@@ -39,9 +39,6 @@ New:
 👍 - corrigido
 
 Corrigir:
-👍- Bash: echo "$!"
-n deve imprimir nada c/ double quotes ou sem quotes, pq expansao inv
-
 👍- $ echo "'quoted'"
 'quoted'
 
@@ -65,10 +62,8 @@ nao pode printar minishell 2x
 👍-echo "'$USER'"
 tem de ficar 'pyrosboss'
 
-
 👍-echo "$HOME"'_suffix'
 /home/pyrosboss _suffix - nao pode ter espaço
-
 
 👍-minishell> ""
 minishell: command not found: minishell> ''
@@ -76,18 +71,12 @@ minishell: command not found: minishell>
 
 👍- caregar 2x CTRL+\ da erro
 
-
 👍- sleep 10 e depois Ctrl+c
 
-funcoes repetidas no HEREDOC e expander tentar simplificar o max psossivel
+👍- funcoes repetidas no HEREDOC e expander tentar simplificar o max psossivel
 -----------------------------------------------------------------------------------
 
 Ainda n esta a funcionar:
 - > e >>
-
-Continuar a fazer testes para ver o que esta a faltar
-
-
-
 
 unclosed quotes tiro? ou deixo?

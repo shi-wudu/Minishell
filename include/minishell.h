@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdbool.h>
-#include <signal.h>
+# include <signal.h>
 # include <string.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -116,9 +116,6 @@ bool	has_syntax_error(t_token *list);
 int		handle_quote_case(t_token **tokens, const char *input, int i);
 
 /* expander */
-char	*join_and_expand_double(char *result, char *str, int *i, t_data *data);
-char	*join_and_expand_dollar(char *result, char *str, int *i, t_data *data);
-char	*expand_string(char *str, t_data *data);
 void	expand_tokens(t_token *tokens, t_data *data);
 char	*append_char(char *s, char c);
 char	*join_and_skip(char *result, char *str, int *i, char quote);
@@ -179,8 +176,7 @@ char 	*gen_heredoc_filename(void);
 char 	*read_heredoc(char *delimiter, bool expand, char **envp, int last_exit_status);
 bool 	heredoc_should_stop(char *line, char *delimiter);
 void	write_heredoc_line(int fd, char *line, char **envp, bool expand, int last);
-char 	*expand_vars_no_quotes(const char *line, char **envp,  int last_exit_status);
-
+char	*expand_dollar_only(const char *str,char **envp,int last_exit_status);
 
 
 
