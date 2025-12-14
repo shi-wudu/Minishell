@@ -74,10 +74,10 @@ tem de ficar 'pyrosboss'
 minishell: command not found: minishell> ''
 minishell: command not found: minishell> 
 
-- caregar 2x CTRL+\ da erro
+👍- caregar 2x CTRL+\ da erro
 
 
-- sleep 10 e depois Ctrl+c
+👍- sleep 10 e depois Ctrl+c
 
 funcoes repetidas no HEREDOC e expander tentar simplificar o max psossivel
 -----------------------------------------------------------------------------------

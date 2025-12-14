@@ -69,6 +69,7 @@ static void	wait_for_children(t_cmd *cmd)
     int		status;
     pid_t	pid;
     t_cmd	*current;
+    int sig;
 
     current = cmd;
     while (current)
@@ -84,9 +85,10 @@ static void	wait_for_children(t_cmd *cmd)
 
             else if (WIFSIGNALED(status))
             {
-                int sig = WTERMSIG(status);
-
-                if (sig == SIGQUIT) // ctrl- 
+                sig = WTERMSIG(status);
+                if (sig == SIGINT)
+					write(1, "\n", 1); 
+                if (sig == SIGQUIT) 
                     write(1, "Quit: 3\n", 8);
 
                 current->exit_status = 128 + sig;

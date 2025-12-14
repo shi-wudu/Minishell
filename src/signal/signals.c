@@ -29,10 +29,10 @@ void    sigint_heredoc(int sig)
     close(STDIN_FILENO);
 }
 
-void    setup_signals_interactive(void)
+void setup_signals_interactive(void)
 {
     signal(SIGINT, sigint_handler);
-    signal(SIGQUIT, sigquit_handler);
+    signal(SIGQUIT, SIG_IGN);
 }
 
 void    setup_signals_child(void)
