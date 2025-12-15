@@ -23,3 +23,8 @@ void	errmsg(const char *msg, const char *arg, bool newline)
 	if (newline)
 		write(2, "\n", 1);
 }
+
+int	ft_is_space(char c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
+}

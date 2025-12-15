@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdbool.h>
-#include <signal.h>
+# include <signal.h>
 # include <string.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -27,6 +27,11 @@
 # include <sys/wait.h>
 # include <limits.h>
 # include "../libft/libft.h"
+
+#define SIG_IDLE   0
+#define SIG_CHILD  1
+#define SIG_HDOC   2
+
 
 /*=============================*/
 /*         ENUMS               */
@@ -111,9 +116,6 @@ bool	has_syntax_error(t_token *list);
 int		handle_quote_case(t_token **tokens, const char *input, int i);
 
 /* expander */
-char	*join_and_expand_double(char *result, char *str, int *i, t_data *data);
-char	*join_and_expand_dollar(char *result, char *str, int *i, t_data *data);
-char	*expand_string(char *str, t_data *data);
 void	expand_tokens(t_token *tokens, t_data *data);
 char	*append_char(char *s, char c);
 char	*join_and_skip(char *result, char *str, int *i, char quote);
@@ -127,6 +129,8 @@ void	parse_redirect(t_cmd *cmd, t_token **tk);
 void	free_commands(t_cmd *cmd);
 void	init_cmd(t_cmd *cmd);
 void	free_str_tab(char **tab);
+char	*ft_strjoin_free(char *s1, const char *s2);
+
 /* utils */
 int		ft_is_space(char c);
 void	errmsg(const char *msg, const char *arg, bool newline);
@@ -172,8 +176,7 @@ char 	*gen_heredoc_filename(void);
 char 	*read_heredoc(char *delimiter, bool expand, char **envp, int last_exit_status);
 bool 	heredoc_should_stop(char *line, char *delimiter);
 void	write_heredoc_line(int fd, char *line, char **envp, bool expand, int last);
-char 	*expand_vars_no_quotes(const char *line, char **envp,  int last_exit_status);
-
+char	*expand_dollar_only(const char *str,char **envp,int last_exit_status);
 
 
 

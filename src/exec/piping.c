@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+extern volatile sig_atomic_t g_signal;
 
 static void handle_child_process(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
 {
@@ -68,6 +69,7 @@ static void	wait_for_children(t_cmd *cmd)
     int		status;
     pid_t	pid;
     t_cmd	*current;
+    int sig;
 
     current = cmd;
     while (current)
@@ -83,12 +85,10 @@ static void	wait_for_children(t_cmd *cmd)
 
             else if (WIFSIGNALED(status))
             {
-                int sig = WTERMSIG(status);
-
-                if (sig == SIGINT)       // ctrl-C
-                    write(1, "\n", 1);
-
-                else if (sig == SIGQUIT) // ctrl- 
+                sig = WTERMSIG(status);
+                if (sig == SIGINT)
+					write(1, "\n", 1); 
+                if (sig == SIGQUIT) 
                     write(1, "Quit: 3\n", 8);
 
                 current->exit_status = 128 + sig;
@@ -102,6 +102,7 @@ static void	wait_for_children(t_cmd *cmd)
 
 void execute_commands_piped(t_cmd *cmd, t_data *data)
 {
+    g_signal = SIG_CHILD;
     t_cmd	*current;
     int		pipefd[2];
     int		in_fd;
@@ -117,7 +118,12 @@ void execute_commands_piped(t_cmd *cmd, t_data *data)
     while (current)
     {
         out_fd = STDOUT_FILENO;
-        
+        if (!current->command || current->command[0] == '\0')
+        {
+            current->exit_status = 0;
+            current = current->next;
+            continue;
+        }
         if (current->pipe_output)
         {
             if (create_pipe(pipefd) == -1)
@@ -161,4 +167,5 @@ void execute_commands_piped(t_cmd *cmd, t_data *data)
     }
     
     wait_for_children(cmd);
+    g_signal = SIG_IDLE; 
 }

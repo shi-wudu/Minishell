@@ -2,35 +2,37 @@
 
 extern volatile sig_atomic_t g_signal;
 
-void    sigint_handler(int sig)
+void sigint_handler(int sig)
 {
     (void)sig;
-    g_signal = 130;
-    write(1, "\n", 1);
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
+
+    if (g_signal == SIG_IDLE)
+    {
+        write(1, "\n", 1);
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+    }
 }
+
 
 void    sigquit_handler(int sig)
 {
     (void)sig;
-    rl_on_new_line();      // bash: não faz nada no prompt
-    rl_redisplay();
 }
 
 void    sigint_heredoc(int sig)
 {
     (void)sig;
-    g_signal = 130;
+    g_signal = SIG_CHILD;
     write(1, "\n", 1);
-    close(STDIN_FILENO);   // interrompe o readline do heredoc
+    close(STDIN_FILENO);
 }
 
-void    setup_signals_interactive(void)
+void setup_signals_interactive(void)
 {
     signal(SIGINT, sigint_handler);
-    signal(SIGQUIT, sigquit_handler);
+    signal(SIGQUIT, SIG_IGN);
 }
 
 void    setup_signals_child(void)
