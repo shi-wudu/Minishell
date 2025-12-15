@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+ 
 static int is_valid_number(char *str)
 {
 	int i;

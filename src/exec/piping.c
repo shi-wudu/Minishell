@@ -57,7 +57,7 @@ static void handle_child_process(t_cmd *cmd, int in_fd, int out_fd, t_data *data
         exit(1);
     }
 }
-
+ 
 void execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
 {
     handle_child_process(cmd, in_fd, out_fd, data);

@@ -106,7 +106,6 @@ int update_or_add_var(char ***env, char *var, int *count)
         }
         i++;
     }
-
     {
         char **new_env = malloc(sizeof(char *) * (*count + 2));
         if (!new_env)

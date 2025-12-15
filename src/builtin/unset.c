@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+ 
 void	free_environment(char **env)
 {
 	int	i;

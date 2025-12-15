@@ -33,7 +33,7 @@ static int	redirect_input(char *infile)
 	close(fd);
 	return (0);
 }
-
+ 
 static int	redirect_output(char *outfile, int append)
 {
 	int	fd;

@@ -40,7 +40,7 @@ int	builtin_echo(char **argv)
 
 	newline = 1;
 	i = 1;
-	if (argv[i] && ft_strcmp(argv[i], "-n") == 0)
+	while (argv[i] && echo_nnn_handler(argv[i]))
 	{
 		newline = 0;
 		i++;
@@ -85,7 +85,7 @@ int	builtin_cd(char **argv, char **env)
 	}
 	return (0);
 }
-
+ 
 int	builtin_pwd(void)
 {
 	char	cwd[PATH_MAX];

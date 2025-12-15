@@ -17,7 +17,7 @@ static char	*check_direct_path(char *cmd)
 		return (ft_strdup(cmd));
 	return (NULL);
 }
-
+ 
 static char	*search_in_path(char *cmd, char *path_env)
 {
 	char	**path_dirs;

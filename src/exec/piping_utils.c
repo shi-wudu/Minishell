@@ -26,7 +26,7 @@ void	free_args(char **args)
     }
     free(args);
 }
-
+ 
 void	close_pipes(int *pipefd)
 {
     if (pipefd)

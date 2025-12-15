@@ -4,7 +4,7 @@ CFLAGS      = -Wall -Wextra -Werror -Iinclude
 RM          = rm -f
 SRC_DIR     = src
 OBJ_DIR     = obj
-
+ 
 SRC_FILES := \
 	main.c \
 	debug.c \
