@@ -42,8 +42,13 @@ static void minishell_loop(t_data *data)
                     last = last->next;
                 data->last_exit_status = last->exit_status;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 				//printf("EXIT CODE = %d\n", data->last_exit_status); //debug para ver exit ccode se esta certo
 			}
+=======
+                //printf("EXIT CODE = %d\n", data->last_exit_status); //debug para ver exit ccode se esta certo
+            }
+>>>>>>> Stashed changes
 =======
                 //printf("EXIT CODE = %d\n", data->last_exit_status); //debug para ver exit ccode se esta certo
             }

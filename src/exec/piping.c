@@ -13,6 +13,7 @@
 #include <errno.h>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 static void handle_child_process(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
 {
     char    *path;
@@ -167,5 +168,7 @@ void execute_commands_piped(t_cmd *cmd, t_data *data)
     wait_for_children(cmd);
     setup_signals_interactive();
 }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

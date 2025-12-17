@@ -10,5 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
+#include <errno.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdlib.h>
 
+<<<<<<< Updated upstream
 
+=======
+
+>>>>>>> Stashed changes
