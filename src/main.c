@@ -34,15 +34,20 @@ static void minishell_loop(t_data *data)
 			expand_tokens(data->token, data);
 			data->cmd = parser(data->token);
 			//print_commands(data->cmd); // debug
-            execute_commands_piped(data->cmd, data);
+            execute_commands(data->cmd, data);
             if (data->cmd)
             {
                 t_cmd *last = data->cmd;
                 while (last->next)
                     last = last->next;
                 data->last_exit_status = last->exit_status;
+<<<<<<< Updated upstream
 				//printf("EXIT CODE = %d\n", data->last_exit_status); //debug para ver exit ccode se esta certo
 			}
+=======
+                //printf("EXIT CODE = %d\n", data->last_exit_status); //debug para ver exit ccode se esta certo
+            }
+>>>>>>> Stashed changes
 		}
 		cleanup_iteration(data);
 	}

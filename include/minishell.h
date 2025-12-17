@@ -105,7 +105,7 @@ t_prog	*prog_data(void);
 /*=============================*/
 
 /* debug */
-//void	execute_commands(t_cmd *cmds, t_data *data);
+void	execute_commands(t_cmd *cmd, t_data *data);
 void	print_tokens(t_token *list);
 void	print_commands(t_cmd *cmd);
 

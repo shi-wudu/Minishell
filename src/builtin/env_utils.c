@@ -157,33 +157,22 @@ int	builtin_env(char **env)
 
 char **dup_env(char **envp)
 {
-    int     count = 0;
-    char    **new_env;
-    int     i;
+    int i = 0;
+    char **copy;
 
     if (!envp)
-        return NULL;
-
-    while (envp[count])
-        count++;
-
-    new_env = malloc((count + 1) * sizeof(char *));
-    if (!new_env)
-        return NULL;
-
+        return (NULL);
+    while (envp[i])
+        i++;
+    copy = malloc(sizeof(char *) * (i + 1));
+    if (!copy)
+        return (NULL);
     i = 0;
-    while (i < count)
+    while (envp[i])
     {
-        new_env[i] = ft_strdup(envp[i]);
-        if (!new_env[i])
-        {
-            while (i-- > 0)
-                free(new_env[i]);
-            free(new_env);
-            return NULL;
-        }
+        copy[i] = ft_strdup(envp[i]);
         i++;
     }
-    new_env[count] = NULL;
-    return new_env;
+    copy[i] = NULL;
+    return (copy);
 }

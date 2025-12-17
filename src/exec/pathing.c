@@ -13,7 +13,7 @@
 
 static char	*check_direct_path(char *cmd)
 {
-	if (access(cmd, F_OK) == 0)
+	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	return (NULL);
 }
@@ -24,6 +24,7 @@ static char	*search_in_path(char *cmd, char *path_env)
 	char	*full_path;
 	char	*tmp;
 	int		i;
+	char    *dir;
 
 	path_dirs = ft_split(path_env, ':');
 	if (!path_dirs)
@@ -31,14 +32,15 @@ static char	*search_in_path(char *cmd, char *path_env)
 	i = 0;
 	while (path_dirs[i])
 	{
-		tmp = ft_strjoin(path_dirs[i], "/");
+		dir = (path_dirs[i][0] == '\0') ? "." : path_dirs[i];
+		tmp = ft_strjoin(dir, "/");
 		if (!tmp)
 			return (free_str_tab(path_dirs), NULL);
 		full_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (!full_path)
 			return (free_str_tab(path_dirs), NULL);
-		if (access(full_path, F_OK) == 0)
+		if (access(full_path, X_OK) == 0)
 			return (free_str_tab(path_dirs), full_path);
 		free(full_path);
 		i++;
