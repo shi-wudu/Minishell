@@ -165,10 +165,15 @@ char	*resolve_path(char *cmd, char **envp);
 int		apply_redirections(t_cmd *cmd, char **envp, int last_exit_status);
 void	free_args(char **args);
 void	close_pipes(int *pipefd);
-void	close_all_fds(int *pipefd, int in_fd, int out_fd);
 int		create_pipe(int *pipefd);
 void	execute_commands_piped(t_cmd *cmd, t_data *data);
 void	execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data);
+
+/* Piping Utils  */
+int	count_cmds(t_cmd *cmd);
+t_cmd **collect_cmds(t_cmd *cmd, int n);
+void	close_all_pipes(int *pipes, int n);
+void	kill_children(pid_t *pids, int count);
 
 /* signals */
 void    setup_signals_interactive(void);

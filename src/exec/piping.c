@@ -10,165 +10,169 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-#include <errno.h>
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-static void handle_child_process(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
+// cria (n - 1) pipes e devolve um array linear de fds (2*pairs)
+// devolve NULL em erro
+static int	*create_pipes(int n)
 {
-    char    *path;
+    int	*pipes;
+    int	i;
 
-    if (apply_redirections(cmd, data->envp, data->last_exit_status) == -1)
-        exit(1);
-    
-    if (in_fd != STDIN_FILENO)
+    if (n < 2)
+        return (NULL);
+    pipes = malloc(sizeof(int) * 2 * (n - 1));
+    if (!pipes)
+        return (NULL);
+    i = 0;
+    while (i < n - 1)
     {
-        if (dup2(in_fd, STDIN_FILENO) == -1)
+        if (pipe(&pipes[i * 2]) == -1)
         {
-            perror("dup2");
-            exit(1);
-        }
-        close(in_fd);
-    }
-
-    if (out_fd != STDOUT_FILENO)
-    {
-        if (dup2(out_fd, STDOUT_FILENO) == -1)
-        {
-            perror("dup2");
-            exit(1);
-        }
-        close(out_fd);
-    }
-
-    if (is_builtin(cmd->command))
-        exit(exec_builtin(cmd->args, &data->envp, false));
-
-    path = resolve_path(cmd->command, data->envp);
-    if (!path)
-    {
-        ft_putstr_fd("minishell: command not found: ", 2);
-        ft_putendl_fd(cmd->command, 2);
-        exit(127);
-    }
-    
-    if (execve(path, cmd->args, data->envp) == -1)
-    {
-        perror("execve");
-        free(path);
-        exit(1);
-    }
-}
- 
-void execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
-{
-    handle_child_process(cmd, in_fd, out_fd, data);
-}
-
-static void	wait_for_children(t_cmd *cmd)
-{
-    int		status;
-    pid_t	pid;
-    t_cmd	*current;
-    int sig;
-
-    current = cmd;
-    while (current)
-    {
-        if (current->exit_status != 0)
-        {
-            pid = waitpid(current->exit_status, &status, 0);
-            if (pid == -1)
-                break;
-
-            if (WIFEXITED(status))
-                current->exit_status = WEXITSTATUS(status);
-
-            else if (WIFSIGNALED(status))
+            // fechar fds ja criados em caso de erro
+            while (--i >= 0)
             {
-                sig = WTERMSIG(status);
-                if (sig == SIGINT)
-					write(1, "\n", 1); 
-                if (sig == SIGQUIT) 
-                    write(1, "Quit: 3\n", 8);
-
-                current->exit_status = 128 + sig;
+                close(pipes[i * 2]);
+                close(pipes[i * 2 + 1]);
             }
-            else
-                current->exit_status = 1;
+            free(pipes);
+            return (NULL);
         }
-        current = current->next;
+        i++;
     }
+    return (pipes);
 }
 
-void execute_commands_piped(t_cmd *cmd, t_data *data)
+// cria um filho para o indice idx do pipeline
+// o filho fica com in_fd/out_fd (read/write ends) e fecha os outros fds
+// retorna pid do filho no parent, -1 em erro
+static pid_t	spawn_pipeline_child(t_cmd *cmd, int *pipes, int idx, int n, t_data *data)
 {
-    t_cmd	*current;
-    int		pipefd[2];
+    pid_t	pid;
     int		in_fd;
     int		out_fd;
-    pid_t	pid;
+    int		j;
+
+    in_fd = -1;
+    out_fd = -1;
+    if (idx > 0)
+        in_fd = pipes[(idx - 1) * 2];
+    if (idx < n - 1)
+        out_fd = pipes[idx * 2 + 1];
+    pid = fork();
+    if (pid == -1)
+        return (-1);
+    if (pid == 0)
+    {
+        // child: fechar fds que nao sao o in_fd/out_fd
+        j = 0;
+        while (j < n - 1)
+        {
+            if ((idx - 1) != j)
+                close(pipes[j * 2]);
+            if (idx != j)
+                close(pipes[j * 2 + 1]);
+            j++;
+        }
+        // execute_child vai dup2, aplicar redirs e exec/exit
+        execute_child(cmd, in_fd, out_fd, data);
+        exit(127);
+    }
+    return (pid);
+}
+
+// spawn de todos os filhos do pipeline; devolve quantos filhos foram criados (0..n)
+// em caso de erro devolve o numero criado ate ao momento (pids preenchidos de 0..created-1)
+static int	spawn_all_children(t_cmd **cmds, int *pipes, pid_t *pids, int n, t_data *data)
+{
+    int	i;
+    pid_t	p;
+
+    i = 0;
+    while (i < n)
+    {
+        p = spawn_pipeline_child(cmds[i], pipes, i, n, data);
+        if (p == -1)
+            return (i);
+        pids[i] = p;
+        i++;
+    }
+    return (n);
+}
+
+// espera count filhos e grava exit_status em cada comando
+static void	wait_and_collect(pid_t *pids, t_cmd **cmds, int count, t_data *data)
+{
+    int	i;
+    int	status;
+    int	code;
+
+    i = 0;
+    while (i < count)
+    {
+        status = 0;
+        if (waitpid(pids[i], &status, 0) == -1)
+        {
+            cmds[i]->exit_status = 1;
+        }
+        else if (WIFEXITED(status))
+        {
+            code = WEXITSTATUS(status);
+            cmds[i]->exit_status = code;
+        }
+        else if (WIFSIGNALED(status))
+            cmds[i]->exit_status = 128 + WTERMSIG(status);
+        i++;
+    }
+    if (data && count > 0)
+        data->last_exit_status = cmds[count - 1]->exit_status;
+}
+
+// executor principal de pipelines: coordena criacao de pipes, fork e espera
+// se nao houver comando retorna; se houver erros, limpa recursos antes de sair
+void	execute_commands_piped(t_cmd *cmd, t_data *data)
+{
+    int		n;
+    t_cmd	**cmds;
+    int		*pipes;
+    pid_t	*pids;
+    int		spawned;
+    int		i;
 
     if (!cmd)
         return ;
-    setup_signals_parent_exec();
-    current = cmd;
-    in_fd = STDIN_FILENO;
-    while (current)
+    n = count_cmds(cmd);
+    cmds = collect_cmds(cmd, n);
+    if (!cmds)
+        return ;
+    pipes = create_pipes(n);
+    pids = malloc(sizeof(pid_t) * n);
+    if (!pids)
     {
-        out_fd = STDOUT_FILENO;
-        if (!current->command || current->command[0] == '\0')
-        {
-            current->exit_status = 0;
-            current = current->next;
-            continue;
-        }
-        if (current->pipe_output)
-        {
-            if (create_pipe(pipefd) == -1)
-                return ;
-            out_fd = pipefd[1];
-        }
-        
-        if (is_builtin(current->command) && !current->pipe_output && current->prev == NULL)
-        {
-            current->exit_status = exec_builtin(current->args, (char ***)&data->envp, true);
-            if (in_fd != STDIN_FILENO)
-                close(in_fd);
-        }
-        else
-        {
-            pid = fork();
-            if (pid == -1)
-            {
-                perror("fork");
-                return ;
-            }
-            
-            if (pid == 0)
-            {
-                setup_signals_child();
-                execute_child(current, in_fd, out_fd, data);
-            }
-            else
-                current->exit_status = pid;
-                            
-            if (in_fd != STDIN_FILENO)
-                close(in_fd);
-            if (out_fd != STDOUT_FILENO)
-                close(out_fd);
-            
-            if (current->pipe_output)
-                in_fd = pipefd[0];
-        }
-        
-        current = current->next;
+        free(cmds);
+        close_all_pipes(pipes, n);
+        free(pipes);
+        return ;
     }
-    
-    wait_for_children(cmd);
-    setup_signals_interactive();
+    // inicializa pids a 0 para evitar lixo em caminhos de erro
+    i = 0;
+    while (i < n)
+        pids[i++] = 0;
+    // spawn children: devolve quantos foram efectivamente criados
+    spawned = spawn_all_children(cmds, pipes, pids, n, data);
+    // parent fecha todos os fds de pipes assim que os filhos foram criados (ou tentou criar)
+    close_all_pipes(pipes, n);
+    free(pipes);
+    if (spawned != n)
+    {
+        // erro no fork em algum ponto: matar e esperar apenas os spawnados
+        kill_children(pids, spawned);
+        wait_and_collect(pids, cmds, spawned, data);
+        free(pids);
+        free(cmds);
+        return ;
+    }
+    // esperar todos os filhos normalmente
+    wait_and_collect(pids, cmds, n, data);
+    free(pids);
+    free(cmds);
 }
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
