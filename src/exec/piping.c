@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-extern volatile sig_atomic_t g_signal;
-
 static void handle_child_process(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
 {
     char    *path;
@@ -102,7 +100,6 @@ static void	wait_for_children(t_cmd *cmd)
 
 void execute_commands_piped(t_cmd *cmd, t_data *data)
 {
-    g_signal = SIG_CHILD;
     t_cmd	*current;
     int		pipefd[2];
     int		in_fd;
@@ -111,10 +108,9 @@ void execute_commands_piped(t_cmd *cmd, t_data *data)
 
     if (!cmd)
         return ;
-    
+    setup_signals_parent_exec();
     current = cmd;
     in_fd = STDIN_FILENO;
-    
     while (current)
     {
         out_fd = STDOUT_FILENO;
@@ -167,5 +163,5 @@ void execute_commands_piped(t_cmd *cmd, t_data *data)
     }
     
     wait_for_children(cmd);
-    g_signal = SIG_IDLE; 
+    setup_signals_interactive();
 }

@@ -13,21 +13,19 @@ SRC_FILES := \
     builtin/exit_export.c \
     builtin/env_utils.c \
     builtin/unset.c \
-	parser/parser_pipe.c \
-	parser/parser_redirects.c \
+	parser/parser_redirects_pipe.c \
 	parser/parser_utils.c \
 	parser/parser_word.c \
 	parser/parser.c \
 	lexer/lexer_main.c \
-	lexer/lexer_tokenize.c \
 	lexer/lexer_utils.c \
 	lexer/lexer_words.c \
 	lexer/lexer_redirects.c \
 	lexer/lexer_quotes.c \
-	lexer/lexer_tokens_list.c \
-	lexer/lexer_tokens_check.c \
+	lexer/tokens/tokens_list.c \
+	lexer/tokens/tokens_check.c \
 	utils/utils.c \
-	expander/expander_main.c \
+	expander/expander.c \
 	expander/expander_utils.c \
 	exec/executer.c \
     exec/pathing.c \

@@ -43,25 +43,18 @@ static int	count_args(t_token *tk)
 	return (count);
 }
 
+static void	init_args_zero(t_cmd *cmd)
+{
+	if (cmd->command)
+		cmd->args[0] = ft_strdup(cmd->command);
+	else
+		cmd->args[0] = ft_strdup("");
+}
 
-
-void	parse_word(t_cmd *cmd, t_token **tk)
+static void	fill_args(t_cmd *cmd, t_token **tk)
 {
 	int		i;
-	int		argc;
 	char	*arg;
-
-	if (!cmd || !tk || !*tk)
-		return ;
-
-	set_command(cmd, tk);
-
-	argc = count_args(*tk);
-	cmd->args = malloc(sizeof(char *) * (argc + 2));
-	if (!cmd->args)
-		return ;
-
-	cmd->args[0] = ft_strdup(cmd->command ? cmd->command : "");
 
 	i = 1;
 	while (*tk && (*tk)->type != PIPE
@@ -81,4 +74,23 @@ void	parse_word(t_cmd *cmd, t_token **tk)
 	}
 	cmd->args[i] = NULL;
 }
+
+void	parse_word(t_cmd *cmd, t_token **tk)
+{
+	int	argc;
+
+	if (!cmd || !tk || !*tk)
+		return ;
+
+	set_command(cmd, tk);
+
+	argc = count_args(*tk);
+	cmd->args = malloc(sizeof(char *) * (argc + 2));
+	if (!cmd->args)
+		return ;
+
+	init_args_zero(cmd);
+	fill_args(cmd, tk);
+}
+
 

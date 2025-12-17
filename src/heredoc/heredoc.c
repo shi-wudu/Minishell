@@ -1,6 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
+/*   Updated: 2025/10/21 21:34:53 by seilkiv          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-extern volatile sig_atomic_t g_signal;
+#include "minishell.h"
 
 static int open_heredoc_file(char **tmp_file)
 {
@@ -30,14 +40,19 @@ char *read_heredoc(char *delimiter, bool expand, char **envp, int last_exit_stat
     while (1)
     {
         line = readline("> ");
-        if (g_signal == 130 || heredoc_should_stop(line, delimiter))
+        if (prog_data()->heredoc_interrupted || heredoc_should_stop(line, delimiter))
             break;
         write_heredoc_line(fd, line, envp, expand, last_exit_status);
         free(line);
     }
     close(fd);
     setup_signals_interactive();
-    if (g_signal == 130)
-        return (unlink(tmp_file), free(tmp_file), NULL);
+    if (prog_data()->heredoc_interrupted)
+    {
+        prog_data()->heredoc_interrupted = 0;
+        unlink(tmp_file);
+        free(tmp_file);
+        return (NULL);
+    }
     return (tmp_file);
 }

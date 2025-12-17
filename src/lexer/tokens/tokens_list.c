@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_token	*new_token(const char *value, t_token_type type)
+static t_token	*new_token(const char *value, t_token_type type)
 {
 	t_token	*token;
 

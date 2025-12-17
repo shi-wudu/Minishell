@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	extract_quoted(t_token **tokens, const char *input, int start)
+static int	extract_quoted(t_token **tokens, const char *input, int start)
 {
 	char	quote;
 	int		i;
@@ -31,8 +31,6 @@ int	extract_quoted(t_token **tokens, const char *input, int start)
 	str = ft_strndup(input + start + 1, i - start - 1);
 	if (!str)
 		return (-1);
-
-	//Escolher quotes
 	if (quote == '\'')
 		type = STRING_SQUOTE;
 	else

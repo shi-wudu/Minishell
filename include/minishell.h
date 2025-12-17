@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef _POSIX_C_SOURCE
+# define _POSIX_C_SOURCE 200809L
+#endif
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -27,10 +30,6 @@
 # include <sys/wait.h>
 # include <limits.h>
 # include "../libft/libft.h"
-
-#define SIG_IDLE   0
-#define SIG_CHILD  1
-#define SIG_HDOC   2
 
 
 /*=============================*/
@@ -93,6 +92,14 @@ typedef struct s_data
 	int			last_exit_status;
 }	t_data;
 
+typedef struct s_prog
+{
+	int	exit_status;
+	int	heredoc_interrupted;
+}	t_prog;
+
+t_prog	*prog_data(void);
+
 /*=============================*/
 /*            FILES            */
 /*=============================*/
@@ -103,14 +110,12 @@ void	print_tokens(t_token *list);
 void	print_commands(t_cmd *cmd);
 
 /* lexer */
-t_token	*tokenize(const char *input);
+bool	lexer(t_data *data);
 int		is_redirect(char c);
 int		extract_word(t_token **tokens, const char *input, int start);
-int		extract_quoted(t_token **tokens, const char *input, int start);
 int		handle_redirects(t_token **tokens, const char *input, int i);
 int		skip_spaces(const char *str, int i);
 void	add_token(t_token **tokens, const char *value, t_token_type type);
-t_token	*new_token(const char *value, t_token_type type);
 void	free_tokens(t_token *list);
 bool	has_syntax_error(t_token *list);
 int		handle_quote_case(t_token **tokens, const char *input, int i);
@@ -118,10 +123,9 @@ int		handle_quote_case(t_token **tokens, const char *input, int i);
 /* expander */
 void	expand_tokens(t_token *tokens, t_data *data);
 char	*append_char(char *s, char c);
-char	*join_and_skip(char *result, char *str, int *i, char quote);
+char	*expand_dollar_only(const char *str,char **envp,int last_exit_status);
 
 /* parser */
-bool	lexer(t_data *data);
 t_cmd	*parser(t_token *tokens);
 void	parse_word(t_cmd *cmd, t_token **tk);
 t_cmd	*parse_pipe(t_cmd *cmd, t_token **tk);
@@ -134,6 +138,9 @@ char	*ft_strjoin_free(char *s1, const char *s2);
 /* utils */
 int		ft_is_space(char c);
 void	errmsg(const char *msg, const char *arg, bool newline);
+void	cleanup_iteration(t_data *data);
+void 	free_all(t_data *data);
+void	free_environment(char **env);
 
 /* built ins */
 int		is_builtin(char *cmd);
@@ -152,7 +159,6 @@ int		update_or_add_var(char ***env, char *var, int *count);
 /* Environment Util*/
 char	*get_env_value(char **env, char *key);
 char	**dup_env(char **envp);
-void	free_environment(char **env);
 
 /* Executing */
 char	*resolve_path(char *cmd, char **envp);
@@ -168,15 +174,13 @@ void	execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data);
 void    setup_signals_interactive(void);
 void    setup_signals_child(void);
 void    setup_signals_heredoc(void);
-void    sigint_handler(int sig);
-void    sigquit_handler(int sig);
+void	setup_signals_parent_exec(void);
 
 /* heredoc */
 char 	*gen_heredoc_filename(void);
 char 	*read_heredoc(char *delimiter, bool expand, char **envp, int last_exit_status);
 bool 	heredoc_should_stop(char *line, char *delimiter);
 void	write_heredoc_line(int fd, char *line, char **envp, bool expand, int last);
-char	*expand_dollar_only(const char *str,char **envp,int last_exit_status);
 
 
 

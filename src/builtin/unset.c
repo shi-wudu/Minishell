@@ -11,21 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
- 
-void	free_environment(char **env)
-{
-	int	i;
-
-	if (!env)
-		return ;
-	i = 0;
-	while (env[i])
-	{
-		free(env[i]);
-		i++;
-	}
-	free(env);
-}
 
 static int	does_env_exist(char *env_entry, char *var_name)
 {
