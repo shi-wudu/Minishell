@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-
 // se for necessario configurar stdin/stdout vindos de pipes, faz dup2 e fecha fds
 static void	child_setup_fds(int in_fd, int out_fd)
 {
@@ -29,13 +28,12 @@ static void	child_setup_fds(int in_fd, int out_fd)
 
 // no filho: repoe sinais para o comportamento por omissao e aplica redirecoes
 // se apply_redirections falhar termina o filho imediatamente
-static void	child_prepare_and_redir(t_cmd *cmd, t_data *data)
+static void	child_prepare_and_redir(t_cmd *cmd)
 {
-    // repoe sinais para o comportamento por omissao nos filhos
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
+    int ret;
     // aplica redirecoes (vai dup2 e fechar fds). apply_redirections espera t_cmd*
-    if (apply_redirections(cmd, data->envp, data->last_exit_status) != 0)
+    ret = apply_redirections(cmd);
+    if (ret != 0)
         exit(1);
 }
 
@@ -53,12 +51,12 @@ static void	child_exec_external(t_cmd *cmd, t_data *data)
 {
     char	*path;
 
-    ft_putstr_fd("debug: child_exec_external cmd=", 2);
+    /*ft_putstr_fd("debug: child_exec_external cmd=", 2);
     if (cmd->command)
         ft_putendl_fd(cmd->command, 2);
     else
         ft_putendl_fd("(null)", 2);
-
+    */
     path = resolve_path(cmd->command, data->envp);
     if (!path)
     {
@@ -87,8 +85,9 @@ static void	child_exec_external(t_cmd *cmd, t_data *data)
 // o filho deve terminar com exit e nao voltar ao pai
 void	execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data)
 {
+    setup_signals_child();
     child_setup_fds(in_fd, out_fd);
-    child_prepare_and_redir(cmd, data);
+    child_prepare_and_redir(cmd);
     if (is_builtin(cmd->command))
         child_exec_builtin(cmd, data);
     else
@@ -137,6 +136,7 @@ static int	wait_for_child(pid_t pid)
 {
     int		status;
     pid_t	w;
+    int sig;
 
     status = 0;
     while ((w = waitpid(pid, &status, 0)) == -1 && errno == EINTR)
@@ -146,7 +146,15 @@ static int	wait_for_child(pid_t pid)
     if (WIFEXITED(status))
         return (WEXITSTATUS(status));
     if (WIFSIGNALED(status))
+    {
+        sig = WTERMSIG(status);
+
+        if (sig == SIGINT)
+            write(1, "\n", 1);
+        else if (sig == SIGQUIT)
+            write(1, "Quit (core dumped)\n", 20);
         return (128 + WTERMSIG(status));
+    }
     return (1);
 }
 
@@ -188,14 +196,19 @@ static void	execute_main(t_cmd *cmd, t_data *data)
 
 // entrada principal: delega pipelines, executa builtin no pai quando seguro
 // senao cria filhos para cada comando e actualiza data->last_exit_status
-void	execute_commands(t_cmd *cmd, t_data *data)
+int     execute_commands(t_cmd *cmd, t_data *data)
 {
     t_cmd	*current;
     int		last_status;
+    int     ret;
 
     if (!cmd)
-        return ;
-    ft_putstr_fd("debug: execute_commands cmd=", 2);
+        return (0);
+
+    ret = prepare_heredocs(cmd, data);
+    if (ret == 130)
+        return (130);
+    /*ft_putstr_fd("debug: execute_commands cmd=", 2);
     if (cmd->command)
         ft_putendl_fd(cmd->command, 2);
     else
@@ -204,12 +217,12 @@ void	execute_commands(t_cmd *cmd, t_data *data)
     {
         ft_putstr_fd("debug: envp[0]=", 2);
         ft_putendl_fd(data->envp[0], 2);
-    }
+    }*/
     // se houver pipeline, delega para o executor das pipes
     if (cmd->next)
     {
         execute_commands_piped(cmd, data);
-        return ;
+        return (1);
     }
     current = cmd;
     // se for builtin isolado sem redirs executa no processo pai
@@ -218,8 +231,11 @@ void	execute_commands(t_cmd *cmd, t_data *data)
         last_status = exec_builtin(current->args, &data->envp, true);
         current->exit_status = last_status;
         data->last_exit_status = last_status;
-        return ;
+        return (1);
     }
+    setup_signals_parent_exec();
     // senao spawn+wait para cada comando (child faz redirs/exec)
     execute_main(current, data);
+    setup_signals_interactive();
+    return(1);
 }

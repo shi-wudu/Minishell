@@ -138,6 +138,7 @@ void	execute_commands_piped(t_cmd *cmd, t_data *data)
     int		spawned;
     int		i;
 
+    setup_signals_parent_exec();
     if (!cmd)
         return ;
     n = count_cmds(cmd);
@@ -173,6 +174,7 @@ void	execute_commands_piped(t_cmd *cmd, t_data *data)
     }
     // esperar todos os filhos normalmente
     wait_and_collect(pids, cmds, n, data);
+    setup_signals_interactive();
     free(pids);
     free(cmds);
 }

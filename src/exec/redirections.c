@@ -63,19 +63,20 @@ static int	redirect_output(char *outfile, int append)
 	return (0);
 }
 
-int apply_redirections(t_cmd *cmd, char **envp, int last_exit_status)
+int apply_redirections(t_cmd *cmd)
 {
-    int fd;
-
     if (!cmd)
         return 0;
-
-    if (cmd->io.heredoc)
+	//int fd; esta parte esta no heredoc dividida
+    /*if (cmd->io.heredoc)
     {
         char *file = read_heredoc(cmd->io.heredoc_delimiter, cmd->io.heredoc_expand, envp, last_exit_status);
-        if (!file)
-            return -1;
-
+		if (!file)
+		{
+			if (g_signal == SIGINT)
+				return 130;
+			return -1;
+		}
         fd = open(file, O_RDONLY);
         if (fd == -1)
         {
@@ -94,7 +95,7 @@ int apply_redirections(t_cmd *cmd, char **envp, int last_exit_status)
         close(fd);
         unlink(file);   // remove ficheiro temporário
         free(file);
-    }
+    }*/
     else if (cmd->io.infile)
     {
         if (redirect_input(cmd->io.infile) == -1)

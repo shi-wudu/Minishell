@@ -92,20 +92,14 @@ typedef struct s_data
 	int			last_exit_status;
 }	t_data;
 
-typedef struct s_prog
-{
-	int	exit_status;
-	int	heredoc_interrupted;
-}	t_prog;
-
-t_prog	*prog_data(void);
-
 /*=============================*/
 /*            FILES            */
 /*=============================*/
 
+/* global variable */
+extern volatile sig_atomic_t g_signal;
+
 /* debug */
-void	execute_commands(t_cmd *cmd, t_data *data);
 void	print_tokens(t_token *list);
 void	print_commands(t_cmd *cmd);
 
@@ -161,8 +155,9 @@ char	*get_env_value(char **env, char *key);
 char	**dup_env(char **envp);
 
 /* Executing */
+int		execute_commands(t_cmd *cmd, t_data *data);
 char	*resolve_path(char *cmd, char **envp);
-int		apply_redirections(t_cmd *cmd, char **envp, int last_exit_status);
+int		apply_redirections(t_cmd *cmd);
 void	free_args(char **args);
 void	close_pipes(int *pipefd);
 int		create_pipe(int *pipefd);
@@ -186,7 +181,7 @@ char 	*gen_heredoc_filename(void);
 char 	*read_heredoc(char *delimiter, bool expand, char **envp, int last_exit_status);
 bool 	heredoc_should_stop(char *line, char *delimiter);
 void	write_heredoc_line(int fd, char *line, char **envp, bool expand, int last);
-
+int		prepare_heredocs(t_cmd *cmd, t_data *data);
 
 
 #endif

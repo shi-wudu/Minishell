@@ -12,10 +12,12 @@
 
 #include "minishell.h"
 
+volatile sig_atomic_t g_signal = 0;
+
 static void	sigint_interactive(int sig)
 {
 	(void)sig;
-	prog_data()->exit_status = 130;
+	g_signal = SIGINT;
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -25,7 +27,7 @@ static void	sigint_interactive(int sig)
 static void	sigint_heredoc(int sig)
 {
 	(void)sig;
-	prog_data()->heredoc_interrupted = 1;
+	g_signal = SIGINT;
 	write(1, "\n", 1);
 	close(STDIN_FILENO);
 }
