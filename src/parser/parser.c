@@ -25,7 +25,7 @@ static t_cmd	*init_new_cmd(t_cmd **head)
 	return (new);
 }
 
-static void	handle_token(t_cmd **current, t_token **tk)
+static void	handle_token(t_cmd **current, t_token **tk, t_data *data)
 {
 	if ((*tk)->type == WORD)
 		parse_word(*current, tk);
@@ -33,12 +33,12 @@ static void	handle_token(t_cmd **current, t_token **tk)
 		*current = parse_pipe(*current, tk);
 	else if ((*tk)->type == INPUT || (*tk)->type == TRUNC
 		|| (*tk)->type == APPEND || (*tk)->type == HEREDOC)
-		parse_redirect(*current, tk);
+		parse_redirect(*current, tk, data);
 	else
 		*tk = (*tk)->next;
 }
 
-t_cmd	*parser(t_token *tokens)
+t_cmd	*parser(t_token *tokens, t_data *data)
 {
 	t_cmd	*head;
 	t_cmd	*current;
@@ -47,7 +47,7 @@ t_cmd	*parser(t_token *tokens)
 	head = NULL;
 	current = NULL;
 	tk = tokens;
-	while (tk && tk->type != END)
+	while (tk && tk->type != END && !data->parse_error)
 	{
 		if (!current)
 		{
@@ -55,7 +55,7 @@ t_cmd	*parser(t_token *tokens)
 			if (!current)
 				return (NULL);
 		}
-		handle_token(&current, &tk);
+		handle_token(&current, &tk, data);
 	}
 	return (head);
 }

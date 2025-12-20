@@ -18,27 +18,28 @@ static void	set_outfile(t_cmd *cmd, char *filename, bool append)
 	cmd->io.append = append;
 }
 
-void	parse_redirect(t_cmd *cmd, t_token **tk)
+void	parse_redirect(t_cmd *cmd, t_token **tk, t_data *data)
 {
 	char	*filename;
 
+	if (!(*tk)->next || (*tk)->next->type != WORD)
+	{
+		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
+			2);
+		data->parse_error = true;
+		*tk = NULL;
+		return ;
+	}
 	filename = (*tk)->next->value;
 	if ((*tk)->type == INPUT)
 		cmd->io.infile = ft_strdup(filename);
-
 	else if ((*tk)->type == TRUNC)
 		set_outfile(cmd, filename, false);
-
 	else if ((*tk)->type == APPEND)
 		set_outfile(cmd, filename, true);
-		
 	else if ((*tk)->type == HEREDOC)
 	{
-		if ((*tk)->next->type == STRING_DQUOTE || (*tk)->next->type == STRING_SQUOTE)
-			cmd->io.heredoc_expand = false;
-		else
-			cmd->io.heredoc_expand = true;
-
+		cmd->io.heredoc_expand = !(*tk)->next->no_expand;
 		cmd->io.heredoc_delimiter = ft_strdup(filename);
 		cmd->io.heredoc = true;
 	}

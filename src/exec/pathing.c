@@ -35,17 +35,17 @@ static char	*search_in_path(char *cmd, char *path_env)
 		dir = (path_dirs[i][0] == '\0') ? "." : path_dirs[i];
 		tmp = ft_strjoin(dir, "/");
 		if (!tmp)
-			return (free_str_tab(path_dirs), NULL);
+			return (free_args(path_dirs), NULL);
 		full_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (!full_path)
-			return (free_str_tab(path_dirs), NULL);
+			return (free_args(path_dirs), NULL);
 		if (access(full_path, X_OK) == 0)
-			return (free_str_tab(path_dirs), full_path);
+			return (free_args(path_dirs), full_path);
 		free(full_path);
 		i++;
 	}
-	free_str_tab(path_dirs);
+	free_args(path_dirs);
 	return (NULL);
 }
 

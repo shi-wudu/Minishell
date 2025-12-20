@@ -12,33 +12,58 @@
 
 #include "minishell.h"
 
-static void	handle_dollar(const char *str, char **envp, int *i, char **res, int last)
+static void	expand_exit_status(char **res, int last, int *i)
 {
-	int		start;
+	char	*num;
+
+	num = ft_itoa(last);
+	*res = ft_strjoin_free(*res, num);
+	free(num);
+	*i += 2;
+}
+
+static void	append_env_value(char **res, char **envp,
+		const char *str, int start, int end)
+{
 	char	*name;
 	char	*val;
-	char	*num;
+
+	name = ft_substr(str, start, end - start);
+	if (!name)
+		return ;
+	val = get_env_value(envp, name);
+	if (val)
+		*res = ft_strjoin_free(*res, val);
+	else
+		*res = ft_strjoin_free(*res, "");
+	free(name);
+}
+
+static void	handle_dollar(const char *str, char **envp,
+		int *i, char **res, int last)
+{
+	int	start;
 
 	if (str[*i + 1] == '?')
 	{
-		num = ft_itoa(last);
-		*res = ft_strjoin_free(*res, num);
-		free(num);
-		*i += 2;
+		expand_exit_status(res, last, i);
+		return ;
+	}
+	if (!str[*i + 1])
+	{
+		*res = ft_strjoin_free(*res, "$");
+		(*i)++;
 		return ;
 	}
 	start = ++(*i);
 	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
 		(*i)++;
 	if (start == *i)
-		*res = ft_strjoin_free(*res, "$");
-	else
 	{
-		name = ft_substr(str, start, *i - start);
-		val = get_env_value(envp, name);
-		*res = ft_strjoin_free(*res, val ? val : "");
-		free(name);
+		*res = ft_strjoin_free(*res, "$");
+		return ;
 	}
+	append_env_value(res, envp, str, start, *i);
 }
 
 char	*expand_dollar_only(const char *str, char **envp, int last)
@@ -61,26 +86,24 @@ char	*expand_dollar_only(const char *str, char **envp, int last)
 	return (res);
 }
 
-void expand_tokens(t_token *tokens, t_data *data)
+void	expand_tokens(t_token *tokens, t_data *data)
 {
-    while (tokens)
-    {
-        if (tokens->type == HEREDOC && tokens->next)
-        {
-            tokens = tokens->next->next;
-            continue;
-        }
+	char	*expanded;
 
-        if (tokens->type == WORD || tokens->type == STRING_DQUOTE)
-        {
-            char *expanded = expand_dollar_only(
-                tokens->value,
-                data->envp,
-                data->last_exit_status
-            );
-            free(tokens->value);
-            tokens->value = expanded;
-        }
-        tokens = tokens->next;
-    }
+	while (tokens)
+	{
+		if (tokens->type == HEREDOC && tokens->next)
+		{
+			tokens = tokens->next->next;
+			continue ;
+		}
+		if (tokens->type == WORD && !tokens->no_expand)
+		{
+			expanded = expand_dollar_only(tokens->value, data->envp,
+					data->last_exit_status);
+			free(tokens->value);
+			tokens->value = expanded;
+		}
+		tokens = tokens->next;
+	}
 }

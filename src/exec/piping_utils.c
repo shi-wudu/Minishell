@@ -11,21 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_args(char **args)
-{
-    char	**temp;
-
-    temp = args;
-    if (!args)
-        return ;
-    while (*temp)
-    {
-        free(*temp);
-        temp++;
-    }
-    free(args);
-}
  
 // conta quantos comandos ha na lista ligada
 int	count_cmds(t_cmd *cmd)

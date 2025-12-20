@@ -17,14 +17,8 @@ SRC_FILES := \
 	parser/parser_utils.c \
 	parser/parser_word.c \
 	parser/parser.c \
-	lexer/lexer_main.c \
-	lexer/lexer_utils.c \
-	lexer/lexer_words.c \
-	lexer/lexer_redirects.c \
-	lexer/lexer_quotes.c \
-	lexer/tokens/tokens_list.c \
-	lexer/tokens/tokens_check.c \
 	utils/utils.c \
+	utils/check_error.c \
 	expander/expander.c \
 	expander/expander_utils.c \
 	exec/executer.c \
@@ -35,7 +29,12 @@ SRC_FILES := \
 	signal/signals.c \
 	heredoc/heredoc.c \
 	heredoc/heredoc_utils.c \
-	heredoc/heredoc_write.c
+	heredoc/heredoc_write.c \
+	lexer/lexer_identifier.c \
+	lexer/lexer_separator.c \
+	lexer/lexer_token.c \
+	lexer/lexer_utils.c \
+	lexer/lexer.c
 
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))

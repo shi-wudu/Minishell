@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_utils.c                                      :+:      :+:    :+:   */
+/*   lexer_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,20 +12,46 @@
 
 #include "minishell.h"
 
-int	ft_is_quote(char c)
+t_token	*ft_new_token(char *value, t_token_type type)
 {
-	return (c == '\'' || c == '"');
+	t_token	*new;
+
+	new = ft_calloc(1, sizeof(t_token));
+	if (!new)
+		return (NULL);
+	new->value = value;
+	new->type = type;
+	return (new);
 }
 
-void	ft_skip_spaces(char **line)
+void	ft_token_list_add_back(t_token **lst, t_token *new)
 {
-	while (**line && ft_is_space(**line))
-		(*line)++;
+	t_token	*cur;
+
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	cur = *lst;
+	while (cur->next)
+		cur = cur->next;
+	cur->next = new;
+	new->prev = cur;
 }
 
-void	ft_print_quote_err(char c)
+void	ft_clear_token_list(t_token **lst)
 {
-	ft_putstr_fd("minishell: unexpected EOF while looking for matching `", 2);
-	ft_putchar_fd(c, 2);
-	ft_putstr_fd("'\n", 2);
+	t_token	*tmp;
+	t_token	*next;
+
+	tmp = *lst;
+	while (tmp)
+	{
+		next = tmp->next;
+		free(tmp->value);
+		free(tmp);
+		tmp = next;
+	}
+	*lst = NULL;
 }

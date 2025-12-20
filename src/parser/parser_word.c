@@ -29,16 +29,12 @@ static int	count_args(t_token *tk)
 	int	count;
 
 	count = 0;
-	while (tk && tk->type != PIPE
-		&& tk->type != INPUT && tk->type != TRUNC
-		&& tk->type != APPEND && tk->type != HEREDOC
-		&& tk->type != END)
+	while (tk && tk->type != PIPE && tk->type != INPUT && tk->type != TRUNC
+		&& tk->type != APPEND && tk->type != HEREDOC && tk->type != END)
 	{
-		count++;
-		while (tk && (tk->type == WORD
-			|| tk->type == STRING_SQUOTE
-			|| tk->type == STRING_DQUOTE))
-			tk = tk->next;
+		if (tk->type == WORD)
+			count++;
+		tk = tk->next;
 	}
 	return (count);
 }
@@ -53,24 +49,20 @@ static void	init_args_zero(t_cmd *cmd)
 
 static void	fill_args(t_cmd *cmd, t_token **tk)
 {
-	int		i;
-	char	*arg;
+	int	i;
 
 	i = 1;
-	while (*tk && (*tk)->type != PIPE
-		&& (*tk)->type != INPUT && (*tk)->type != TRUNC
-		&& (*tk)->type != APPEND && (*tk)->type != HEREDOC
-		&& (*tk)->type != END)
+	while (*tk && (*tk)->type != PIPE && (*tk)->type != INPUT
+		&& (*tk)->type != TRUNC && (*tk)->type != APPEND
+		&& (*tk)->type != HEREDOC && (*tk)->type != END)
 	{
-		arg = ft_strdup("");
-		while (*tk && ((*tk)->type == WORD
-			|| (*tk)->type == STRING_SQUOTE
-			|| (*tk)->type == STRING_DQUOTE))
+		if ((*tk)->type == WORD)
 		{
-			arg = ft_strjoin_free(arg, (*tk)->value);
+			cmd->args[i++] = ft_strdup((*tk)->value);
 			*tk = (*tk)->next;
 		}
-		cmd->args[i++] = arg;
+		else
+			break ;
 	}
 	cmd->args[i] = NULL;
 }
@@ -81,16 +73,11 @@ void	parse_word(t_cmd *cmd, t_token **tk)
 
 	if (!cmd || !tk || !*tk)
 		return ;
-
 	set_command(cmd, tk);
-
 	argc = count_args(*tk);
 	cmd->args = malloc(sizeof(char *) * (argc + 2));
 	if (!cmd->args)
 		return ;
-
 	init_args_zero(cmd);
 	fill_args(cmd, tk);
 }
-
-

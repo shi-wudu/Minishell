@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_error.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,18 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	errmsg(const char *msg, const char *arg, bool newline)
-{
-	write(2, msg, strlen(msg));
-	if (arg)
-	{
-		write(2, ": ", 2);
-		write(2, arg, strlen(arg));
-	}
-	if (newline)
-		write(2, "\n", 1);
-}
 
 int	ft_is_space(char c)
 {
@@ -44,20 +32,18 @@ void	free_environment(char **env)
 	free(env);
 }
 
-void free_all(t_data *data)
+void	free_all(t_data *data)
 {
-    free_environment(data->envp);
-    rl_clear_history();
+	free_environment(data->envp);
+	rl_clear_history();
 }
 
-void cleanup_iteration(t_data *data)
+void	cleanup_iteration(t_data *data)
 {
-    free_tokens(data->token);
-    data->token = NULL;
-
-    free_commands(data->cmd);
-    data->cmd = NULL;
-
-    free(data->user_input);
-    data->user_input = NULL;
+	ft_clear_token_list(&data->token);
+	data->token = NULL;
+	free_commands(data->cmd);
+	data->cmd = NULL;
+	free(data->user_input);
+	data->user_input = NULL;
 }

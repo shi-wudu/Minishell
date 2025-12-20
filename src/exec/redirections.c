@@ -67,35 +67,6 @@ int apply_redirections(t_cmd *cmd)
 {
     if (!cmd)
         return 0;
-	//int fd; esta parte esta no heredoc dividida
-    /*if (cmd->io.heredoc)
-    {
-        char *file = read_heredoc(cmd->io.heredoc_delimiter, cmd->io.heredoc_expand, envp, last_exit_status);
-		if (!file)
-		{
-			if (g_signal == SIGINT)
-				return 130;
-			return -1;
-		}
-        fd = open(file, O_RDONLY);
-        if (fd == -1)
-        {
-            perror("open heredoc");
-            free(file);
-            return -1;
-        }
-        if (dup2(fd, STDIN_FILENO) == -1)
-        {
-            perror("dup2 heredoc");
-            close(fd);
-            unlink(file);
-            free(file);
-            return -1;
-        }
-        close(fd);
-        unlink(file);   // remove ficheiro temporário
-        free(file);
-    }*/
     else if (cmd->io.infile)
     {
         if (redirect_input(cmd->io.infile) == -1)

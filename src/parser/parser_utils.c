@@ -28,19 +28,19 @@ void	init_cmd(t_cmd *cmd)
 	cmd->io.heredoc = false;
 }
 
-void	free_str_tab(char **tab)
+void	free_args(char **args)
 {
 	int	i;
 
 	i = 0;
-	if (!tab)
+	if (!args)
 		return ;
-	while (tab[i])
+	while (args[i])
 	{
-		free(tab[i]);
+		free(args[i]);
 		i++;
 	}
-	free(tab);
+	free(args);
 }
 
 void	free_commands(t_cmd *cmd)
@@ -50,16 +50,16 @@ void	free_commands(t_cmd *cmd)
 	while (cmd)
 	{
 		tmp = cmd->next;
+		if (cmd->io.heredoc && cmd->io.infile)
+			unlink(cmd->io.infile);
 		free(cmd->command);
-		free_str_tab(cmd->args);
-
+		free_args(cmd->args);
 		if (cmd->io.infile)
 			free(cmd->io.infile);
 		if (cmd->io.outfile)
 			free(cmd->io.outfile);
 		if (cmd->io.heredoc_delimiter)
 			free(cmd->io.heredoc_delimiter);
-
 		free(cmd);
 		cmd = tmp;
 	}
@@ -71,17 +71,13 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 
 	if (!s1 && !s2)
 		return (ft_strdup(""));
-
 	if (!s1)
 		return (ft_strdup(s2));
-
 	if (!s2)
 		return (s1);
-
 	res = ft_strjoin(s1, s2);
 	free(s1);
 	if (!res)
 		return (NULL);
 	return (res);
 }
-

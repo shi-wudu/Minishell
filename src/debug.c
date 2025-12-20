@@ -28,7 +28,7 @@ void print_commands(t_cmd *cmd)
 	ft_printf("\n");
 }
 
-void	print_tokens(t_token *list)
+/*void	print_tokens(t_token *list)
 {
 	t_token	*tmp = list;
 
@@ -39,7 +39,7 @@ void	print_tokens(t_token *list)
 		tmp = tmp->next;
 	}
 	ft_printf("\n");
-}
+}*/
 
 /* void execute_commands(t_cmd *cmds, char **envp)
 {

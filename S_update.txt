@@ -75,9 +75,6 @@ minishell: command not found: minishell>
 
 👍- funcoes repetidas no HEREDOC e expander tentar simplificar o max psossivel
 
-minishell> echo "'"ola  $USER"'"
-'olapyrosboss'
-ver espaços
 -----------------------------------------------------------------------------------
 
 Ainda n esta a funcionar:

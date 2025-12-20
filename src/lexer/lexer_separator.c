@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_utils.c                                      :+:      :+:    :+:   */
+/*   lexer_separator.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,20 +12,29 @@
 
 #include "minishell.h"
 
-int	ft_is_quote(char c)
+static t_token_type	get_separator_type(char *s)
 {
-	return (c == '\'' || c == '"');
+	if (!ft_strncmp(s, "<<", 2))
+		return (HEREDOC);
+	if (!ft_strncmp(s, ">>", 2))
+		return (APPEND);
+	if (*s == '<')
+		return (INPUT);
+	if (*s == '>')
+		return (TRUNC);
+	if (*s == '|')
+		return (PIPE);
+	return (END);
 }
 
-void	ft_skip_spaces(char **line)
+int	ft_handle_separator(char **line, t_token **tokens)
 {
-	while (**line && ft_is_space(**line))
+	t_token_type	type;
+
+	type = get_separator_type(*line);
+	ft_token_list_add_back(tokens, ft_new_token(NULL, type));
+	(*line)++;
+	if (type == HEREDOC || type == APPEND)
 		(*line)++;
-}
-
-void	ft_print_quote_err(char c)
-{
-	ft_putstr_fd("minishell: unexpected EOF while looking for matching `", 2);
-	ft_putchar_fd(c, 2);
-	ft_putstr_fd("'\n", 2);
+	return (1);
 }
