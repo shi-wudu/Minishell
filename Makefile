@@ -11,7 +11,6 @@ SRC_FILES := \
     builtin/builtin.c \
     builtin/echo_cd_pwd.c \
     builtin/exit_export.c \
-    builtin/env_utils.c \
     builtin/unset.c \
 	parser/parser_redirects_pipe.c \
 	parser/parser_utils.c \
@@ -22,11 +21,15 @@ SRC_FILES := \
 	expander/expander.c \
 	expander/expander_utils.c \
 	exec/executer.c \
+	exec/exec_child.c \
+	exec/exec_parent.c \
     exec/pathing.c \
     exec/redirections.c \
-    exec/piping.c \
+    exec/piping_1.c \
+	exec/piping_2.c \
     exec/piping_utils.c \
-	signal/signals.c \
+	signal/signals_01.c \
+	signal/signals_02.c \
 	heredoc/heredoc.c \
 	heredoc/heredoc_utils.c \
 	heredoc/heredoc_write.c \
@@ -34,7 +37,10 @@ SRC_FILES := \
 	lexer/lexer_separator.c \
 	lexer/lexer_token.c \
 	lexer/lexer_utils.c \
-	lexer/lexer.c
+	lexer/lexer.c \
+	env/env_copy.c \
+	env/env_get.c \
+	env/env_update.c 
 
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))

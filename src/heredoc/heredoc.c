@@ -44,8 +44,7 @@ static int	heredoc_setup(char **tmp_file, int *saved_stdin)
 	return (fd);
 }
 
-static bool	heredoc_loop(int fd, char *delimiter, bool expand, char **envp,
-		int last)
+static bool	heredoc_loop(int fd, char *delimiter, bool expand, t_data *data)
 {
 	char	*line;
 
@@ -57,14 +56,13 @@ static bool	heredoc_loop(int fd, char *delimiter, bool expand, char **envp,
 			free(line);
 			return (false);
 		}
-		write_heredoc_line(fd, line, envp, expand, last);
+		write_heredoc_line(fd, line, data, expand);
 		free(line);
 	}
 	return (true);
 }
 
-char	*read_heredoc(char *delimiter, bool expand, char **envp,
-		int last_exit_status)
+char	*read_heredoc(char *delimiter, bool expand, t_data *data)
 {
 	int		fd;
 	int		saved_stdin;
@@ -73,7 +71,7 @@ char	*read_heredoc(char *delimiter, bool expand, char **envp,
 	fd = heredoc_setup(&tmp_file, &saved_stdin);
 	if (fd == -1)
 		return (NULL);
-	heredoc_loop(fd, delimiter, expand, envp, last_exit_status);
+	heredoc_loop(fd, delimiter, expand, data);
 	close(fd);
 	dup2(saved_stdin, STDIN_FILENO);
 	close(saved_stdin);
@@ -101,7 +99,7 @@ int	prepare_heredocs(t_cmd *cmd, t_data *data)
 		if (cmd->io.heredoc)
 		{
 			file = read_heredoc(cmd->io.heredoc_delimiter,
-					cmd->io.heredoc_expand, data->envp, data->last_exit_status);
+					cmd->io.heredoc_expand, data);
 			if (!file)
 			{
 				data->last_exit_status = 130;

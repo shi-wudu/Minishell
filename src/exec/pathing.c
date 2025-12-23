@@ -17,14 +17,31 @@ static char	*check_direct_path(char *cmd)
 		return (ft_strdup(cmd));
 	return (NULL);
 }
- 
+
+static char	*build_and_check_path(char *dir, char *cmd)
+{
+	char	*tmp;
+	char	*full;
+
+	tmp = ft_strjoin(dir, "/");
+	if (!tmp)
+		return (NULL);
+	full = ft_strjoin(tmp, cmd);
+	free(tmp);
+	if (!full)
+		return (NULL);
+	if (access(full, X_OK) == 0)
+		return (full);
+	free(full);
+	return (NULL);
+}
+
 static char	*search_in_path(char *cmd, char *path_env)
 {
 	char	**path_dirs;
 	char	*full_path;
-	char	*tmp;
+	char	*dir;
 	int		i;
-	char    *dir;
 
 	path_dirs = ft_split(path_env, ':');
 	if (!path_dirs)
@@ -32,17 +49,13 @@ static char	*search_in_path(char *cmd, char *path_env)
 	i = 0;
 	while (path_dirs[i])
 	{
-		dir = (path_dirs[i][0] == '\0') ? "." : path_dirs[i];
-		tmp = ft_strjoin(dir, "/");
-		if (!tmp)
-			return (free_args(path_dirs), NULL);
-		full_path = ft_strjoin(tmp, cmd);
-		free(tmp);
-		if (!full_path)
-			return (free_args(path_dirs), NULL);
-		if (access(full_path, X_OK) == 0)
+		if (path_dirs[i][0] == '\0')
+			dir = ".";
+		else
+			dir = path_dirs[i];
+		full_path = build_and_check_path(dir, cmd);
+		if (full_path)
 			return (free_args(path_dirs), full_path);
-		free(full_path);
 		i++;
 	}
 	free_args(path_dirs);

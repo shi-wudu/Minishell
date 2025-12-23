@@ -14,35 +14,55 @@
 
 static void	set_outfile(t_cmd *cmd, char *filename, bool append)
 {
+	if (cmd->io.outfile)
+		free(cmd->io.outfile);
 	cmd->io.outfile = ft_strdup(filename);
 	cmd->io.append = append;
 }
 
-void	parse_redirect(t_cmd *cmd, t_token **tk, t_data *data)
+static bool	validate_redirect(t_token *tk, t_data *data)
+{
+	if (!tk->next || tk->next->type != WORD)
+	{
+		ft_putendl_fd(
+			"minishell: syntax error near unexpected token `newline'", 2);
+		data->parse_error = true;
+		return (false);
+	}
+	return (true);
+}
+
+static void	apply_redirect(t_cmd *cmd, t_token *tk)
 {
 	char	*filename;
 
-	if (!(*tk)->next || (*tk)->next->type != WORD)
+	filename = tk->next->value;
+	if (tk->type == INPUT)
 	{
-		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
-			2);
-		data->parse_error = true;
-		*tk = NULL;
-		return ;
-	}
-	filename = (*tk)->next->value;
-	if ((*tk)->type == INPUT)
+		free(cmd->io.infile);
 		cmd->io.infile = ft_strdup(filename);
-	else if ((*tk)->type == TRUNC)
+	}
+	else if (tk->type == TRUNC)
 		set_outfile(cmd, filename, false);
-	else if ((*tk)->type == APPEND)
+	else if (tk->type == APPEND)
 		set_outfile(cmd, filename, true);
-	else if ((*tk)->type == HEREDOC)
+	else if (tk->type == HEREDOC)
 	{
-		cmd->io.heredoc_expand = !(*tk)->next->no_expand;
+		free(cmd->io.heredoc_delimiter);
+		cmd->io.heredoc_expand = !tk->next->no_expand;
 		cmd->io.heredoc_delimiter = ft_strdup(filename);
 		cmd->io.heredoc = true;
 	}
+}
+
+void	parse_redirect(t_cmd *cmd, t_token **tk, t_data *data)
+{
+	if (!validate_redirect(*tk, data))
+	{
+		*tk = NULL;
+		return ;
+	}
+	apply_redirect(cmd, *tk);
 	*tk = (*tk)->next->next;
 }
 

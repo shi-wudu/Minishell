@@ -12,7 +12,8 @@
 
 #include "libft.h"
 
-//This function will set n number of bytes of the string str to the ascci char c
+// This function will set n number of bytes of the 
+// string str to the ascci char c
 // It returns a pointer to the start of str
 
 void	*ft_memset(void *s, int c, size_t n)

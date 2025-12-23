@@ -11,65 +11,65 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
- 
+
 // conta quantos comandos ha na lista ligada
 int	count_cmds(t_cmd *cmd)
 {
-    int	n;
+	int	n;
 
-    n = 0;
-    while (cmd)
-    {
-        n++;
-        cmd = cmd->next;
-    }
-    return (n);
+	n = 0;
+	while (cmd)
+	{
+		n++;
+		cmd = cmd->next;
+	}
+	return (n);
 }
 
 // colecta os pointers para os comandos numa array (para indexacao)
-t_cmd **collect_cmds(t_cmd *cmd, int n)
+t_cmd	**collect_cmds(t_cmd *cmd, int n)
 {
-    t_cmd	**arr;
-    int		i;
+	t_cmd	**arr;
+	int		i;
 
-    arr = malloc(sizeof(t_cmd *) * n);
-    if (!arr)
-        return (NULL);
-    i = 0;
-    while (i < n && cmd)
-    {
-        arr[i++] = cmd;
-        cmd = cmd->next;
-    }
-    return (arr);
+	arr = malloc(sizeof(t_cmd *) * n);
+	if (!arr)
+		return (NULL);
+	i = 0;
+	while (i < n && cmd)
+	{
+		arr[i++] = cmd;
+		cmd = cmd->next;
+	}
+	return (arr);
 }
 
 // fecha todos os fds dos pipes criados
 void	close_all_pipes(int *pipes, int n)
 {
-    int	i;
+	int	i;
 
-    if (!pipes || n < 2)
-        return ;
-    i = 0;
-    while (i < n - 1)
-    {
-        close(pipes[i * 2]);
-        close(pipes[i * 2 + 1]);
-        i++;
-    }
+	if (!pipes || n < 2)
+		return ;
+	i = 0;
+	while (i < n - 1)
+	{
+		close(pipes[i * 2]);
+		close(pipes[i * 2 + 1]);
+		i++;
+	}
 }
 
 // envia SIGTERM para os filhos spawnados (usado em erro)
 void	kill_children(pid_t *pids, int count)
 {
-    int	i;
+	int	i;
 
-    i = 0;
-    while (i < count)
-    {
-        if (pids[i] > 0)
-            kill(pids[i], SIGTERM);
-        i++;
-    }
+	i = 0;
+	while (i < count)
+	{
+		if (pids[i] > 0)
+			kill(pids[i], SIGTERM);
+		i++;
+	}
 }

@@ -33,7 +33,7 @@ static int	redirect_input(char *infile)
 	close(fd);
 	return (0);
 }
- 
+
 static int	redirect_output(char *outfile, int append)
 {
 	int	fd;
@@ -63,21 +63,19 @@ static int	redirect_output(char *outfile, int append)
 	return (0);
 }
 
-int apply_redirections(t_cmd *cmd)
+int	apply_redirections(t_cmd *cmd)
 {
-    if (!cmd)
-        return 0;
-    else if (cmd->io.infile)
-    {
-        if (redirect_input(cmd->io.infile) == -1)
-            return -1;
-    }
-
-    if (cmd->io.outfile)
-    {
-        if (redirect_output(cmd->io.outfile, cmd->io.append) == -1)
-            return -1;
-    }
-
-    return 0;
+	if (!cmd)
+		return (0);
+	else if (cmd->io.infile)
+	{
+		if (redirect_input(cmd->io.infile) == -1)
+			return (-1);
+	}
+	if (cmd->io.outfile)
+	{
+		if (redirect_output(cmd->io.outfile, cmd->io.append) == -1)
+			return (-1);
+	}
+	return (0);
 }

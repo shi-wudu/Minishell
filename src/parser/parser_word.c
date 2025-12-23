@@ -17,9 +17,9 @@ static void	set_command(t_cmd *cmd, t_token **tk)
 	if (!cmd->command)
 	{
 		if ((*tk)->value)
-			cmd->command = ft_strdup((*tk)->value); // free
+			cmd->command = ft_strdup((*tk)->value);
 		else
-			cmd->command = ft_strdup(""); // free
+			cmd->command = ft_strdup("");
 		*tk = (*tk)->next;
 	}
 }

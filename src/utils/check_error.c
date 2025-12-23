@@ -25,23 +25,28 @@ static bool	is_redirect(t_token_type type)
 		|| type == HEREDOC);
 }
 
+/* 	pipe no início
+	pipe seguido de pipe
+	pipe no fim */
+
 static bool	check_pipes(t_token *tk)
 {
-	/* pipe no início */
 	if (tk && tk->type == PIPE)
 		return (syntax_error("|"), false);
 	while (tk && tk->next)
 	{
-		/* pipe seguido de pipe */
 		if (tk->type == PIPE && tk->next->type == PIPE)
 			return (syntax_error("|"), false);
 		tk = tk->next;
 	}
-	/* pipe no fim */
 	if (tk && tk->type == PIPE)
 		return (syntax_error("|"), false);
 	return (true);
 }
+
+/* 	redirect no fim: echo >
+	redirect seguido de pipe: echo > |
+	redirect seguido de outro redirect: echo > > */
 
 static bool	check_redirects(t_token *tk)
 {
@@ -49,19 +54,16 @@ static bool	check_redirects(t_token *tk)
 	{
 		if (is_redirect(tk->type))
 		{
-			/* redirect no fim: echo > */
 			if (!tk->next || tk->next->type == END)
 			{
 				syntax_error("redirect");
 				return (false);
 			}
-			/* redirect seguido de pipe: echo > | */
 			if (tk->next->type == PIPE)
 			{
 				syntax_error("|");
 				return (false);
 			}
-			/* redirect seguido de outro redirect: echo > > */
 			if (is_redirect(tk->next->type))
 			{
 				syntax_error("redirect");

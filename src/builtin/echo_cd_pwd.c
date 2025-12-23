@@ -12,24 +12,20 @@
 
 #include "minishell.h"
 
-
-int echo_nnn_handler(char *str)
+// Just "-" with nothing after
+int	echo_nnn_handler(char *str)
 {
 	if (!str || str[0] != '-')
 		return (0);
-
 	str++;
-
-	if (!*str)  // Just "-" with nothing after
+	if (!*str)
 		return (0);
-	
 	while (*str)
 	{
 		if (*str != 'n')
 			return (0);
 		str++;
 	}
-	
 	return (1);
 }
 
@@ -85,7 +81,7 @@ int	builtin_cd(char **argv, char **env)
 	}
 	return (0);
 }
- 
+
 int	builtin_pwd(void)
 {
 	char	cwd[PATH_MAX];

@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
- 
-static int is_valid_number(char *str)
+
+static int	is_valid_number(char *str)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	if (str[i] == '+' || str[i] == '-')
 		i++;
@@ -46,38 +46,33 @@ static int	is_valid_identifier(char *str)
 	return (1);
 }
 
-int builtin_exit(char **argv, bool from_shell)
+int	builtin_exit(char **argv, bool from_shell)
 {
-    long exit_code;
+	long	exit_code;
 
-    if (from_shell)
-        ft_putendl_fd("exit", 1);
-
-    if (!argv[1])
-        exit(0);
-
-    if (!is_valid_number(argv[1]))
-    {
-        if (from_shell)
-        {
-            ft_putstr_fd("minishell: exit: ", 2);
-            ft_putstr_fd(argv[1], 2);
-            ft_putendl_fd(": numeric argument required", 2);
-        }
-        exit(255);
-    }
-
-    if (argv[2])
-    {
-        if (from_shell)
-            ft_putendl_fd("minishell: exit: too many arguments", 2);
-        return (1);
-    }
-
-    exit_code = ft_atoi(argv[1]);
-    exit(exit_code % 256);
+	if (from_shell)
+		ft_putendl_fd("exit", 1);
+	if (!argv[1])
+		exit(0);
+	if (!is_valid_number(argv[1]))
+	{
+		if (from_shell)
+		{
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(argv[1], 2);
+			ft_putendl_fd(": numeric argument required", 2);
+		}
+		exit(255);
+	}
+	if (argv[2])
+	{
+		if (from_shell)
+			ft_putendl_fd("minishell: exit: too many arguments", 2);
+		return (1);
+	}
+	exit_code = ft_atoi(argv[1]);
+	exit(exit_code % 256);
 }
-
 
 int	builtin_export(char **argv, char ***env)
 {

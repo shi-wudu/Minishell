@@ -91,6 +91,15 @@ typedef struct s_data
 	bool						parse_error;
 }								t_data;
 
+typedef struct s_pipe_ctx
+{
+	t_cmd						**cmds;
+	int							*pipes;
+	pid_t						*pids;
+	int							n;
+	t_data						*data;
+}								t_pipe_ctx;
+
 /*=============================*/
 /*            FILES            */
 /*=============================*/
@@ -116,7 +125,7 @@ int		ft_append_identifier(char **line, t_token **tokens);
 /* expander */
 void	expand_tokens(t_token *tokens, t_data *data);
 char	*append_char(char *s, char c);
-char	*expand_dollar_only(const char *str, char **envp, int last_exit_status);
+char	*expand_dollar_only(const char *str, t_data *data);
 
 /* parser */
 t_cmd	*parser(t_token *tokens, t_data *data);
@@ -147,22 +156,22 @@ int		builtin_env(char **env);
 int		builtin_exit(char **argv, bool from_shell);
 int		echo_nnn_handler(char *str);
 int		builtin_unset(char **argv, char ***env);
-char	**expand_env(char **env, int *count);
-int		update_or_add_var(char ***env, char *var, int *count);
 
 /* Environment Util*/
 char	*get_env_value(char **env, char *key);
 char	**dup_env(char **envp);
+int		update_or_add_var(char ***env, char *var, int *count);
+char	**expand_env(char **env, int *count);
 
 /* Executing */
 int		execute_commands(t_cmd *cmd, t_data *data);
 char	*resolve_path(char *cmd, char **envp);
 int		apply_redirections(t_cmd *cmd);
 void	free_args(char **args);
-void	close_pipes(int *pipefd);
-int		create_pipe(int *pipefd);
 void	execute_commands_piped(t_cmd *cmd, t_data *data);
 void	execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data);
+void	execute_main(t_cmd *cmd, t_data *data);
+pid_t	spawn_pipeline_child(t_pipe_ctx *ctx, int idx);
 
 /* Piping Utils  */
 int		count_cmds(t_cmd *cmd);
@@ -178,9 +187,9 @@ void	setup_signals_parent_exec(void);
 
 /* heredoc */
 char	*gen_heredoc_filename(void);
-char	*read_heredoc(char *delimiter, bool expand, char **envp, int last_exit_status);
+char	*read_heredoc(char *delimiter, bool expand, t_data *data);
 bool	heredoc_should_stop(char *line, char *delimiter);
-void	write_heredoc_line(int fd, char *line, char **envp, bool expand, int last);
+void	write_heredoc_line(int fd, char *line, t_data *data, bool expand);
 int		prepare_heredocs(t_cmd *cmd, t_data *data);
 
 #endif

@@ -54,6 +54,15 @@ static int	count_remaining(char **env, char **unset_list)
 	return (count);
 }
 
+static bool	copy_env_var(char **dst, char *src, int *k)
+{
+	dst[*k] = ft_strdup(src);
+	if (!dst[*k])
+		return (false);
+	(*k)++;
+	return (true);
+}
+
 static char	**build_new_env(char **env, char **unset_list, int remaining_count)
 {
 	char	**new_env;
@@ -64,17 +73,16 @@ static char	**build_new_env(char **env, char **unset_list, int remaining_count)
 	new_env = ft_calloc(remaining_count + 1, sizeof(char *));
 	if (!new_env)
 		return (NULL);
-	i = -1;
+	i = 0;
 	k = 0;
-	while (env[++i])
+	while (env[i])
 	{
 		j = 0;
 		while (unset_list[j] && !does_env_exist(env[i], unset_list[j]))
 			j++;
-		if (!unset_list[j] && (new_env[k] = ft_strdup(env[i])))
-			k++;
-		else if (!unset_list[j])
+		if (!unset_list[j] && !copy_env_var(new_env, env[i], &k))
 			return (free_environment(new_env), NULL);
+		i++;
 	}
 	new_env[k] = NULL;
 	return (new_env);

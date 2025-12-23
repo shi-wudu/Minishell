@@ -22,16 +22,19 @@ static void	expand_exit_status(char **res, int last, int *i)
 	*i += 2;
 }
 
-static void	append_env_value(char **res, char **envp,
-		const char *str, int start, int end)
+static void	append_env_value(char **res, t_data *data, const char *str, int *i)
 {
+	int		start;
 	char	*name;
 	char	*val;
 
-	name = ft_substr(str, start, end - start);
+	start = *i;
+	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
+		(*i)++;
+	name = ft_substr(str, start, *i - start);
 	if (!name)
 		return ;
-	val = get_env_value(envp, name);
+	val = get_env_value(data->envp, name);
 	if (val)
 		*res = ft_strjoin_free(*res, val);
 	else
@@ -39,14 +42,11 @@ static void	append_env_value(char **res, char **envp,
 	free(name);
 }
 
-static void	handle_dollar(const char *str, char **envp,
-		int *i, char **res, int last)
+static void	handle_dollar(const char *str, int *i, char **res, t_data *data)
 {
-	int	start;
-
 	if (str[*i + 1] == '?')
 	{
-		expand_exit_status(res, last, i);
+		expand_exit_status(res, data->last_exit_status, i);
 		return ;
 	}
 	if (!str[*i + 1])
@@ -55,18 +55,16 @@ static void	handle_dollar(const char *str, char **envp,
 		(*i)++;
 		return ;
 	}
-	start = ++(*i);
-	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
-		(*i)++;
-	if (start == *i)
+	(*i)++;
+	if (!ft_isalnum(str[*i]) && str[*i] != '_')
 	{
 		*res = ft_strjoin_free(*res, "$");
 		return ;
 	}
-	append_env_value(res, envp, str, start, *i);
+	append_env_value(res, data, str, i);
 }
 
-char	*expand_dollar_only(const char *str, char **envp, int last)
+char	*expand_dollar_only(const char *str, t_data *data)
 {
 	int		i;
 	char	*res;
@@ -76,7 +74,7 @@ char	*expand_dollar_only(const char *str, char **envp, int last)
 	while (str && str[i])
 	{
 		if (str[i] == '$')
-			handle_dollar(str, envp, &i, &res, last);
+			handle_dollar(str, &i, &res, data);
 		else
 		{
 			res = append_char(res, str[i]);
@@ -99,8 +97,7 @@ void	expand_tokens(t_token *tokens, t_data *data)
 		}
 		if (tokens->type == WORD && !tokens->no_expand)
 		{
-			expanded = expand_dollar_only(tokens->value, data->envp,
-					data->last_exit_status);
+			expanded = expand_dollar_only(tokens->value, data);
 			free(tokens->value);
 			tokens->value = expanded;
 		}

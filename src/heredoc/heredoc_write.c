@@ -12,28 +12,26 @@
 
 #include "minishell.h"
 
-static void	write_heredoc_line_expanded(int fd, char *line, char **envp,
-		int last)
+static void	write_expanded(int fd, char *line, t_data *data)
 {
 	char	*out;
 
-	out = expand_dollar_only(line, envp, last);
+	out = expand_dollar_only(line, data);
 	write(fd, out, ft_strlen(out));
 	write(fd, "\n", 1);
 	free(out);
 }
 
-static void	write_heredoc_line_noexp(int fd, char *line)
+static void	write_noexp(int fd, char *line)
 {
 	write(fd, line, ft_strlen(line));
 	write(fd, "\n", 1);
 }
 
-void	write_heredoc_line(int fd, char *line, char **envp, bool expand,
-		int last)
+void	write_heredoc_line(int fd, char *line, t_data *data, bool expand)
 {
 	if (expand)
-		write_heredoc_line_expanded(fd, line, envp, last);
+		write_expanded(fd, line, data);
 	else
-		write_heredoc_line_noexp(fd, line);
+		write_noexp(fd, line);
 }
