@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+// Inicializa a estrutura principal do minishell.
+// Duplica o ambiente, inicializa campos e prepara o estado inicial.
+
 static bool	init_data(t_data *data, char **envp)
 {
 	data->token = NULL;
@@ -26,6 +29,10 @@ static bool	init_data(t_data *data, char **envp)
 	}
 	return (true);
 }
+
+// Processa uma linha de input do utilizador.
+// Executa: lexer → expansões → parser → execução.
+// Atualiza o last_exit_status com o resultado do último comando.
 
 static void	process_input(t_data *data)
 {
@@ -49,6 +56,11 @@ static void	process_input(t_data *data)
 	}
 }
 
+// Loop principal do minishell.
+// Configura sinais interativos, lê input com readline,
+// adiciona ao histórico e executa o comando.
+// Termina ao receber EOF (Ctrl-D).
+
 static void	minishell_loop(t_data *data)
 {
 	while (1)
@@ -56,10 +68,13 @@ static void	minishell_loop(t_data *data)
 		setup_signals_interactive();
 		g_signal = 0;
 		data->user_input = readline("minishell> ");
-		if (!data->user_input)
-			return (write(1, "exit\n", 5), (void)0);
 		if (*data->user_input)
 			add_history(data->user_input);
+		else
+		{
+			write(1, "exit\n", 5);
+			return ;
+		}
 		process_input(data);
 		cleanup_iteration(data);
 	}

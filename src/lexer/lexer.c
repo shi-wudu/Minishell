@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// Tokeniza a linha de input em uma lista ligada de tokens.
+
 static t_token	*ft_tokenization_handler(char *line)
 {
 	t_token	*tokens;
@@ -35,6 +37,9 @@ static t_token	*ft_tokenization_handler(char *line)
 	ft_token_list_add_back(&tokens, ft_new_token(NULL, END));
 	return (tokens);
 }
+
+// Função principal do lexer.
+// Cria tokens e valida a sintaxe.
 
 bool	lexer(t_data *data)
 {

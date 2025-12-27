@@ -14,6 +14,8 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
+// Limpa a linha atual, imprime nova linha e reapresenta o prompt.
+
 static void	sigint_interactive(int sig)
 {
 	(void)sig;
@@ -24,6 +26,9 @@ static void	sigint_interactive(int sig)
 	rl_redisplay();
 }
 
+// Handler de SIGINT durante leitura de heredoc.
+// Fecha o stdin para interromper readline.
+
 static void	sigint_heredoc(int sig)
 {
 	(void)sig;
@@ -31,6 +36,10 @@ static void	sigint_heredoc(int sig)
 	write(1, "\n", 1);
 	close(STDIN_FILENO);
 }
+
+// Configura sinais para modo interativo:
+// - SIGINT tratado
+// - SIGQUIT ignorado
 
 void	setup_signals_interactive(void)
 {
@@ -43,6 +52,8 @@ void	setup_signals_interactive(void)
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
 }
+
+// Configura sinais durante leitura de heredoc.
 
 void	setup_signals_heredoc(void)
 {

@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+// Configura sinais no processo pai durante execução:
+// ignora SIGINT e SIGQUIT enquanto espera pelos filhos.
+
 void	setup_signals_parent_exec(void)
 {
 	struct sigaction	sa;
@@ -22,6 +25,9 @@ void	setup_signals_parent_exec(void)
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 }
+
+// Configura sinais no processo filho:
+// restaura comportamento por omissão.
 
 void	setup_signals_child(void)
 {

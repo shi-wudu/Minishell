@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+// Cria e inicializa um novo comando.
+// Define-o como cabeça da lista caso ainda não exista.
+
 static t_cmd	*init_new_cmd(t_cmd **head)
 {
 	t_cmd	*new;
@@ -25,6 +28,9 @@ static t_cmd	*init_new_cmd(t_cmd **head)
 	return (new);
 }
 
+// Analisa o token atual e delega para a função apropriada
+// (palavra, pipe ou redireção).
+
 static void	handle_token(t_cmd **current, t_token **tk, t_data *data)
 {
 	if ((*tk)->type == WORD)
@@ -37,6 +43,9 @@ static void	handle_token(t_cmd **current, t_token **tk, t_data *data)
 	else
 		*tk = (*tk)->next;
 }
+
+// Converte a lista de tokens numa lista ligada de comandos.
+// Interrompe em caso de erro de parsing.
 
 t_cmd	*parser(t_token *tokens, t_data *data)
 {

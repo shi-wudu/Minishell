@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// Cria um novo token com valor e tipo definidos.
+
 t_token	*ft_new_token(char *value, t_token_type type)
 {
 	t_token	*new;
@@ -23,6 +25,8 @@ t_token	*ft_new_token(char *value, t_token_type type)
 	new->type = type;
 	return (new);
 }
+
+// Adiciona um token ao fim da lista.
 
 void	ft_token_list_add_back(t_token **lst, t_token *new)
 {
@@ -39,6 +43,8 @@ void	ft_token_list_add_back(t_token **lst, t_token *new)
 	cur->next = new;
 	new->prev = cur;
 }
+
+// Liberta toda a lista de tokens.
 
 void	ft_clear_token_list(t_token **lst)
 {

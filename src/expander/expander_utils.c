@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+// Acrescenta um caractere a uma string, realocando-a.
 char	*append_char(char *s, char c)
 {
 	char	tmp[2];

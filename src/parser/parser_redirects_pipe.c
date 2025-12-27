@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// Aplica uma redireção de saída ao comando.
+
 static void	set_outfile(t_cmd *cmd, char *filename, bool append)
 {
 	if (cmd->io.outfile)
@@ -19,6 +21,8 @@ static void	set_outfile(t_cmd *cmd, char *filename, bool append)
 	cmd->io.outfile = ft_strdup(filename);
 	cmd->io.append = append;
 }
+
+// Valida se um operador de redireção tem um token válido a seguir.
 
 static bool	validate_redirect(t_token *tk, t_data *data)
 {
@@ -31,6 +35,8 @@ static bool	validate_redirect(t_token *tk, t_data *data)
 	}
 	return (true);
 }
+
+// Aplica a redireção ao comando (input, output ou heredoc).
 
 static void	apply_redirect(t_cmd *cmd, t_token *tk)
 {
@@ -65,6 +71,8 @@ void	parse_redirect(t_cmd *cmd, t_token **tk, t_data *data)
 	apply_redirect(cmd, *tk);
 	*tk = (*tk)->next->next;
 }
+
+// Processa um pipe e cria um novo comando ligado ao anterior.
 
 t_cmd	*parse_pipe(t_cmd *cmd, t_token **tk)
 {

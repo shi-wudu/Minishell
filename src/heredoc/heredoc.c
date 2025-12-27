@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+// Cria e abre um ficheiro temporário para o heredoc.
 static int	open_heredoc_file(char **tmp_file)
 {
 	int	fd;
@@ -26,6 +27,9 @@ static int	open_heredoc_file(char **tmp_file)
 	}
 	return (fd);
 }
+
+// Prepara o ambiente para leitura de heredoc:
+// duplica stdin, cria ficheiro temporário e configura sinais.
 
 static int	heredoc_setup(char **tmp_file, int *saved_stdin)
 {
@@ -44,6 +48,8 @@ static int	heredoc_setup(char **tmp_file, int *saved_stdin)
 	return (fd);
 }
 
+// Loop principal de leitura do heredoc até encontrar o delimitador
+
 static bool	heredoc_loop(int fd, char *delimiter, bool expand, t_data *data)
 {
 	char	*line;
@@ -61,6 +67,8 @@ static bool	heredoc_loop(int fd, char *delimiter, bool expand, t_data *data)
 	}
 	return (true);
 }
+
+// Lê um heredoc completo e devolve o nome do ficheiro temporário.
 
 char	*read_heredoc(char *delimiter, bool expand, t_data *data)
 {
@@ -86,10 +94,9 @@ char	*read_heredoc(char *delimiter, bool expand, t_data *data)
 	return (tmp_file);
 }
 
-/*
-** Lê todos os heredocs antes de executar qualquer comando
-** Deve ser chamada NO PAI, antes de fork()
-*/
+// Processa todos os heredocs antes da execução.
+// Deve ser chamada no processo pai.
+
 int	prepare_heredocs(t_cmd *cmd, t_data *data)
 {
 	char	*file;

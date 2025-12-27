@@ -43,6 +43,8 @@ void	free_args(char **args)
 	free(args);
 }
 
+// Liberta toda a lista de comandos e recursos associados.
+
 void	free_commands(t_cmd *cmd)
 {
 	t_cmd	*tmp;
@@ -64,6 +66,8 @@ void	free_commands(t_cmd *cmd)
 		cmd = tmp;
 	}
 }
+
+// Junta duas strings libertando a primeira.
 
 char	*ft_strjoin_free(char *s1, const char *s2)
 {

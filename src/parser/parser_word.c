@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// Define o comando principal (argv[0]) se ainda não estiver definido.
+
 static void	set_command(t_cmd *cmd, t_token **tk)
 {
 	if (!cmd->command)
@@ -23,6 +25,8 @@ static void	set_command(t_cmd *cmd, t_token **tk)
 		*tk = (*tk)->next;
 	}
 }
+
+// Conta quantos argumentos consecutivos pertencem ao comando atual.
 
 static int	count_args(t_token *tk)
 {
@@ -39,6 +43,8 @@ static int	count_args(t_token *tk)
 	return (count);
 }
 
+// Inicializa o primeiro argumento (argv[0]) com o nome do comando.
+
 static void	init_args_zero(t_cmd *cmd)
 {
 	if (cmd->command)
@@ -46,6 +52,8 @@ static void	init_args_zero(t_cmd *cmd)
 	else
 		cmd->args[0] = ft_strdup("");
 }
+
+// Preenche o array de argumentos do comando a partir dos tokens
 
 static void	fill_args(t_cmd *cmd, t_token **tk)
 {
@@ -66,6 +74,8 @@ static void	fill_args(t_cmd *cmd, t_token **tk)
 	}
 	cmd->args[i] = NULL;
 }
+
+// Trata um token WORD: define comando e argumentos.
 
 void	parse_word(t_cmd *cmd, t_token **tk)
 {

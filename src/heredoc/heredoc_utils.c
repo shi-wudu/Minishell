@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+// Gera um nome único para o ficheiro temporário do heredoc.
+
 char	*gen_heredoc_filename(void)
 {
 	static int	i = 0;
@@ -22,6 +24,8 @@ char	*gen_heredoc_filename(void)
 	free(nbr);
 	return (name);
 }
+
+// Verifica se a leitura do heredoc deve terminar.
 
 bool	heredoc_should_stop(char *line, char *delimiter)
 {

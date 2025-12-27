@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// Expande a variável $? com o último exit status.
+
 static void	expand_exit_status(char **res, int last, int *i)
 {
 	char	*num;
@@ -21,6 +23,8 @@ static void	expand_exit_status(char **res, int last, int *i)
 	free(num);
 	*i += 2;
 }
+
+// Expande uma variável de ambiente e junta ao resultado.
 
 static void	append_env_value(char **res, t_data *data, const char *str, int *i)
 {
@@ -41,6 +45,8 @@ static void	append_env_value(char **res, t_data *data, const char *str, int *i)
 		*res = ft_strjoin_free(*res, "");
 	free(name);
 }
+
+// Trata a expansão iniciada por '$'.
 
 static void	handle_dollar(const char *str, int *i, char **res, t_data *data)
 {
@@ -64,6 +70,8 @@ static void	handle_dollar(const char *str, int *i, char **res, t_data *data)
 	append_env_value(res, data, str, i);
 }
 
+// Expande apenas variáveis ('$') numa string.
+
 char	*expand_dollar_only(const char *str, t_data *data)
 {
 	int		i;
@@ -83,6 +91,8 @@ char	*expand_dollar_only(const char *str, t_data *data)
 	}
 	return (res);
 }
+
+// Aplica expansão a todos os tokens WORD que permitam expansão.
 
 void	expand_tokens(t_token *tokens, t_data *data)
 {

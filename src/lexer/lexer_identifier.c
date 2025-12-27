@@ -17,6 +17,8 @@ static bool	is_word_char(char c)
 	return (!ft_is_space(c) && c != '<' && c != '>' && c != '|');
 }
 
+// Salta conteúdo entre aspas, validando fecho correto.
+
 static int	skip_quoted(char *s, size_t *i, size_t *len, bool *no_expand)
 {
 	char	quote;
@@ -35,6 +37,8 @@ static int	skip_quoted(char *s, size_t *i, size_t *len, bool *no_expand)
 	(*i)++;
 	return (0);
 }
+
+// Calcula o comprimento de uma palavra considerando quotes.
 
 static int	calc_word_len(char *s, size_t *len, bool *no_expand)
 {
@@ -59,6 +63,8 @@ static int	calc_word_len(char *s, size_t *len, bool *no_expand)
 	return (i);
 }
 
+// Copia o conteúdo de uma palavra removendo aspas.
+
 static void	copy_word(char *dst, char *s, size_t stop)
 {
 	size_t	i;
@@ -80,6 +86,8 @@ static void	copy_word(char *dst, char *s, size_t stop)
 			dst[j++] = s[i++];
 	}
 }
+
+// Cria um token WORD a partir da linha de input.
 
 int	ft_append_identifier(char **line, t_token **tokens)
 {

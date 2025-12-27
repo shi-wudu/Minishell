@@ -25,9 +25,10 @@ static bool	is_redirect(t_token_type type)
 		|| type == HEREDOC);
 }
 
-/* 	pipe no início
-	pipe seguido de pipe
-	pipe no fim */
+// Valida regras de sintaxe relacionadas com pipes:
+// - pipe no início
+// - pipes consecutivos
+// - pipe no fim da linha
 
 static bool	check_pipes(t_token *tk)
 {
@@ -44,9 +45,10 @@ static bool	check_pipes(t_token *tk)
 	return (true);
 }
 
-/* 	redirect no fim: echo >
-	redirect seguido de pipe: echo > |
-	redirect seguido de outro redirect: echo > > */
+// Valida regras de sintaxe relacionadas com redireções:
+// - redireção no fim
+// - redireção seguida de pipe
+// - redireções consecutivas
 
 static bool	check_redirects(t_token *tk)
 {
@@ -74,6 +76,9 @@ static bool	check_redirects(t_token *tk)
 	}
 	return (true);
 }
+
+// Executa todas as verificações sintáticas da lista de tokens.
+// Retorna false se algum erro for encontrado.
 
 bool	check_syntax(t_token *tokens)
 {

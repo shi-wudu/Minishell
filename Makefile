@@ -7,7 +7,6 @@ OBJ_DIR     = obj
  
 SRC_FILES := \
 	main.c \
-	debug.c \
     builtin/builtin.c \
     builtin/echo_cd_pwd.c \
     builtin/exit_export.c \

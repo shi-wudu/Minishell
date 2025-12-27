@@ -32,11 +32,17 @@ void	free_environment(char **env)
 	free(env);
 }
 
+// Liberta todos os recursos globais do minishell
+// (ambiente e histórico do readline).
+
 void	free_all(t_data *data)
 {
 	free_environment(data->envp);
 	rl_clear_history();
 }
+
+// Limpa todos os dados associados a uma iteração do loop:
+// tokens, comandos e input do utilizador.
 
 void	cleanup_iteration(t_data *data)
 {

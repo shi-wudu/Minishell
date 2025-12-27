@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// Determina o tipo de separador (<, >, >>, <<, |).
+
 static t_token_type	get_separator_type(char *s)
 {
 	if (!ft_strncmp(s, "<<", 2))
@@ -26,6 +28,8 @@ static t_token_type	get_separator_type(char *s)
 		return (PIPE);
 	return (END);
 }
+
+// Trata operadores especiais e cria tokens de separadores.
 
 int	ft_handle_separator(char **line, t_token **tokens)
 {
