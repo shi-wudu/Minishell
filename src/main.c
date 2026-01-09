@@ -68,13 +68,13 @@ static void	minishell_loop(t_data *data)
 		setup_signals_interactive();
 		g_signal = 0;
 		data->user_input = readline("minishell> ");
-		if (*data->user_input)
-			add_history(data->user_input);
-		else
+		if (!data->user_input)
 		{
 			write(1, "exit\n", 5);
-			return ;
+			return;
 		}
+		if (*data->user_input)
+			add_history(data->user_input);
 		process_input(data);
 		cleanup_iteration(data);
 	}
