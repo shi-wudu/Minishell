@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+// Verifica se uma string representa um número inteiro válido,
+// permitindo um sinal opcional (+ ou -).
+
 static int	is_valid_number(char *str)
 {
 	int	i;
@@ -30,6 +33,8 @@ static int	is_valid_number(char *str)
 	return (1);
 }
 
+// Verifica se uma string é um identificador válido de variável de ambiente.
+
 static int	is_valid_identifier(char *str)
 {
 	int	i;
@@ -45,6 +50,11 @@ static int	is_valid_identifier(char *str)
 	}
 	return (1);
 }
+
+// Implementação do builtin exit.
+// Encerra o shell quando executado no processo pai.
+// Valida argumentos numéricos, trata erros e calcula o exit status
+// de acordo com as regras do bash (exit_code % 256).
 
 int	builtin_exit(char **argv, bool from_shell)
 {
@@ -73,6 +83,11 @@ int	builtin_exit(char **argv, bool from_shell)
 	exit_code = ft_atoi(argv[1]);
 	exit(exit_code % 256);
 }
+
+// Implementação do builtin export.
+// Lista o ambiente quando chamado sem argumentos.
+// Caso contrário, valida identificadores e adiciona ou atualiza
+// variáveis de ambiente.
 
 int	builtin_export(char **argv, char ***env)
 {

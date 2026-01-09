@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+// Verifica se uma entrada do ambiente corresponde a uma variável
+// específica (comparação até ao '=').
+
 static int	does_env_exist(char *env_entry, char *var_name)
 {
 	int	i;
@@ -63,6 +66,9 @@ static bool	copy_env_var(char **dst, char *src, int *k)
 	return (true);
 }
 
+// Constrói um novo array de ambiente removendo as variáveis
+// especificadas em unset_list.
+
 static char	**build_new_env(char **env, char **unset_list, int remaining_count)
 {
 	char	**new_env;
@@ -87,6 +93,9 @@ static char	**build_new_env(char **env, char **unset_list, int remaining_count)
 	new_env[k] = NULL;
 	return (new_env);
 }
+
+// Implementação do builtin unset.
+// Remove variáveis do ambiente reconstruindo o array de env.
 
 int	builtin_unset(char **argv, char ***env)
 {

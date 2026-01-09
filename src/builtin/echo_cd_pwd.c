@@ -12,7 +12,10 @@
 
 #include "minishell.h"
 
-// Just "-" with nothing after
+// Verifica se uma string corresponde ao formato válido de opções -n
+// para o builtin echo (ex: -n, -nn, -nnnn).
+// Retorna 1 se for válida, 0 caso contrário.
+
 int	echo_nnn_handler(char *str)
 {
 	if (!str || str[0] != '-')
@@ -28,6 +31,10 @@ int	echo_nnn_handler(char *str)
 	}
 	return (1);
 }
+
+// Implementação do builtin echo.
+// Imprime os argumentos separados por espaços e adiciona uma newline
+
 
 int	builtin_echo(char **argv)
 {
@@ -52,6 +59,9 @@ int	builtin_echo(char **argv)
 		ft_putstr_fd("\n", 1);
 	return (0);
 }
+
+// Implementação do builtin cd.
+// Altera o diretório de trabalho do processo atual
 
 int	builtin_cd(char **argv, char **env)
 {
@@ -81,6 +91,9 @@ int	builtin_cd(char **argv, char **env)
 	}
 	return (0);
 }
+
+// Implementação do builtin pwd.
+// Obtém e imprime o diretório de trabalho atual.
 
 int	builtin_pwd(void)
 {

@@ -39,6 +39,7 @@ static int	skip_quoted(char *s, size_t *i, size_t *len, bool *no_expand)
 }
 
 // Calcula o comprimento de uma palavra considerando quotes.
+// Marca se há single quotes (no_expand = true)
 
 static int	calc_word_len(char *s, size_t *len, bool *no_expand)
 {

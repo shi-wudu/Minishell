@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// Verifica se o comando corresponde a um builtin suportado pelo minishell.
+
 int	is_builtin(char *cmd)
 {
 	if (!cmd)
@@ -23,6 +25,9 @@ int	is_builtin(char *cmd)
 		return (1);
 	return (0);
 }
+
+// Executa um builtin com base no nome do comando (argv[0]).
+// Atua como um dispatcher que encaminha para a função concreta.
 
 int	exec_builtin(char **argv, char ***env, bool from_shell)
 {
