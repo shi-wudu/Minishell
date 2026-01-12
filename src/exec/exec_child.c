@@ -16,12 +16,12 @@
 //	faz dup2 e fecha fds
 static void	child_setup_fds(int in_fd, int out_fd)
 {
-	if (in_fd != -1)
+	if (in_fd != -1 && in_fd != STDIN_FILENO)
 	{
 		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
 	}
-	if (out_fd != -1)
+	if (out_fd != -1 && out_fd != STDOUT_FILENO)
 	{
 		dup2(out_fd, STDOUT_FILENO);
 		close(out_fd);

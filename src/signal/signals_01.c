@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "minishell.h"
 
 volatile sig_atomic_t	g_signal = 0;
@@ -34,7 +35,7 @@ static void	sigint_heredoc(int sig)
 	(void)sig;
 	g_signal = SIGINT;
 	write(1, "\n", 1);
-	close(STDIN_FILENO);
+	rl_done = 1;
 }
 
 // Configura sinais para modo interativo:
@@ -61,7 +62,7 @@ void	setup_signals_heredoc(void)
 
 	sa.sa_handler = sigint_heredoc;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
+	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);

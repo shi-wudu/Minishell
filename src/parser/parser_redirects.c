@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+static void	touch_outfile(char *filename, bool append)
+{
+	int	fd;
+
+	if (append)
+		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else
+		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd >= 0)
+		close(fd);
+}
+
 // Aplica uma redireção de saída ao comando.
 
 static void	set_outfile(t_cmd *cmd, char *filename, bool append)
@@ -49,9 +61,17 @@ static void	apply_redirect(t_cmd *cmd, t_token *tk)
 		cmd->io.infile = ft_strdup(filename);
 	}
 	else if (tk->type == TRUNC)
+	{
+		if (cmd->io.outfile)
+			touch_outfile(cmd->io.outfile, cmd->io.append);
 		set_outfile(cmd, filename, false);
+	}
 	else if (tk->type == APPEND)
+	{
+		if (cmd->io.outfile)
+			touch_outfile(cmd->io.outfile, cmd->io.append);
 		set_outfile(cmd, filename, true);
+	}
 	else if (tk->type == HEREDOC)
 	{
 		free(cmd->io.heredoc_delimiter);
@@ -70,21 +90,4 @@ void	parse_redirect(t_cmd *cmd, t_token **tk, t_data *data)
 	}
 	apply_redirect(cmd, *tk);
 	*tk = (*tk)->next->next;
-}
-
-// Processa um pipe e cria um novo comando ligado ao anterior.
-
-t_cmd	*parse_pipe(t_cmd *cmd, t_token **tk)
-{
-	t_cmd	*new_cmd;
-
-	cmd->pipe_output = true;
-	new_cmd = calloc(1, sizeof(t_cmd));
-	if (!new_cmd)
-		return (NULL);
-	init_cmd(new_cmd);
-	cmd->next = new_cmd;
-	new_cmd->prev = cmd;
-	*tk = (*tk)->next;
-	return (new_cmd);
 }

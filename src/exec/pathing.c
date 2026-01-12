@@ -9,6 +9,7 @@
 /*   Updated: 2025-11-30 17:33:30 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	*check_direct_path(char *cmd)

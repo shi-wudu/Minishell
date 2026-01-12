@@ -47,7 +47,7 @@ if (data && data->envp && data->envp[0])
 {
 	ft_putstr_fd("debug: envp[0]=", 2);
 	ft_putendl_fd(data->envp[0], 2);
-}*/
+}*/ 
 // se houver pipeline, delega para o executor das pipes
 // se for builtin isolado sem redirs executa no processo pai
 // senao spawn+wait para cada comando (child faz redirs/exec)

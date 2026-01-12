@@ -50,6 +50,11 @@ static void	append_env_value(char **res, t_data *data, const char *str, int *i)
 
 static void	handle_dollar(const char *str, int *i, char **res, t_data *data)
 {
+	if (str[*i + 1] == '{')
+	{
+		handle_this(str, i, res, data);
+		return ;
+	}
 	if (str[*i + 1] == '?')
 	{
 		expand_exit_status(res, data->last_exit_status, i);

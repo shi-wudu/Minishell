@@ -12,6 +12,26 @@
 
 #include "minishell.h"
 
+static void	ensure_standard_fds_open(void)
+{
+	int fd;
+	int tmp;
+
+	for (fd = 0; fd <= 2; fd++)
+	{
+		if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
+		{
+			tmp = open("/dev/null", O_RDWR);
+			if (tmp != -1)
+			{
+				dup2(tmp, fd);
+				if (tmp > 2)
+					close(tmp);
+			}
+		}
+	}
+}
+
 // cria (n - 1) pipes e devolve um array linear de fds (2*pairs)
 // devolve NULL em erro
 // fechar fds ja criados em caso de erro
@@ -118,6 +138,7 @@ void	execute_commands_piped(t_cmd *cmd, t_data *data)
 
 	if (!cmd)
 		return ;
+	ensure_standard_fds_open();
 	setup_signals_parent_exec();
 	ctx.n = count_cmds(cmd);
 	ctx.cmds = collect_cmds(cmd, ctx.n);

@@ -24,3 +24,27 @@ char	*append_char(char *s, char c)
 	free(s);
 	return (new);
 }
+
+void handle_this(const char *str, int *i, char **res, t_data *data)
+{
+	int		start;
+	char	*name;
+	char	*val;
+
+	if (str[*i + 1] == '{')
+	{
+		*i += 2;
+		start = *i;
+		while (str[*i] && str[*i] != '}')
+			(*i)++;
+		if (str[*i] != '}')
+			return ;
+		name = ft_substr(str, start, *i - start);
+		val = get_env_value(data->envp, name);
+		if (val)
+			*res = ft_strjoin_free(*res, val);
+		free(name);
+		(*i)++;
+		return ;
+	}
+}

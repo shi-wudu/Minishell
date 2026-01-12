@@ -126,6 +126,7 @@ int		ft_append_identifier(char **line, t_token **tokens);
 void	expand_tokens(t_token *tokens, t_data *data);
 char	*append_char(char *s, char c);
 char	*expand_dollar_only(const char *str, t_data *data);
+void 	handle_this(const char *str, int *i, char **res, t_data *data);
 
 /* parser */
 t_cmd	*parser(t_token *tokens, t_data *data);
