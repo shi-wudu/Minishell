@@ -24,70 +24,44 @@ static void	touch_outfile(char *filename, bool append)
 		close(fd);
 }
 
-// Aplica uma redireção de saída ao comando.
-
-static void	set_outfile(t_cmd *cmd, char *filename, bool append)
+static void	apply_redirect(t_cmd *cmd, t_token *op, t_token *arg)
 {
-	if (cmd->io.outfile)
+	if (op->type == INPUT)
+	{
+		free(cmd->io.infile);
+		cmd->io.infile = ft_strdup(arg->value);
+	}
+	else if (op->type == HEREDOC)
+	{
+		cmd->io.heredoc = true;
+		cmd->io.heredoc_expand = !arg->quoted;
+		free(cmd->io.heredoc_delimiter);
+		cmd->io.heredoc_delimiter = ft_strdup(arg->value);
+	}
+	else
+	{
+		touch_outfile(arg->value, op->type == APPEND);
 		free(cmd->io.outfile);
-	cmd->io.outfile = ft_strdup(filename);
-	cmd->io.append = append;
+		cmd->io.outfile = ft_strdup(arg->value);
+		cmd->io.append = (op->type == APPEND);
+		//cmd->pipe_output = false;
+	}
 }
 
-// Valida se um operador de redireção tem um token válido a seguir.
-
-static bool	validate_redirect(t_token *tk, t_data *data)
+bool	parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data)
 {
-	if (!tk->next || tk->next->type != WORD)
+	t_token	*op;
+	t_token	*arg;
+
+	op = *tk;
+	arg = op->next;
+	if (!arg || arg->type != WORD)
 	{
-		ft_putendl_fd(
-			"minishell: syntax error near unexpected token `newline'", 2);
+		syntax_error("newline");
 		data->parse_error = true;
 		return (false);
 	}
+	apply_redirect(cmd, op, arg);
+	*tk = arg->next;
 	return (true);
-}
-
-// Aplica a redireção ao comando (input, output ou heredoc).
-
-static void	apply_redirect(t_cmd *cmd, t_token *tk)
-{
-	char	*filename;
-
-	filename = tk->next->value;
-	if (tk->type == INPUT)
-	{
-		free(cmd->io.infile);
-		cmd->io.infile = ft_strdup(filename);
-	}
-	else if (tk->type == TRUNC)
-	{
-		if (cmd->io.outfile)
-			touch_outfile(cmd->io.outfile, cmd->io.append);
-		set_outfile(cmd, filename, false);
-	}
-	else if (tk->type == APPEND)
-	{
-		if (cmd->io.outfile)
-			touch_outfile(cmd->io.outfile, cmd->io.append);
-		set_outfile(cmd, filename, true);
-	}
-	else if (tk->type == HEREDOC)
-	{
-		free(cmd->io.heredoc_delimiter);
-		cmd->io.heredoc_expand = !tk->next->no_expand;
-		cmd->io.heredoc_delimiter = ft_strdup(filename);
-		cmd->io.heredoc = true;
-	}
-}
-
-void	parse_redirect(t_cmd *cmd, t_token **tk, t_data *data)
-{
-	if (!validate_redirect(*tk, data))
-	{
-		*tk = NULL;
-		return ;
-	}
-	apply_redirect(cmd, *tk);
-	*tk = (*tk)->next->next;
 }

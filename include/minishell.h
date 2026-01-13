@@ -56,6 +56,7 @@ typedef struct s_token
 	char						*value;
 	t_token_type				type;
 	bool						no_expand;
+	bool						quoted;
 	struct s_token				*prev;
 	struct s_token				*next;
 }								t_token;
@@ -130,9 +131,10 @@ void 	handle_this(const char *str, int *i, char **res, t_data *data);
 
 /* parser */
 t_cmd	*parser(t_token *tokens, t_data *data);
-void	parse_word(t_cmd *cmd, t_token **tk);
-t_cmd	*parse_pipe(t_cmd *cmd, t_token **tk);
-void	parse_redirect(t_cmd *cmd, t_token **tk, t_data *data);
+t_cmd 	*new_cmd(t_cmd **head, t_cmd *prev);
+bool	handle_word_pipe(t_cmd **cmd, t_cmd **head, t_token **tk);
+bool	add_arg(t_cmd *cmd, char *value);
+bool	parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data);
 void	free_commands(t_cmd *cmd);
 void	init_cmd(t_cmd *cmd);
 void	free_args(char **args);

@@ -24,6 +24,7 @@ static int	skip_quoted(char *s, size_t *i, size_t *len, bool *no_expand)
 	char	quote;
 
 	quote = s[*i];
+	
 	if (quote == '\'')
 		*no_expand = true;
 	(*i)++;
@@ -41,17 +42,19 @@ static int	skip_quoted(char *s, size_t *i, size_t *len, bool *no_expand)
 // Calcula o comprimento de uma palavra considerando quotes.
 // Marca se há single quotes (no_expand = true)
 
-static int	calc_word_len(char *s, size_t *len, bool *no_expand)
+static int	calc_word_len(char *s, size_t *len, bool *no_expand, bool *quoted)
 {
 	size_t	i;
 
 	i = 0;
 	*len = 0;
 	*no_expand = false;
+	*quoted = false;
 	while (s[i] && is_word_char(s[i]))
 	{
 		if (ft_is_quote(s[i]))
 		{
+			*quoted = true;
 			if (skip_quoted(s, &i, len, no_expand) == -1)
 				return (-1);
 		}
@@ -96,9 +99,10 @@ int	ft_append_identifier(char **line, t_token **tokens)
 	size_t	len;
 	int		consumed;
 	bool	no_expand;
+	bool	quoted;
 	t_token	*tok;
 
-	consumed = calc_word_len(*line, &len, &no_expand);
+	consumed = calc_word_len(*line, &len, &no_expand, &quoted);
 	if (consumed < 0)
 		return (0);
 	word = ft_calloc(len + 1, sizeof(char));
@@ -109,6 +113,7 @@ int	ft_append_identifier(char **line, t_token **tokens)
 	if (!tok)
 		return (free(word), 0);
 	tok->no_expand = no_expand;
+	tok->quoted = quoted;
 	ft_token_list_add_back(tokens, tok);
 	*line += consumed;
 	return (1);

@@ -11,10 +11,10 @@ SRC_FILES := \
     builtin/echo_cd_pwd.c \
     builtin/exit_export.c \
     builtin/unset.c \
-	parser/parser_pipe.c \
+	parser/parser_args.c \
+	parser/parser_cmd.c \
 	parser/parser_redirects.c \
 	parser/parser_utils.c \
-	parser/parser_word.c \
 	parser/parser.c \
 	utils/utils.c \
 	utils/check_error.c \
