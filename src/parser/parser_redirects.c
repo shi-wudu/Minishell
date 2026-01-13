@@ -24,6 +24,17 @@ static void	touch_outfile(char *filename, bool append)
 		close(fd);
 }
 
+static char	*strip_quotes(const char *s)
+{
+	size_t	len;
+
+	len = ft_strlen(s);
+	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'')
+		|| (s[0] == '"' && s[len - 1] == '"')))
+		return (ft_substr(s, 1, len - 2));
+	return (ft_strdup(s));
+}
+
 static void	apply_redirect(t_cmd *cmd, t_token *op, t_token *arg)
 {
 	if (op->type == INPUT)
@@ -36,7 +47,7 @@ static void	apply_redirect(t_cmd *cmd, t_token *op, t_token *arg)
 		cmd->io.heredoc = true;
 		cmd->io.heredoc_expand = !arg->quoted;
 		free(cmd->io.heredoc_delimiter);
-		cmd->io.heredoc_delimiter = ft_strdup(arg->value);
+		cmd->io.heredoc_delimiter = strip_quotes(arg->value);
 	}
 	else
 	{

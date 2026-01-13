@@ -37,6 +37,8 @@ void	free_environment(char **env)
 
 void	free_all(t_data *data)
 {
+	ft_clear_token_list(&data->token);
+    free_commands(data->cmd);
 	free_environment(data->envp);
 	rl_clear_history();
 }

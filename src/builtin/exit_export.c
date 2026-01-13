@@ -63,7 +63,7 @@ int	builtin_exit(char **argv, bool from_shell)
 	if (from_shell)
 		ft_putendl_fd("exit", 1);
 	if (!argv[1])
-		exit(0);
+		return (0);
 	if (!is_valid_number(argv[1]))
 	{
 		if (from_shell)
@@ -72,7 +72,7 @@ int	builtin_exit(char **argv, bool from_shell)
 			ft_putstr_fd(argv[1], 2);
 			ft_putendl_fd(": numeric argument required", 2);
 		}
-		exit(255);
+		return (255);
 	}
 	if (argv[2])
 	{
@@ -81,7 +81,7 @@ int	builtin_exit(char **argv, bool from_shell)
 		return (1);
 	}
 	exit_code = ft_atoi(argv[1]);
-	exit(exit_code % 256);
+	return (exit_code % 256);
 }
 
 // Implementação do builtin export.

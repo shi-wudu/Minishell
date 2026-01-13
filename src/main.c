@@ -44,8 +44,11 @@ static void	process_input(t_data *data)
 	expand_tokens(data->token, data);
 	data->parse_error = false;
 	data->cmd = parser(data->token, data);
-	if (data->parse_error)
+	if (data->parse_error || !data->cmd)
+	{
+		cleanup_iteration(data);
 		return ;
+	}
 	executed = execute_commands(data->cmd, data);
 	if (executed && data->cmd)
 	{
@@ -72,6 +75,7 @@ static void	minishell_loop(t_data *data)
 		if (!data->user_input)
 		{
 			write(1, "exit\n", 5);
+			cleanup_iteration(data);
 			return;
 		}
 		if (*data->user_input)

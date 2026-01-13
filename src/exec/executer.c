@@ -30,6 +30,13 @@ static int	exec_parent_builtin(t_cmd *cmd, t_data *data)
 {
 	int	status;
 
+	if (ft_strcmp(cmd->command, "exit") == 0)
+    {
+        status = builtin_exit(cmd->args, true);
+        cleanup_iteration(data);
+        free_all(data);
+        exit(status);
+    }
 	status = exec_builtin(cmd->args, &data->envp, true);
 	cmd->exit_status = status;
 	data->last_exit_status = status;
