@@ -70,6 +70,7 @@ static void	handle_dollar(const char *str, int *i, char **res, t_data *data)
 	if (!ft_isalnum(str[*i]) && str[*i] != '_')
 	{
 		*res = ft_strjoin_free(*res, "$");
+		(*i)++;
 		return ;
 	}
 	append_env_value(res, data, str, i);
@@ -80,19 +81,31 @@ static void	handle_dollar(const char *str, int *i, char **res, t_data *data)
 char	*expand_dollar_only(const char *str, t_data *data)
 {
 	int		i;
+	char	quote;
 	char	*res;
 
 	i = 0;
+	quote = 0;
 	res = ft_strdup("");
-	while (str && str[i])
+	while (str[i])
 	{
-		if (str[i] == '$')
-			handle_dollar(str, &i, &res, data);
-		else
+		if ((str[i] == '\'' || str[i] == '"')
+			&& (quote == 0 || quote == str[i]))
 		{
-			res = append_char(res, str[i]);
-			i++;
+			handle_quote_char(str, &i, &quote, &res);
+			continue ;
 		}
+		if ((str[i] == '\'' || str[i] == '"') && quote != 0)
+		{
+			res = append_char(res, str[i++]);
+			continue ;
+		}
+		if (str[i] == '$' && quote != '\'')
+		{
+			handle_dollar(str, &i, &res, data);
+			continue ;
+		}
+		res = append_char(res, str[i++]);
 	}
 	return (res);
 }
@@ -110,7 +123,7 @@ void	expand_tokens(t_token *tokens, t_data *data)
 			tokens = tokens->next->next;
 			continue ;
 		}
-		if (tokens->type == WORD && !tokens->no_expand)
+		if (tokens->type == WORD)
 		{
 			expanded = expand_dollar_only(tokens->value, data);
 			free(tokens->value);

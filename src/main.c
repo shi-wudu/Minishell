@@ -12,19 +12,6 @@
 
 #include "minishell.h"
 
-// void	print_tokens(t_token *list)
-// {
-// 	t_token	*tmp = list;
-
-// 	ft_printf("\n Tokens:\n");
-// 	while (tmp)
-// 	{
-// 		ft_printf("  [%d] %s\n", tmp->type, tmp->value);
-// 		tmp = tmp->next;
-// 	}
-// 	ft_printf("\n");
-// }
-
 // Inicializa a estrutura principal do minishell.
 // Duplica o ambiente, inicializa campos e prepara o estado inicial.
 

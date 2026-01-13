@@ -48,3 +48,25 @@ void handle_this(const char *str, int *i, char **res, t_data *data)
 		return ;
 	}
 }
+
+bool	handle_quote_char(const char *str, int *i, char *quote, char **res)
+{
+	char	c;
+
+	c = str[*i];
+	if (*quote == 0)
+	{
+		*quote = c;
+		(*i)++;
+		return (true);
+	}
+	if (*quote == c)
+	{
+		*quote = 0;
+		(*i)++;
+		return (true);
+	}
+	*res = append_char(*res, c);
+	(*i)++;
+	return (true);
+}

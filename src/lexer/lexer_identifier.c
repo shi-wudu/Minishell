@@ -19,14 +19,11 @@ static bool	is_word_char(char c)
 
 // Salta conteúdo entre aspas, validando fecho correto.
 
-static int	skip_quoted(char *s, size_t *i, size_t *len, bool *no_expand)
+static int	skip_quoted(char *s, size_t *i, size_t *len)
 {
 	char	quote;
 
 	quote = s[*i];
-	
-	if (quote == '\'')
-		*no_expand = true;
 	(*i)++;
 	while (s[*i] && s[*i] != quote)
 	{
@@ -40,22 +37,20 @@ static int	skip_quoted(char *s, size_t *i, size_t *len, bool *no_expand)
 }
 
 // Calcula o comprimento de uma palavra considerando quotes.
-// Marca se há single quotes (no_expand = true)
 
-static int	calc_word_len(char *s, size_t *len, bool *no_expand, bool *quoted)
+static int	calc_word_len(char *s, size_t *len, bool *quoted)
 {
 	size_t	i;
 
 	i = 0;
 	*len = 0;
-	*no_expand = false;
 	*quoted = false;
 	while (s[i] && is_word_char(s[i]))
 	{
 		if (ft_is_quote(s[i]))
 		{
 			*quoted = true;
-			if (skip_quoted(s, &i, len, no_expand) == -1)
+			if (skip_quoted(s, &i, len) == -1)
 				return (-1);
 		}
 		else
@@ -67,28 +62,15 @@ static int	calc_word_len(char *s, size_t *len, bool *no_expand, bool *quoted)
 	return (i);
 }
 
-// Copia o conteúdo de uma palavra removendo aspas.
+// Copia o conteúdo de uma palavra
 
-static void	copy_word(char *dst, char *s, size_t stop)
+static void copy_word(char *dst, char *s, size_t stop)
 {
-	size_t	i;
-	size_t	j;
-	char	quote;
+    size_t i = 0;
+    size_t j = 0;
 
-	i = 0;
-	j = 0;
-	while (i < stop)
-	{
-		if (ft_is_quote(s[i]))
-		{
-			quote = s[i++];
-			while (s[i] && s[i] != quote)
-				dst[j++] = s[i++];
-			i++;
-		}
-		else
-			dst[j++] = s[i++];
-	}
+    while (i < stop)
+        dst[j++] = s[i++];
 }
 
 // Cria um token WORD a partir da linha de input.
@@ -98,21 +80,19 @@ int	ft_append_identifier(char **line, t_token **tokens)
 	char	*word;
 	size_t	len;
 	int		consumed;
-	bool	no_expand;
 	bool	quoted;
 	t_token	*tok;
 
-	consumed = calc_word_len(*line, &len, &no_expand, &quoted);
+	consumed = calc_word_len(*line, &len, &quoted);
 	if (consumed < 0)
 		return (0);
-	word = ft_calloc(len + 1, sizeof(char));
+	word = ft_calloc(consumed + 1, sizeof(char));
 	if (!word)
 		return (0);
 	copy_word(word, *line, consumed);
 	tok = ft_new_token(word, WORD);
 	if (!tok)
 		return (free(word), 0);
-	tok->no_expand = no_expand;
 	tok->quoted = quoted;
 	ft_token_list_add_back(tokens, tok);
 	*line += consumed;

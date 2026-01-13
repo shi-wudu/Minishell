@@ -55,7 +55,6 @@ typedef struct s_token
 {
 	char						*value;
 	t_token_type				type;
-	bool						no_expand;
 	bool						quoted;
 	struct s_token				*prev;
 	struct s_token				*next;
@@ -128,6 +127,7 @@ void	expand_tokens(t_token *tokens, t_data *data);
 char	*append_char(char *s, char c);
 char	*expand_dollar_only(const char *str, t_data *data);
 void 	handle_this(const char *str, int *i, char **res, t_data *data);
+bool 	handle_quote_char(const char *str, int *i, char *quote, char **res);
 
 /* parser */
 t_cmd	*parser(t_token *tokens, t_data *data);
