@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:18:52 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/20 13:18:52 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 12:51:14 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	free_environment(char **env)
 void	free_all(t_data *data)
 {
 	ft_clear_token_list(&data->token);
-    free_commands(data->cmd);
+	free_commands(data->cmd);
 	free_environment(data->envp);
 	rl_clear_history();
 }

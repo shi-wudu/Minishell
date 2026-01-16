@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/21 21:34:53 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 14:02:37 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,11 @@ int	prepare_heredocs(t_cmd *cmd, t_data *data)
 			{
 				data->last_exit_status = 130;
 				return (130);
+			}
+			if (cmd->io.infile)
+			{
+				unlink(cmd->io.infile);
+				free(cmd->io.infile);
 			}
 			cmd->io.infile = file;
 		}

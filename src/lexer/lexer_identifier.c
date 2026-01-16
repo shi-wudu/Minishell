@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:29 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/12/20 00:47:37 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 13:06:45 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,15 @@ static int	calc_word_len(char *s, size_t *len, bool *quoted)
 
 // Copia o conteúdo de uma palavra
 
-static void copy_word(char *dst, char *s, size_t stop)
+static void	copy_word(char *dst, char *s, size_t stop)
 {
-    size_t i = 0;
-    size_t j = 0;
+	size_t	i;
+	size_t	j;
 
-    while (i < stop)
-        dst[j++] = s[i++];
+	i = 0;
+	j = 0;
+	while (i < stop)
+		dst[j++] = s[i++];
 }
 
 // Cria um token WORD a partir da linha de input.

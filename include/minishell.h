@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:17:15 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/20 13:17:15 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 13:02:58 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,12 @@ int		ft_append_identifier(char **line, t_token **tokens);
 void	expand_tokens(t_token *tokens, t_data *data);
 char	*append_char(char *s, char c);
 char	*expand_dollar_only(const char *str, t_data *data);
-void 	handle_this(const char *str, int *i, char **res, t_data *data);
-bool 	handle_quote_char(const char *str, int *i, char *quote, char **res);
+void	handle_this(const char *str, int *i, char **res, t_data *data);
+bool	handle_quote_char(const char *str, int *i, char *quote, char **res);
 
 /* parser */
 t_cmd	*parser(t_token *tokens, t_data *data);
-t_cmd 	*new_cmd(t_cmd **head, t_cmd *prev);
+t_cmd	*new_cmd(t_cmd **head, t_cmd *prev);
 bool	handle_word_pipe(t_cmd **cmd, t_cmd **head, t_token **tk);
 bool	add_arg(t_cmd *cmd, char *value);
 bool	parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data);
@@ -181,6 +181,7 @@ int		count_cmds(t_cmd *cmd);
 t_cmd	**collect_cmds(t_cmd *cmd, int n);
 void	close_all_pipes(int *pipes, int n);
 void	kill_children(pid_t *pids, int count);
+void	ensure_standard_fds_open(void);
 
 /* signals */
 void	setup_signals_interactive(void);

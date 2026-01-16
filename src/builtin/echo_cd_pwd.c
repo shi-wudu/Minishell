@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_cd_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student42.lisboa.pt>    +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:56:16 by marleand          #+#    #+#             */
-/*   Updated: 2025/09/03 19:25:50 by marleand         ###   ########.fr       */
+/*   Updated: 2026/01/16 12:56:54 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int	echo_nnn_handler(char *str)
 
 // Implementação do builtin echo.
 // Imprime os argumentos separados por espaços e adiciona uma newline
-
 
 int	builtin_echo(char **argv)
 {

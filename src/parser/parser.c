@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:18:58 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/21 22:01:09 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 14:06:18 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,8 @@ t_cmd	*parser(t_token *tokens, t_data *data)
 		if (!cmd)
 			cmd = new_cmd(&head, NULL);
 		if (tk->type == WORD || tk->type == PIPE)
-		{
 			if (!handle_word_pipe(&cmd, &head, &tk))
 				return (NULL);
-		}
 		else if (tk->type == INPUT || tk->type == TRUNC
 			|| tk->type == APPEND || tk->type == HEREDOC)
 		{
@@ -44,4 +42,3 @@ t_cmd	*parser(t_token *tokens, t_data *data)
 	}
 	return (head);
 }
-

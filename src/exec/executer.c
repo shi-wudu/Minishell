@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  #+#  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-11-30 16:08:39 by user              #+#    #+#             */
-/*   Updated: 2025-11-30 16:08:39 by user             ###   ########.fr       */
+/*   Created: 2025/11/30 16:08:39 by user              #+#    #+#             */
+/*   Updated: 2026/01/16 13:05:35 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ static int	exec_parent_builtin(t_cmd *cmd, t_data *data)
 	int	status;
 
 	if (ft_strcmp(cmd->command, "exit") == 0)
-    {
-        status = builtin_exit(cmd->args, true);
-        cleanup_iteration(data);
-        free_all(data);
-        exit(status);
-    }
+	{
+		status = builtin_exit(cmd->args, true);
+		cleanup_iteration(data);
+		free_all(data);
+		exit(status);
+	}
 	status = exec_builtin(cmd->args, &data->envp, true);
 	cmd->exit_status = status;
 	data->last_exit_status = status;
@@ -54,10 +54,12 @@ if (data && data->envp && data->envp[0])
 {
 	ft_putstr_fd("debug: envp[0]=", 2);
 	ft_putendl_fd(data->envp[0], 2);
-}*/ 
+}*/
+
 // se houver pipeline, delega para o executor das pipes
 // se for builtin isolado sem redirs executa no processo pai
 // senao spawn+wait para cada comando (child faz redirs/exec)
+
 int	execute_commands(t_cmd *cmd, t_data *data)
 {
 	t_cmd	*current;

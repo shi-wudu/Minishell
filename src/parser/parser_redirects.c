@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:13 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/20 13:19:13 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 14:02:21 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static char	*strip_quotes(const char *s)
 
 	len = ft_strlen(s);
 	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'')
-		|| (s[0] == '"' && s[len - 1] == '"')))
+			|| (s[0] == '"' && s[len - 1] == '"')))
 		return (ft_substr(s, 1, len - 2));
 	return (ft_strdup(s));
 }
@@ -55,7 +55,6 @@ static void	apply_redirect(t_cmd *cmd, t_token *op, t_token *arg)
 		free(cmd->io.outfile);
 		cmd->io.outfile = ft_strdup(arg->value);
 		cmd->io.append = (op->type == APPEND);
-		//cmd->pipe_output = false;
 	}
 }
 

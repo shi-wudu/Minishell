@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:18:42 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/20 13:18:42 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 13:03:52 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ static void	process_input(t_data *data)
 			last = last->next;
 		data->last_exit_status = last->exit_status;
 	}
-	//print_tokens(data->token);
 }
 
 // Loop principal do minishell.
@@ -76,7 +75,7 @@ static void	minishell_loop(t_data *data)
 		{
 			write(1, "exit\n", 5);
 			cleanup_iteration(data);
-			return;
+			return ;
 		}
 		if (*data->user_input)
 			add_history(data->user_input);

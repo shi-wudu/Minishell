@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-t_cmd *new_cmd(t_cmd **head, t_cmd *prev)
+t_cmd	*new_cmd(t_cmd **head, t_cmd *prev)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = ft_calloc(1, sizeof(t_cmd));
 	if (!cmd)

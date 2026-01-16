@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/21 21:34:53 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 13:18:12 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,7 @@ char	*expand_dollar_only(const char *str, t_data *data)
 			continue ;
 		}
 		if (str[i] == '$' && quote != '\'')
-		{
 			handle_dollar(str, &i, &res, data);
-			continue ;
-		}
 		res = append_char(res, str[i++]);
 	}
 	return (res);

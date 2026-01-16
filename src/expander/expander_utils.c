@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/21 21:34:53 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 13:15:02 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*append_char(char *s, char c)
 	return (new);
 }
 
-void handle_this(const char *str, int *i, char **res, t_data *data)
+void	handle_this(const char *str, int *i, char **res, t_data *data)
 {
 	int		start;
 	char	*name;
@@ -38,7 +38,10 @@ void handle_this(const char *str, int *i, char **res, t_data *data)
 		while (str[*i] && str[*i] != '}')
 			(*i)++;
 		if (str[*i] != '}')
+		{
+			*res = ft_strjoin_free(*res, "${");
 			return ;
+		}
 		name = ft_substr(str, start, *i - start);
 		val = get_env_value(data->envp, name);
 		if (val)

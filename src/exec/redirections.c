@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  #+#  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-11-30 17:37:28 by user              #+#    #+#             */
-/*   Updated: 2025-11-30 17:37:28 by user             ###   ########.fr       */
+/*   Created: 2025/11/30 17:37:28 by user              #+#    #+#             */
+/*   Updated: 2026/01/16 13:47:04 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	redirect_input(char *infile)

@@ -6,9 +6,10 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/21 21:34:53 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 12:44:30 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 // Gera um nome único para o ficheiro temporário do heredoc.

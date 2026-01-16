@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_copy.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student42.lisboa.pt>    +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 15:02:08 by marleand          #+#    #+#             */
-/*   Updated: 2025/09/03 18:57:11 by marleand         ###   ########.fr       */
+/*   Updated: 2026/01/16 12:51:44 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	**dup_env(char **envp)
 		if (!copy[i])
 		{
 			free_environment(copy);
-			return(NULL);
+			return (NULL);
 		}
 		i++;
 	}

@@ -1,0 +1,139 @@
+FIRST TEST OF ALL
+. and enter #most of the times have leaks in this case
+
+
+
+QUOTES
+echo "hello 'world'"
+echo 'hello "world"'
+echo "'"
+echo '"'
+echo "'""'"
+echo '"'"'"'"   # nested alternating quotes
+echo "a'b'c"
+echo 'a"b"c'
+echo "'$PATH'"  # single-quoted + expansion inside
+echo "''''$USER''''"
+echo "$USER$PATH"
+echo '$USER$PATH'
+echo ">>file"
+
+HARDER QUOTES
+echo "a'b"'"c"d'
+echo "abc$USER'def$HOME'ghi""
+echo "    " | cat -e     # preserve spaces
+echo """"hello""""       # empty quotes collapsing
+
+
+
+REDIRECTIONS
+echo hello > file1 > file2
+echo hi > file1 bye bye
+cat < file1 > file2
+ls > file
+echo test > file >> file2
+
+
+PIPES AND COMBINATIONS
+ls | cat -e
+echo hi | cat -e | grep h
+echo hello | cat > file
+cat < file | wc -l
+echo 123 | grep 1 | wc -c
+cat non_existent | grep something
+ls | | cat
+
+
+ENVIRONMENT VARIABLES EXPANSION
+echo $HOME
+echo $NOT_DEFINED
+echo $?
+echo "$?"
+echo '$?'
+echo $$      # may differ depending on project rules
+echo "$USER$PWD"
+echo ${USER}abc   # should behave like bash (careful!)
+export TEST=hello
+echo $TEST
+export TEST="hi there"
+echo "$TEST"
+$? duas vezes 
+
+ENVIRONMENT VARIABLES EXPANSION HARDER
+echo $HOME$PWD$PATH
+echo "$HOME$PWD$PATH"
+echo "$HOME""$PWD""$PATH"
+echo $HOME"$PWD"'$PATH'
+echo ${NOTSET:-fallback}
+echo $SHLVL
+export VAR="   spaces   "   ..............
+export VAR="   spaces   " && echo $VAR #with bonus
+export EMPTY= && echo $EMPTY #with bonus
+unset PATH && echo $PATH && ls #with bonus
+
+
+
+BUILTIN EDGE CASES
+cd /
+cd - #não és obrigado a dar handle ao cd -
+cd no_such_dir
+pwd
+unset pwd e depois cd ..
+export A=1 B=2 C
+exit
+exit 42
+
+
+HEREDOC
+cat << EOF
+>hello
+>EOF
+
+cat << "EOF"
+>$USER #should not expand
+>EOF
+
+cat << 'EOF'
+>$USER #also should not expand
+>EOF
+
+cat <<EOF | cat
+>line1
+>line2
+>EOF
+
+cat << EOF << END ......................
+>first
+>EOF
+>second
+>END
+
+cat <<EOF | grep hi
+>hello
+>hi
+>EOF
+
+cat <<EOF | cat | cat | grep two
+>one
+>two
+>EOF
+
+cat <<EOF
+>^C during here-doc
+>EOF
+cat | cat | cat | sleep 3 | cat << eof | sleep 3
+
+
+
+SIGNAL HANDLING
+Ctrl+C (SIGINT) inside a here-doc
+Ctrl+D at prompt
+Ctrl+\ (SIGQUIT) during execution
+sleep 5 then Ctrl+C
+cat waiting for stdin + signals
+sleep 10 → Ctrl+C
+cat → Ctrl+D
+cat → Ctrl+\
+Check $? after each. Bash returns:
+Ctrl+C → 130
+Ctrl+\ → 131

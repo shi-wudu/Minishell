@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   piping_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  #+#  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-11-30 17:50:12 by user              #+#    #+#             */
-/*   Updated: 2025-11-30 17:50:12 by user             ###   ########.fr       */
+/*   Created: 2025/11/30 17:50:12 by user              #+#    #+#             */
+/*   Updated: 2026/01/16 13:05:49 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,26 @@ pid_t	spawn_pipeline_child(t_pipe_ctx *ctx, int idx)
 		exit(127);
 	}
 	return (pid);
+}
+
+void	ensure_standard_fds_open(void)
+{
+	int	fd;
+	int	tmp;
+
+	fd = 0;
+	while (fd <= 2)
+	{
+		if (fcntl(fd, F_GETFD) == -1 && errno == EBADF)
+		{
+			tmp = open("/dev/null", O_RDWR);
+			if (tmp != -1)
+			{
+				dup2(tmp, fd);
+				if (tmp > 2)
+					close(tmp);
+			}
+		}
+		fd ++;
+	}
 }

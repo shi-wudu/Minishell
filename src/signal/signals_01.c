@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/21 21:34:53 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/16 12:37:08 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	sigint_heredoc(int sig)
 	(void)sig;
 	g_signal = SIGINT;
 	write(1, "\n", 1);
-	rl_done = 1;
+	close(STDIN_FILENO);
 }
 
 // Configura sinais para modo interativo:
