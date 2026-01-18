@@ -21,3 +21,23 @@
 
     obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.2
 }
+
+{
+    readline 8.1 x86_64
+
+    Memcheck:Leak
+    match-leak-kinds: reachable
+
+    ...
+    obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.1
+}
+
+{
+    libtinfo 6.3 x86_64
+
+    Memcheck:Leak
+    match-leak-kinds: reachable
+
+    ...
+    obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.6.3
+}

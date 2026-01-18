@@ -70,8 +70,10 @@ static void	wait_and_collect(t_pipe_ctx *ctx, int count)
 	int	i;
 	int	status;
 	int	code;
+	int	printed_quit;
 
 	i = 0;
+	printed_quit = 0;
 	while (i < count)
 	{
 		status = 0;
@@ -85,7 +87,14 @@ static void	wait_and_collect(t_pipe_ctx *ctx, int count)
 			ctx->cmds[i]->exit_status = code;
 		}
 		else if (WIFSIGNALED(status))
+		{
+			if (!printed_quit && WTERMSIG(status) == SIGQUIT)
+			{
+				write(2, "Quit (core dumped)\n", 19);
+				printed_quit = 1;
+			}
 			ctx->cmds[i]->exit_status = 128 + WTERMSIG(status);
+		}
 		i++;
 	}
 	if (count > 0)
