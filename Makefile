@@ -23,6 +23,7 @@ SRC_FILES := \
 	exec/executer.c \
 	exec/exec_child.c \
 	exec/exec_parent.c \
+	exec/exec_utils.c \
     exec/pathing.c \
     exec/redirections.c \
     exec/piping_1.c \

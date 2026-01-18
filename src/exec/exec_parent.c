@@ -28,7 +28,7 @@ static pid_t	spawn_child(t_cmd *cmd, t_data *data)
 	if (pid == 0)
 	{
 		execute_child(cmd, -1, -1, data);
-		exit(127);
+		cleanup_and_exit_child(data, 127);
 	}
 	return (pid);
 }

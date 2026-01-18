@@ -21,6 +21,11 @@ char	*append_char(char *s, char c)
 	tmp[0] = c;
 	tmp[1] = '\0';
 	new = ft_strjoin(s, tmp);
+	if (!new)
+	{
+		free(s);
+		return (NULL);
+	}
 	free(s);
 	return (new);
 }

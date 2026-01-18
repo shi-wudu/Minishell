@@ -57,7 +57,7 @@ pid_t	spawn_pipeline_child(t_pipe_ctx *ctx, int idx)
 	{
 		child_close_unused_pipes(ctx, idx);
 		execute_child(ctx->cmds[idx], in_fd, out_fd, ctx->data);
-		exit(127);
+		cleanup_and_exit_child(ctx->data, 127);
 	}
 	return (pid);
 }

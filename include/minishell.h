@@ -175,6 +175,7 @@ void	execute_commands_piped(t_cmd *cmd, t_data *data);
 void	execute_child(t_cmd *cmd, int in_fd, int out_fd, t_data *data);
 void	execute_main(t_cmd *cmd, t_data *data);
 pid_t	spawn_pipeline_child(t_pipe_ctx *ctx, int idx);
+void	cleanup_and_exit_child(t_data *data, int status);
 
 /* Piping Utils  */
 int		count_cmds(t_cmd *cmd);
