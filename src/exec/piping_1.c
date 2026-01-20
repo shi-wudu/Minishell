@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 17:50:12 by user              #+#    #+#             */
-/*   Updated: 2026/01/16 13:03:13 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 11:15:07 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ static void	pipeline_cleanup_and_wait(t_pipe_ctx *ctx, int spawned)
 // criados (ou tentou criar)
 // erro no fork em algum ponto: matar e esperar apenas os spawnados
 // esperar todos os filhos normalmente
+
 void	execute_commands_piped(t_cmd *cmd, t_data *data)
 {
 	t_pipe_ctx	ctx;

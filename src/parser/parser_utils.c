@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:09 by seilkiv           #+#    #+#             */
-/*   Updated: 2025/10/21 22:00:37 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 10:57:14 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	free_commands(t_cmd *cmd)
 		if (cmd->io.outfile)
 			free(cmd->io.outfile);
 		if (cmd->heredoc_delimiters)
-    		free_args(cmd->heredoc_delimiters);
+			free_args(cmd->heredoc_delimiters);
 		free(cmd);
 		cmd = tmp;
 	}
@@ -93,8 +93,8 @@ char	*strip_quotes(const char *s)
 	size_t	len;
 
 	len = ft_strlen(s);
-	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'')
-			|| (s[0] == '"' && s[len - 1] == '"')))
+	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'') || (s[0] == '"'
+				&& s[len - 1] == '"')))
 		return (ft_substr(s, 1, len - 2));
 	return (ft_strdup(s));
 }

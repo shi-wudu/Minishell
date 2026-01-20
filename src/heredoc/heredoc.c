@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/16 14:02:37 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 11:08:33 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,51 +97,25 @@ char	*read_heredoc(char *delimiter, bool expand, t_data *data)
 // Processa todos os heredocs antes da execução.
 // Deve ser chamada no processo pai.
 
-int prepare_heredocs(t_cmd *cmd, t_data *data)
+int	prepare_heredocs(t_cmd *cmd, t_data *data)
 {
-    int   i;
-    char *file;
-    char *last_file;
+	char	*last;
 
-    while (cmd)
-    {
-        last_file = NULL;
-        i = 0;
-
-        while (i < cmd->heredoc_count)
-        {
-            file = read_heredoc(
-                cmd->heredoc_delimiters[i],
-                cmd->io.heredoc_expand,
-                data
-            );
-            if (!file)
-            {
-                data->last_exit_status = 130;
-                return (130);
-            }
-
-            if (last_file)
-            {
-                unlink(last_file);
-                free(last_file);
-            }
-
-            last_file = file;
-            i++;
-        }
-
-        if (last_file)
-        {
-            if (cmd->io.infile)
-            {
-                unlink(cmd->io.infile);
-                free(cmd->io.infile);
-            }
-            cmd->io.infile = last_file;
-        }
-
-        cmd = cmd->next;
-    }
-    return (0);
+	while (cmd)
+	{
+		last = resolve_heredocs(cmd, data);
+		if (cmd->heredoc_count && !last)
+			return (data->last_exit_status = 130, 130);
+		if (last)
+		{
+			if (cmd->io.infile)
+			{
+				unlink(cmd->io.infile);
+				free(cmd->io.infile);
+			}
+			cmd->io.infile = last;
+		}
+		cmd = cmd->next;
+	}
+	return (0);
 }

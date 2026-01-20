@@ -20,25 +20,25 @@
 
 static char	**append_str_array(char **old, char *value)
 {
-    char	**new;
-    int		i;
+	char	**new;
+	int		i;
 
-    i = 0;
-    while (old && old[i])
-        i++;
-    new = ft_calloc(i + 2, sizeof(char *));
-    if (!new)
-        return (NULL);
-    i = 0;
-    while (old && old[i])
-    {
-        new[i] = old[i];
-        i++;
-    }
-    new[i] = value;
-    new[i + 1] = NULL;
-    free(old);
-    return (new);
+	i = 0;
+	while (old && old[i])
+		i++;
+	new = ft_calloc(i + 2, sizeof(char *));
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (old && old[i])
+	{
+		new[i] = old[i];
+		i++;
+	}
+	new[i] = value;
+	new[i + 1] = NULL;
+	free(old);
+	return (new);
 }
 
 // Cria ou prepara um ficheiro de output para redirection (> ou >>).
@@ -68,7 +68,8 @@ static void	apply_redirect(t_cmd *cmd, t_token *op, t_token *arg)
 	else if (op->type == HEREDOC)
 	{
 		cmd->io.heredoc_expand = !arg->quoted;
-		cmd->heredoc_delimiters = append_str_array(cmd->heredoc_delimiters,strip_quotes(arg->value));
+		cmd->heredoc_delimiters = append_str_array(cmd->heredoc_delimiters,
+				strip_quotes(arg->value));
 		cmd->heredoc_count++;
 	}
 	else
