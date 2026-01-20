@@ -74,6 +74,6 @@ v:		$(NAME)
 	clear && valgrind --show-leak-kinds=all --leak-check=full --track-fds=all --track-origins=yes --suppressions=readline.supp ./minishell
 
 ch:		$(NAME)
-	valgrind --show-leak-kinds=definite --leak-check=full --track-fds=all --track-origins=yes --run-libc-freeres=yes --suppressions=readline.supp --trace-children=yes ./minishell
+	valgrind --show-leak-kinds=definite --leak-check=full --track-fds=all --track-origins=yes --run-libc-freeres=yes --suppressions=readline.supp ./minishell
 
 .PHONY: all clean fclean re
