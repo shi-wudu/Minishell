@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:17:15 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 17:05:21 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:15:15 by marleand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <linux/limits.h>
+# include <stdio.h>
+# include <stdlib.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <stdio.h>
-# include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
