@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:17:15 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 17:53:39 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 21:38:18 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,16 +155,16 @@ bool		check_syntax(t_token *tokens);
 void		syntax_error(char *token);
 
 /* built ins */
-int			is_builtin(char *cmd);
-int			exec_builtin(char **argv, char ***env, bool from_shell);
-int			builtin_echo(char **argv);
-int			builtin_cd(char **argv, char **env);
-int			builtin_pwd(void);
-int			builtin_export(char **argv, char ***env);
-int			builtin_env(char **env);
-int			builtin_exit(char **argv, bool from_shell);
-int			echo_nnn_handler(char *str);
-int			builtin_unset(char **argv, char ***env);
+int		is_builtin(char *cmd);
+int		exec_builtin(char **argv, char ***env, bool from_shell);
+int		builtin_echo(char **argv);
+int		builtin_cd(char **argv, char ***env);
+int		builtin_pwd(void);
+int		builtin_export(char **argv, char ***env);
+int		builtin_env(char **env);
+int		builtin_exit(char **argv, bool from_shell);
+int		echo_nnn_handler(char *str);
+int		builtin_unset(char **argv, char ***env);
 
 /* Environment Util*/
 char		*get_env_value(char **env, char *key);

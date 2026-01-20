@@ -77,3 +77,34 @@ int	update_or_add_var(char ***env, char *var, int *count)
 	(*count)++;
 	return (1);
 }
+
+int	env_count(char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env && env[i])
+		i++;
+	return (i);
+}
+
+void	update_pwd_vars(char ***env, const char *oldpwd, const char *newpwd)
+{
+	int		count;
+	char	*var;
+
+	if (!env || !*env || !newpwd)
+		return ;
+	count = env_count(*env);
+	if (oldpwd)
+	{
+		var = ft_strjoin("OLDPWD=", oldpwd);
+		if (var)
+			update_or_add_var(env, var, &count);
+		free(var);
+	}
+	var = ft_strjoin("PWD=", newpwd);
+	if (var)
+		update_or_add_var(env, var, &count);
+	free(var);
+}

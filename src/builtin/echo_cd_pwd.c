@@ -62,32 +62,29 @@ int	builtin_echo(char **argv)
 // Implementação do builtin cd.
 // Altera o diretório de trabalho do processo atual
 
-int	builtin_cd(char **argv, char **env)
+int	builtin_cd(char **argv, char ***env)
 {
 	char	cwd[PATH_MAX];
+	char	oldpwd[PATH_MAX];
 	char	*path;
 
 	path = argv[1];
 	if (!path)
-		path = get_env_value(env, "HOME");
+		path = get_env_value(*env, "HOME");
 	if (!path)
-	{
-		ft_putendl_fd("minishell: cd: HOME not set", 2);
-		return (1);
-	}
+		return (ft_putendl_fd("minishell: cd: HOME not set", 2), 1);
+	if (!getcwd(oldpwd, sizeof(oldpwd)))
+		oldpwd[0] = '\0';
 	if (chdir(path) != 0)
 	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(path, 2);
-		ft_putstr_fd(": ", 2);
-		ft_putendl_fd(strerror(errno), 2);
-		return (1);
+		return (ft_putstr_fd("minishell: cd: ", 2),
+			ft_putstr_fd(path, 2),
+			ft_putstr_fd(": ", 2),
+			ft_putendl_fd(strerror(errno), 2), 1);
 	}
 	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		ft_putendl_fd("minishell: pwd: getcwd failed", 2);
-		return (1);
-	}
+		return (ft_putendl_fd("minishell: pwd: getcwd failed", 2), 1);
+	update_pwd_vars(env, oldpwd[0] ? oldpwd : NULL, cwd);
 	return (0);
 }
 
