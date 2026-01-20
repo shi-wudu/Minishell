@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:09 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 10:57:14 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 16:00:12 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	init_cmd(t_cmd *cmd)
 	cmd->prev = NULL;
 	cmd->pipe_output = false;
 	cmd->io.infile = NULL;
+	cmd->io.infile_is_heredoc = false;
 	cmd->io.outfile = NULL;
 	cmd->io.append = false;
 	cmd->heredoc_delimiters = NULL;
@@ -52,12 +53,11 @@ void	free_commands(t_cmd *cmd)
 	while (cmd)
 	{
 		tmp = cmd->next;
-		if (cmd->io.infile)
+		if (cmd->io.infile && cmd->io.infile_is_heredoc)
 			unlink(cmd->io.infile);
+		free(cmd->io.infile);
 		free(cmd->command);
 		free_args(cmd->args);
-		if (cmd->io.infile)
-			free(cmd->io.infile);
 		if (cmd->io.outfile)
 			free(cmd->io.outfile);
 		if (cmd->heredoc_delimiters)

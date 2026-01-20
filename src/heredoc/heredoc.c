@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 11:08:33 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 15:56:44 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,12 +108,13 @@ int	prepare_heredocs(t_cmd *cmd, t_data *data)
 			return (data->last_exit_status = 130, 130);
 		if (last)
 		{
-			if (cmd->io.infile)
+			if (cmd->io.infile && cmd->io.infile_is_heredoc)
 			{
 				unlink(cmd->io.infile);
 				free(cmd->io.infile);
 			}
 			cmd->io.infile = last;
+			cmd->io.infile_is_heredoc = true;
 		}
 		cmd = cmd->next;
 	}

@@ -16,6 +16,7 @@ void	cleanup_and_exit_child(t_data *data, int status)
 {
 	if (data)
 	{
+		ft_clear_token_list(&data->token);
 		free_commands(data->cmd);
 		data->cmd = NULL;
 		free_environment(data->envp);

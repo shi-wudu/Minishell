@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:17:15 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 11:14:47 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:05:21 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_io
 	char						*outfile;
 	bool						append;
 	bool						heredoc_expand;
+	bool    					infile_is_heredoc;
 }								t_io;
 
 typedef struct s_command

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirects.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:13 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/16 14:02:21 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 15:53:31 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ static void	apply_redirect(t_cmd *cmd, t_token *op, t_token *arg)
 	{
 		free(cmd->io.infile);
 		cmd->io.infile = ft_strdup(arg->value);
+		cmd->io.infile_is_heredoc = false;
 	}
 	else if (op->type == HEREDOC)
 	{

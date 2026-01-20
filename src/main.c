@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:18:42 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/16 13:03:52 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 16:57:35 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static bool	init_data(t_data *data, char **envp)
 	data->cmd = NULL;
 	data->last_exit_status = 0;
 	data->parse_error = false;
+	// data->pipe_ctx = NULL;
+	// data->is_child = false; 
 	data->envp = dup_env(envp);
 	if (!data->envp)
 	{
