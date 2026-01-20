@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   piping_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 17:50:12 by user              #+#    #+#             */
-/*   Updated: 2026/01/16 13:05:49 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:46:31 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ pid_t	spawn_pipeline_child(t_pipe_ctx *ctx, int idx)
 		return (-1);
 	if (pid == 0)
 	{
+		ctx->data->is_child = true;
 		child_close_unused_pipes(ctx, idx);
 		execute_child(ctx->cmds[idx], in_fd, out_fd, ctx->data);
 		cleanup_and_exit_child(ctx->data, 127);

@@ -6,7 +6,7 @@
 /*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 17:50:12 by user              #+#    #+#             */
-/*   Updated: 2026/01/20 16:53:24 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 17:57:03 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,23 +123,27 @@ static void	pipeline_cleanup_and_wait(t_pipe_ctx *ctx, int spawned)
 
 void	execute_commands_piped(t_cmd *cmd, t_data *data)
 {
-	t_pipe_ctx	ctx;
+	t_pipe_ctx	*ctx;
 	int			spawned;
 
 	if (!cmd)
 		return ;
+	ctx = malloc(sizeof(t_pipe_ctx));
+	if (!ctx)
+		return ;
 	ensure_standard_fds_open();
 	setup_signals_parent_exec();
-	ctx.n = count_cmds(cmd);
-	ctx.cmds = collect_cmds(cmd, ctx.n);
-	ctx.pipes = create_pipes(ctx.n);
-	ctx.pids = malloc(sizeof(pid_t) * ctx.n);
-	ctx.data = data;
-	if (!ctx.cmds || !ctx.pipes || !ctx.pids)
-		return ;
-	spawned = spawn_all_children(&ctx);
-	close_all_pipes(ctx.pipes, ctx.n);
-	free(ctx.pipes);
-	pipeline_cleanup_and_wait(&ctx, spawned);
+	ctx->n = count_cmds(cmd);
+	ctx->cmds = collect_cmds(cmd, ctx->n);
+	ctx->pipes = create_pipes(ctx->n);
+	ctx->pids = malloc(sizeof(pid_t) * ctx->n);
+	ctx->data = data;
+	data->pipe_ctx = ctx;
+	spawned = spawn_all_children(ctx);
+	close_all_pipes(ctx->pipes, ctx->n);
+	free(ctx->pipes);
+	pipeline_cleanup_and_wait(ctx, spawned);
+	free(ctx);
+	data->pipe_ctx = NULL;
 	setup_signals_interactive();
 }

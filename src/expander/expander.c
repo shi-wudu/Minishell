@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/16 13:18:12 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/20 19:20:29 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ char	*expand_dollar_only(const char *str, t_data *data)
 	res = ft_strdup("");
 	while (str[i])
 	{
+		// printf("char %i:%c\n", i, str[i]);
 		if ((str[i] == '\'' || str[i] == '"')
 			&& (quote == 0 || quote == str[i]))
 		{
@@ -103,6 +104,7 @@ char	*expand_dollar_only(const char *str, t_data *data)
 		if (str[i] == '$' && quote != '\'')
 			handle_dollar(str, &i, &res, data);
 		res = append_char(res, str[i++]);
+		// printf("char %i:%c\n", i, str[i]);
 	}
 	return (res);
 }

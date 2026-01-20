@@ -28,18 +28,6 @@
 
     ...
 
-    obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.3
-}
-
-{
-    readline 1
-
-    Memcheck:Leak
-
-    match-leak-kinds: reachable
-
-    ...
-
     obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.2
 }
 
@@ -72,3 +60,4 @@
     ...
     obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.6.3
 }
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_export.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  #+#  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-11-02 19:15:39 by user              #+#    #+#             */
-/*   Updated: 2025-11-02 19:15:39 by user             ###   ########.fr       */
+/*   Created: 2025/11/02 19:15:39 by user              #+#    #+#             */
+/*   Updated: 2026/01/20 18:44:36 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	builtin_exit(char **argv, bool from_shell)
 			ft_putstr_fd(argv[1], 2);
 			ft_putendl_fd(": numeric argument required", 2);
 		}
-		return (255);
+		return (2);
 	}
 	if (argv[2])
 	{

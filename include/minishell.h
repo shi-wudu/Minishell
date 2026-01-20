@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marleand <marleand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:17:15 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 17:15:15 by marleand         ###   ########.fr       */
+/*   Updated: 2026/01/20 17:53:39 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <linux/limits.h>
-# include <stdio.h>
-# include <stdlib.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
@@ -82,15 +82,7 @@ typedef struct s_command
 	struct s_command			*prev;
 }								t_cmd;
 
-typedef struct s_data
-{
-	char						*user_input;
-	t_token						*token;
-	t_cmd						*cmd;
-	char						**envp;
-	int							last_exit_status;
-	bool						parse_error;
-}								t_data;
+typedef struct s_data t_data; 
 
 typedef struct s_pipe_ctx
 {
@@ -100,6 +92,18 @@ typedef struct s_pipe_ctx
 	int							n;
 	t_data						*data;
 }								t_pipe_ctx;
+
+typedef struct s_data
+{
+	char						*user_input;
+	t_token						*token;
+	t_cmd						*cmd;
+	char						**envp;
+	int							last_exit_status;
+	bool						parse_error;
+	t_pipe_ctx					*pipe_ctx;
+	bool						is_child;
+}								t_data;
 
 /*=============================*/
 /*            FILES            */
