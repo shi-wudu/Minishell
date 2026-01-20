@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:17:15 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 21:38:18 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/20 21:44:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,8 @@ char		*get_env_value(char **env, char *key);
 char		**dup_env(char **envp);
 int			update_or_add_var(char ***env, char *var, int *count);
 char		**expand_env(char **env, int *count);
+int			env_count(char **env);
+void		update_pwd_vars(char ***env, const char *oldpwd, const char *newpwd);
 
 /* Executing */
 int			execute_commands(t_cmd *cmd, t_data *data);

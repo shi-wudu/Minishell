@@ -62,11 +62,22 @@ int	builtin_echo(char **argv)
 // Implementação do builtin cd.
 // Altera o diretório de trabalho do processo atual
 
+
+static int	cd_err(const char *path)
+{
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd((char *)path, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(strerror(errno), 2);
+	return (1);
+}
+
 int	builtin_cd(char **argv, char ***env)
 {
-	char	cwd[PATH_MAX];
-	char	oldpwd[PATH_MAX];
-	char	*path;
+	char		cwd[PATH_MAX];
+	const char	*old;
+	char		oldpwd[PATH_MAX];
+	char		*path;
 
 	path = argv[1];
 	if (!path)
@@ -76,14 +87,15 @@ int	builtin_cd(char **argv, char ***env)
 	if (!getcwd(oldpwd, sizeof(oldpwd)))
 		oldpwd[0] = '\0';
 	if (chdir(path) != 0)
-	{
-		return (ft_putstr_fd("minishell: cd: ", 2),
-			ft_putstr_fd(path, 2),
-			ft_putstr_fd(": ", 2),
-			ft_putendl_fd(strerror(errno), 2), 1);
-	}
+		return (cd_err(path));
 	if (!getcwd(cwd, sizeof(cwd)))
 		return (ft_putendl_fd("minishell: pwd: getcwd failed", 2), 1);
+	{
+		old = NULL;
+		if (oldpwd[0])
+			old = oldpwd;
+		update_pwd_vars(env, old, cwd);
+	}
 	return (0);
 }
 
