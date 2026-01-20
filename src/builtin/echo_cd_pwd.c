@@ -84,7 +84,6 @@ int	builtin_cd(char **argv, char ***env)
 	}
 	if (!getcwd(cwd, sizeof(cwd)))
 		return (ft_putendl_fd("minishell: pwd: getcwd failed", 2), 1);
-	update_pwd_vars(env, oldpwd[0] ? oldpwd : NULL, cwd);
 	return (0);
 }
 
