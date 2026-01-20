@@ -19,7 +19,7 @@ static int	is_parent_builtin(t_cmd *cmd)
 		return (0);
 	if (!is_builtin(cmd->command))
 		return (0);
-	if (cmd->io.infile || cmd->io.outfile || cmd->io.heredoc)
+	if (cmd->io.infile || cmd->io.outfile || cmd->heredoc_count > 0)
 		return (0);
 	if (cmd->pipe_output)
 		return (0);

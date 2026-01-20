@@ -65,9 +65,7 @@ typedef struct s_io
 	char						*infile;
 	char						*outfile;
 	bool						append;
-	bool						heredoc;
 	bool						heredoc_expand;
-	char						*heredoc_delimiter;
 }								t_io;
 
 typedef struct s_command
@@ -77,6 +75,8 @@ typedef struct s_command
 	t_io						io;
 	int							exit_status;
 	bool						pipe_output;
+	char    					**heredoc_delimiters;
+	int    					 	heredoc_count;
 	struct s_command			*next;
 	struct s_command			*prev;
 }								t_cmd;
@@ -139,6 +139,7 @@ void	free_commands(t_cmd *cmd);
 void	init_cmd(t_cmd *cmd);
 void	free_args(char **args);
 char	*ft_strjoin_free(char *s1, const char *s2);
+char	*strip_quotes(const char *s);
 
 /* utils */
 int		ft_is_space(char c);

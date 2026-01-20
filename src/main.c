@@ -74,7 +74,6 @@ static void	minishell_loop(t_data *data)
 		if (!data->user_input)
 		{
 			write(1, "exit\n", 5);
-			cleanup_iteration(data);
 			return ;
 		}
 		if (*data->user_input)

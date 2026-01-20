@@ -97,29 +97,51 @@ char	*read_heredoc(char *delimiter, bool expand, t_data *data)
 // Processa todos os heredocs antes da execução.
 // Deve ser chamada no processo pai.
 
-int	prepare_heredocs(t_cmd *cmd, t_data *data)
+int prepare_heredocs(t_cmd *cmd, t_data *data)
 {
-	char	*file;
+    int   i;
+    char *file;
+    char *last_file;
 
-	while (cmd)
-	{
-		if (cmd->io.heredoc)
-		{
-			file = read_heredoc(cmd->io.heredoc_delimiter,
-					cmd->io.heredoc_expand, data);
-			if (!file)
-			{
-				data->last_exit_status = 130;
-				return (130);
-			}
-			if (cmd->io.infile)
-			{
-				unlink(cmd->io.infile);
-				free(cmd->io.infile);
-			}
-			cmd->io.infile = file;
-		}
-		cmd = cmd->next;
-	}
-	return (0);
+    while (cmd)
+    {
+        last_file = NULL;
+        i = 0;
+
+        while (i < cmd->heredoc_count)
+        {
+            file = read_heredoc(
+                cmd->heredoc_delimiters[i],
+                cmd->io.heredoc_expand,
+                data
+            );
+            if (!file)
+            {
+                data->last_exit_status = 130;
+                return (130);
+            }
+
+            if (last_file)
+            {
+                unlink(last_file);
+                free(last_file);
+            }
+
+            last_file = file;
+            i++;
+        }
+
+        if (last_file)
+        {
+            if (cmd->io.infile)
+            {
+                unlink(cmd->io.infile);
+                free(cmd->io.infile);
+            }
+            cmd->io.infile = last_file;
+        }
+
+        cmd = cmd->next;
+    }
+    return (0);
 }

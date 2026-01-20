@@ -12,6 +12,11 @@
 
 #include "minishell.h"
 
+// Decide como tratar o token atual durante o parsing.
+// Encaminha WORD e PIPE para handle_word_pipe,
+// redirections para parse_redirect_token,
+// ou avança o token em casos neutros.
+
 static bool	parser_handle_token(t_cmd **cmd, t_cmd **head,
 			t_token **tk, t_data *data)
 {
@@ -24,8 +29,9 @@ static bool	parser_handle_token(t_cmd **cmd, t_cmd **head,
 	return (true);
 }
 
-// Cria e inicializa um novo comando.
-// Define-o como cabeça da lista caso ainda não exista.
+// Constrói a lista de comandos a partir da lista de tokens.
+// Agrupa argumentos, pipes e redirections num conjunto de t_cmd.
+// Retorna a cabeça da lista ou NULL em caso de erro.
 
 t_cmd	*parser(t_token *tokens, t_data *data)
 {

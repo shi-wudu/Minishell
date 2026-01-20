@@ -23,9 +23,9 @@ void	init_cmd(t_cmd *cmd)
 	cmd->pipe_output = false;
 	cmd->io.infile = NULL;
 	cmd->io.outfile = NULL;
-	cmd->io.heredoc_delimiter = NULL;
 	cmd->io.append = false;
-	cmd->io.heredoc = false;
+	cmd->heredoc_delimiters = NULL;
+	cmd->heredoc_count = 0;
 }
 
 void	free_args(char **args)
@@ -52,7 +52,7 @@ void	free_commands(t_cmd *cmd)
 	while (cmd)
 	{
 		tmp = cmd->next;
-		if (cmd->io.heredoc && cmd->io.infile)
+		if (cmd->io.infile)
 			unlink(cmd->io.infile);
 		free(cmd->command);
 		free_args(cmd->args);
@@ -60,8 +60,8 @@ void	free_commands(t_cmd *cmd)
 			free(cmd->io.infile);
 		if (cmd->io.outfile)
 			free(cmd->io.outfile);
-		if (cmd->io.heredoc_delimiter)
-			free(cmd->io.heredoc_delimiter);
+		if (cmd->heredoc_delimiters)
+    		free_args(cmd->heredoc_delimiters);
 		free(cmd);
 		cmd = tmp;
 	}
@@ -84,4 +84,17 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 	if (!res)
 		return (NULL);
 	return (res);
+}
+
+// Remove aspas exteriores de uma string, se existirem.
+
+char	*strip_quotes(const char *s)
+{
+	size_t	len;
+
+	len = ft_strlen(s);
+	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'')
+			|| (s[0] == '"' && s[len - 1] == '"')))
+		return (ft_substr(s, 1, len - 2));
+	return (ft_strdup(s));
 }

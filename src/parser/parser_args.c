@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// Aumenta dinamicamente um array de strings para adicionar um novo valor.
+
 static char	**grow_str_array(char **old, char *value)
 {
 	int		i;
@@ -33,6 +35,9 @@ static char	**grow_str_array(char **old, char *value)
 	new[i] = ft_strdup(value);
 	return (new);
 }
+
+// Adiciona um argumento ao comando.
+// Define o nome do comando se ainda não estiver definido.
 
 bool	add_arg(t_cmd *cmd, char *value)
 {
