@@ -100,7 +100,7 @@ char	*read_heredoc(char *delimiter, bool expand, t_data *data)
 int	prepare_heredocs(t_cmd *cmd, t_data *data)
 {
 	char	*last;
-
+	data->in_heredoc = true;
 	while (cmd)
 	{
 		last = resolve_heredocs(cmd, data);
@@ -118,5 +118,6 @@ int	prepare_heredocs(t_cmd *cmd, t_data *data)
 		}
 		cmd = cmd->next;
 	}
+	data->in_heredoc = false;
 	return (0);
 }

@@ -36,7 +36,7 @@ int	ft_handle_separator(char **line, t_token **tokens)
 	t_token_type	type;
 
 	type = get_separator_type(*line);
-	ft_token_list_add_back(tokens, ft_new_token(NULL, type));
+	ft_token_list_add_back(tokens, ft_new_token(type));
 	(*line)++;
 	if (type == HEREDOC || type == APPEND)
 		(*line)++;

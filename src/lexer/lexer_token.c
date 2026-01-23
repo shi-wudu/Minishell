@@ -14,15 +14,17 @@
 
 // Cria um novo token com valor e tipo definidos.
 
-t_token	*ft_new_token(char *value, t_token_type type)
+t_token	*ft_new_token(t_token_type type)
 {
 	t_token	*new;
 
 	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->value = value;
 	new->type = type;
+	new->segments = NULL;
+	new->prev = NULL;
+	new->next = NULL;
 	return (new);
 }
 
@@ -55,7 +57,12 @@ void	ft_clear_token_list(t_token **lst)
 	while (tmp)
 	{
 		next = tmp->next;
-		free(tmp->value);
+
+		if (tmp->type == WORD)
+		{
+			free_segments(tmp->segments);
+			free_args(tmp->expanded);
+		}
 		free(tmp);
 		tmp = next;
 	}

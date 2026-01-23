@@ -20,6 +20,7 @@ SRC_FILES := \
 	utils/check_error.c \
 	expander/expander.c \
 	expander/expander_utils.c \
+	expander/expand_heredoc.c \
 	exec/executer.c \
 	exec/exec_child.c \
 	exec/exec_parent.c \

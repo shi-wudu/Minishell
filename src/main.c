@@ -21,6 +21,7 @@ static bool	init_data(t_data *data, char **envp)
 	data->cmd = NULL;
 	data->last_exit_status = 0;
 	data->parse_error = false;
+	data->in_heredoc = false;
 	data->pipe_ctx = NULL;
 	data->is_child = false; 
 	data->envp = dup_env(envp);
@@ -52,7 +53,7 @@ static void	process_input(t_data *data)
 		return ;
 	}
 	executed = execute_commands(data->cmd, data);
-	if (executed && data->cmd)
+	if (executed == 1 && data->cmd)
 	{
 		last = data->cmd;
 		while (last->next)
@@ -77,6 +78,13 @@ static void	minishell_loop(t_data *data)
 		{
 			write(1, "exit\n", 5);
 			return ;
+		}
+		if (g_signal == SIGINT)
+		{
+			data->last_exit_status = 130;
+			g_signal = 0;
+			if (!data->user_input)
+				continue;
 		}
 		if (*data->user_input)
 			add_history(data->user_input);

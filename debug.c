@@ -75,3 +75,45 @@
 		cmd = cmd->next;
 	}
 } */
+
+/*static const char *token_type_str(t_token_type type)
+{
+	if (type == WORD) return ("WORD");
+	if (type == PIPE) return ("PIPE");
+	if (type == INPUT) return ("INPUT");
+	if (type == TRUNC) return ("TRUNC");
+	if (type == APPEND) return ("APPEND");
+	if (type == HEREDOC) return ("HEREDOC");
+	if (type == END) return ("END");
+	return ("UNKNOWN");
+}
+
+static const char *seg_type_str(t_seg_type type)
+{
+	if (type == UNQUOTED) return ("UNQUOTED");
+	if (type == SINGLE_QUOTED) return ("SINGLE_QUOTED");
+	if (type == DOUBLE_QUOTED) return ("DOUBLE_QUOTED");
+	return ("UNKNOWN");
+}
+
+void	print_tokens_and_segments(t_token *tk)
+{
+	int ti = 0;
+
+	while (tk)
+	{
+		printf("Token[%d]: %s\n", ti++, token_type_str(tk->type));
+		if (tk->type == WORD)
+		{
+			t_segment *seg = tk->segments;
+			int si = 0;
+			while (seg)
+			{
+				printf("  Segment[%d]: type=%s value=\"%s\"\n",
+					si++, seg_type_str(seg->type), seg->value);
+				seg = seg->next;
+			}
+		}
+		tk = tk->next;
+	}
+}*/

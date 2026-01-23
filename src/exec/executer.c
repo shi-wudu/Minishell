@@ -43,19 +43,18 @@ static int	exec_parent_builtin(t_cmd *cmd, t_data *data)
 	return (1);
 }
 
+static bool is_null_command(t_cmd *cmd)
+{
+    if (!cmd)
+        return false;
+    return (!cmd->command &&
+           (cmd->io.infile ||
+            cmd->io.outfile ||
+            cmd->heredoc_count > 0));
+}
+
 // entrada principal: delega pipelines, executa builtin no pai quando seguro
 // senao cria filhos para cada comando e actualiza data->last_exit_status
-/*ft_putstr_fd("debug: execute_commands cmd=", 2);
-if (cmd->command)
-	ft_putendl_fd(cmd->command, 2);
-else
-	ft_putendl_fd("(null)", 2);
-if (data && data->envp && data->envp[0])
-{
-	ft_putstr_fd("debug: envp[0]=", 2);
-	ft_putendl_fd(data->envp[0], 2);
-}*/
-
 // se houver pipeline, delega para o executor das pipes
 // se for builtin isolado sem redirs executa no processo pai
 // senao spawn+wait para cada comando (child faz redirs/exec)
@@ -70,6 +69,12 @@ int	execute_commands(t_cmd *cmd, t_data *data)
 	ret = prepare_heredocs(cmd, data);
 	if (ret == 130)
 		return (130);
+	if (is_null_command(cmd))
+    {
+        cmd->exit_status = 0;
+        data->last_exit_status = 0;
+        return (1);
+    }
 	if (cmd->next)
 	{
 		execute_commands_piped(cmd, data);

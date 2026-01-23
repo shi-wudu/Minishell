@@ -18,7 +18,7 @@ static void	write_expanded(int fd, char *line, t_data *data)
 {
 	char	*out;
 
-	out = expand_dollar_only(line, data);
+	out = expand_heredoc_line(line, data);
 	write(fd, out, ft_strlen(out));
 	write(fd, "\n", 1);
 	free(out);

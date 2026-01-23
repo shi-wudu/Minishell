@@ -54,8 +54,8 @@ static int	wait_for_child(pid_t pid)
 		if (sig == SIGINT)
 			write(1, "\n", 1);
 		else if (sig == SIGQUIT)
-			write(1, "Quit (core dumped)\n", 20);
-		return (128 + WTERMSIG(status));
+			write(2, "Quit (core dumped)\n", 19);
+		return (128 + sig);
 	}
 	return (1);
 }

@@ -47,15 +47,29 @@ typedef enum e_token_type
 	END
 }								t_token_type;
 
+typedef enum e_seg_type
+{
+    UNQUOTED,
+    SINGLE_QUOTED,
+    DOUBLE_QUOTED
+}   							t_seg_type;
+
 /*=============================*/
 /*         STRUCTS             */
 /*=============================*/
 
+typedef struct s_segment
+{
+    char            *value;
+    t_seg_type      type;
+    struct s_segment *next;
+}   							t_segment;
+
 typedef struct s_token
 {
-	char						*value;
 	t_token_type				type;
-	bool						quoted;
+	t_segment       			*segments;
+	char 						**expanded;
 	struct s_token				*prev;
 	struct s_token				*next;
 }								t_token;
@@ -103,6 +117,7 @@ typedef struct s_data
 	bool						parse_error;
 	t_pipe_ctx					*pipe_ctx;
 	bool						is_child;
+	bool						in_heredoc;
 }								t_data;
 
 /*=============================*/
@@ -121,7 +136,7 @@ bool		lexer(t_data *data);
 int			ft_is_quote(char c);
 void		ft_skip_spaces(char **line);
 void		ft_print_quote_err(char c);
-t_token		*ft_new_token(char *value, t_token_type type);
+t_token	*ft_new_token(t_token_type type);
 void		ft_token_list_add_back(t_token **lst, t_token *new);
 void		ft_clear_token_list(t_token **lst);
 int			ft_handle_separator(char **line, t_token **tokens);
@@ -133,18 +148,25 @@ char		*append_char(char *s, char c);
 char		*expand_dollar_only(const char *str, t_data *data);
 void		handle_this(const char *str, int *i, char **res, t_data *data);
 bool		handle_quote_char(const char *str, int *i, char *quote, char **res);
+char 		**word_split_ifs(const char *s);
+
 
 /* parser */
 t_cmd		*parser(t_token *tokens, t_data *data);
 t_cmd		*new_cmd(t_cmd **head, t_cmd *prev);
 bool		handle_word_pipe(t_cmd **cmd, t_cmd **head, t_token **tk);
-bool		add_arg(t_cmd *cmd, char *value);
+bool 		add_arg(t_cmd *cmd, char *value, bool quoted);
 bool		parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data);
 void		free_commands(t_cmd *cmd);
 void		init_cmd(t_cmd *cmd);
 void		free_args(char **args);
 char		*ft_strjoin_free(char *s1, const char *s2);
 char		*strip_quotes(const char *s);
+char		**grow_str_array(char **old, char *value);
+
+
+char	**append_str_array(char **old, char *value);
+bool add_expanded_args(t_cmd *cmd, char **expanded);
 
 /* utils */
 int			ft_is_space(char c);
@@ -205,5 +227,14 @@ bool		heredoc_should_stop(char *line, char *delimiter);
 void		write_heredoc_line(int fd, char *line, t_data *data, bool expand);
 int			prepare_heredocs(t_cmd *cmd, t_data *data);
 char		*resolve_heredocs(t_cmd *cmd, t_data *data);
+
+char *expand_heredoc_line(const char *s, t_data *data);
+
+
+t_segment   *new_segment(char *value, t_seg_type type);
+void        segment_add_back(t_segment **lst, t_segment *new);
+void        free_segments(t_segment *seg);
+int parse_segment(char *s, size_t *i, t_segment **segs);
+bool	is_word_char(char c);
 
 #endif

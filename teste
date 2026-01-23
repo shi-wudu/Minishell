@@ -9,7 +9,7 @@ echo 'hello "world"'
 echo "'"
 echo '"'
 echo "'""'"
-echo '"'"'"'"   # nested alternating quotes
+echo '"'"'"'    # nested alternating quotes
 echo "a'b'c"
 echo 'a"b"c'
 echo "'$PATH'"  # single-quoted + expansion inside
@@ -20,10 +20,11 @@ echo ">>file"
 
 HARDER QUOTES
 echo "a'b"'"c"d'
-echo "abc$USER'def$HOME'ghi""
-echo "    " | cat -e     # preserve spaces
+echo "abc$USER'def$HOME'ghi"
+echo '"; echo HACK; #'   # test if parser leaks quotes
+echo "    " | cat -e     # preserve spaces               ....................................
 echo """"hello""""       # empty quotes collapsing
-
+echo "$(echo hi)"  #with bonus
 
 
 REDIRECTIONS
@@ -32,6 +33,14 @@ echo hi > file1 bye bye
 cat < file1 > file2
 ls > file
 echo test > file >> file2
+
+REDIR FODIDAS
+cat < nofile > file                                       .................................
+> out echo hi
+cat < in.txt > out.txt  < other.txt #TO TEST FOR SURE
+> f1 > f2 > f3 > f4 echo boom #TO TEST FOR SURE
+echo > f && echo >> f && < f cat #TO TEST FOR SURE with bonus #se fizeste hard code
+
 
 
 PIPES AND COMBINATIONS
@@ -42,6 +51,19 @@ cat < file | wc -l
 echo 123 | grep 1 | wc -c
 cat non_existent | grep something
 ls | | cat
+ls || echo fail
+
+PIPES AND COMBINATIONS HARDER
+echo a | echo b | echo c
+cat | cat | cat | cat                                    ......................................... com ctrl+c / ctrl+\ so com make v
+ls | grep minishell | wc -l > out
+cat non_existent | grep hi | wc -c
+yes | head -n 5 | cat -e
+ls /no/such/dir | grep hi | cat -e
+cat missing.txt | wc -l | echo done
+echo one > f1 | echo two >> f1 | cat < f1 | grep two #FODIDO
+echo 1 | (echo 2 | echo 3)   # should fail if no subshells #with bonys
+
 
 
 ENVIRONMENT VARIABLES EXPANSION
@@ -66,7 +88,7 @@ echo "$HOME""$PWD""$PATH"
 echo $HOME"$PWD"'$PATH'
 echo ${NOTSET:-fallback}
 echo $SHLVL
-export VAR="   spaces   "   ..............
+export VAR="   spaces   "
 export VAR="   spaces   " && echo $VAR #with bonus
 export EMPTY= && echo $EMPTY #with bonus
 unset PATH && echo $PATH && ls #with bonus
@@ -82,9 +104,34 @@ unset pwd e depois cd ..
 export A=1 B=2 C
 exit
 exit 42
+exit 9223372036854775808   # overflow case
+export TEST="a b" && echo $TEST #with bonus
+unset TEST && echo $TEST #with bonus
+unset PATH && ls #with bonus
+
+BUILTIN EDGE CASES HARDER
+cd //////      # normalize path
+cd ././././
+cd ../../../../..
+pwd | cat -e
+export ""=abc
+export ""=test
+export 123=abc
+export a=123 and then export a=
+export 123=xyz           # invalid
+exit 99999999999999999999999999999999999999   # overflow
+exit abc
+exit "42"
+exit 42 extra_args
+create a 3 folders or 4 enter them, rm -rf the first folder of it, try to go back with cd ..
+unset VAR && echo $VAR #with bonus
+export VAR="1=2" && export | grep VAR #with bonus
+export A=B C=D E && env #with bonus
+unset PATH && ls         # should fail cleanly #with bonus
 
 
-HEREDOC
+
+HEREDOC                                                       ...........................ctrl+c e ctrl+\ durante o makev
 cat << EOF
 >hello
 >EOF
@@ -102,7 +149,7 @@ cat <<EOF | cat
 >line2
 >EOF
 
-cat << EOF << END ......................
+cat << EOF << END
 >first
 >EOF
 >second

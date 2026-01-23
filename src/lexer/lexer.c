@@ -34,7 +34,7 @@ static t_token	*ft_tokenization_handler(char *line)
 				return (ft_clear_token_list(&tokens), NULL);
 		}
 	}
-	ft_token_list_add_back(&tokens, ft_new_token(NULL, END));
+	ft_token_list_add_back(&tokens, ft_new_token(END));
 	return (tokens);
 }
 

@@ -18,7 +18,7 @@
 // liberta o array antigo (mas não o conteúdo)
 // retorna o novo array ou NULL em erro
 
-static char	**append_str_array(char **old, char *value)
+char	**append_str_array(char **old, char *value)
 {
 	char	**new;
 	int		i;
@@ -58,47 +58,62 @@ static void	touch_outfile(char *filename, bool append)
 // Aplica uma redirection ao comando atual,
 // configurando infile, outfile ou heredoc conforme o operador.
 
-static void	apply_redirect(t_cmd *cmd, t_token *op, t_token *arg)
+static void apply_redirect(t_cmd *cmd, t_token *op, char *filename)
 {
-	if (op->type == INPUT)
-	{
-		free(cmd->io.infile);
-		cmd->io.infile = ft_strdup(arg->value);
-		cmd->io.infile_is_heredoc = false;
-	}
-	else if (op->type == HEREDOC)
-	{
-		cmd->io.heredoc_expand = !arg->quoted;
-		cmd->heredoc_delimiters = append_str_array(cmd->heredoc_delimiters,
-				strip_quotes(arg->value));
-		cmd->heredoc_count++;
-	}
-	else
-	{
-		touch_outfile(arg->value, op->type == APPEND);
-		free(cmd->io.outfile);
-		cmd->io.outfile = ft_strdup(arg->value);
-		cmd->io.append = (op->type == APPEND);
-	}
+    if (op->type == INPUT)
+    {
+        free(cmd->io.infile);
+        cmd->io.infile = ft_strdup(filename);
+        cmd->io.infile_is_heredoc = false;
+    }
+    else if (op->type == HEREDOC)
+    {
+        cmd->heredoc_delimiters =
+            append_str_array(cmd->heredoc_delimiters, ft_strdup(filename));
+        cmd->heredoc_count++;
+    }
+    else
+    {
+        touch_outfile(filename, op->type == APPEND);
+        free(cmd->io.outfile);
+        cmd->io.outfile = ft_strdup(filename);
+        cmd->io.append = (op->type == APPEND);
+    }
 }
 
 // Processa um token de redirection.
 // Valida sintaxe, aplica a redirection e avança o token.
 
-bool	parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data)
+bool parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data)
 {
-	t_token	*op;
-	t_token	*arg;
+    t_token *op = *tk;
+    t_token *arg = op->next;
 
-	op = *tk;
-	arg = op->next;
-	if (!arg || arg->type != WORD)
-	{
-		syntax_error("newline");
-		data->parse_error = true;
-		return (false);
-	}
-	apply_redirect(cmd, op, arg);
-	*tk = arg->next;
-	return (true);
+    if (!arg || arg->type != WORD || !arg->expanded || !arg->expanded[0])
+    {
+        syntax_error("newline");
+        data->parse_error = true;
+        return (false);
+    }
+
+    if (op->type == HEREDOC)
+    {
+        bool quoted = false;
+        t_segment *seg = arg->segments;
+
+        while (seg)
+        {
+            if (seg->type != UNQUOTED)
+            {
+                quoted = true;
+                break;
+            }
+            seg = seg->next;
+        }
+        cmd->io.heredoc_expand = !quoted;
+    }
+
+    apply_redirect(cmd, op, arg->expanded[0]);
+    *tk = arg->next;
+    return (true);
 }
