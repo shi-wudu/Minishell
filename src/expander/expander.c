@@ -3,146 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 21:56:49 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/23 07:32:20 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int is_ifs(char c)
+static void	apply_segment(t_segment *seg, t_expand_ctx *ctx)
 {
-    return (c == ' ' || c == '\t' || c == '\n');
+	char	*expanded;
+
+	if (seg->type == SINGLE_QUOTED)
+	{
+		*ctx->current = ft_strjoin_free(*ctx->current, seg->value);
+		return ;
+	}
+	expanded = expand_vars(seg->value, ctx->data);
+	if (seg->type == UNQUOTED)
+		handle_unquoted(expanded, ctx->result, ctx->current, ctx->prev);
+	else
+		*ctx->current = ft_strjoin_free(*ctx->current, expanded);
+	free(expanded);
 }
 
-static char *expand_vars(const char *s, t_data *data)
+static char	**expand_word_token(t_token *tok, t_data *data)
 {
-    int i = 0;
-    char *res = ft_strdup("");
+	t_segment		*seg;
+	char			*current;
+	char			**result;
+	t_expand_ctx	ctx;
 
-    while (s[i])
-    {
-        if (s[i] == '$' && s[i + 1] == '{')
-        {
-            handle_this(s, &i, &res, data);
-            continue;
-        }
-         if (s[i] == '$' && s[i + 1] == '$')
-        {
-            char *pid = ft_itoa(getpid());
-            res = ft_strjoin_free(res, pid);
-            free(pid);
-            i += 2;
-            continue;
-        }
-        if (s[i] == '$' && s[i + 1] == '?')
-        {
-            char *num = ft_itoa(data->last_exit_status);
-            res = ft_strjoin_free(res, num);
-            free(num);
-            i += 2;
-        }
-        else if (s[i] == '$' && (ft_isalnum(s[i + 1]) || s[i + 1] == '_'))
-        {
-            int start = ++i;
-            while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
-                i++;
-            char *name = ft_substr(s, start, i - start);
-            char *val = get_env_value(data->envp, name);
-            res = ft_strjoin_free(res, val ? val : "");
-            free(name);
-        }
-        else
-            res = append_char(res, s[i++]);
-    }
-    return (res);
+	seg = tok->segments;
+	current = ft_strdup("");
+	result = NULL;
+	ctx.data = data;
+	ctx.prev = UNQUOTED;
+	ctx.current = &current;
+	ctx.result = &result;
+	while (seg)
+	{
+		apply_segment(seg, &ctx);
+		ctx.prev = seg->type;
+		seg = seg->next;
+	}
+	return (append_str_array(result, current));
 }
 
-static char **split_ifs(const char *s)
+void	expand_tokens(t_token *tokens, t_data *data)
 {
-    char **res = NULL;
-    int i = 0, start;
-
-    while (s[i])
-    {
-        while (s[i] && is_ifs(s[i]))
-            i++;
-        if (!s[i])
-            break;
-        start = i;
-        while (s[i] && !is_ifs(s[i]))
-            i++;
-        res = append_str_array(res, ft_substr(s, start, i - start));
-    }
-    return (res);
-}
-
-char **expand_word_token(t_token *tok, t_data *data)
-{
-    t_segment   *seg;
-    t_seg_type  prev_type;
-    char        **result;
-    char        *current;
-
-    result = NULL;
-    current = ft_strdup("");
-    prev_type = UNQUOTED;   // assume início como unquoted
-
-    seg = tok->segments;
-    while (seg)
-    {
-        if (seg->type == SINGLE_QUOTED)
-        {
-            current = ft_strjoin_free(current, seg->value);
-        }
-        else
-        {
-            char *expanded = expand_vars(seg->value, data);
-
-            if (seg->type == UNQUOTED)
-            {
-                char **split = split_ifs(expanded);
-                int i = 0;
-
-                if (split && split[0])
-                {
-                    // 🔴 REGRA CRÍTICA
-                    if (prev_type != UNQUOTED)
-                    {
-                        result = append_str_array(result, current);
-                        current = ft_strdup(split[i++]);
-                    }
-                    else
-                        current = ft_strjoin_free(current, split[i++]);
-
-                    while (split[i])
-                    {
-                        result = append_str_array(result, current);
-                        current = ft_strdup(split[i++]);
-                    }
-                }
-                free_args(split);
-            }
-            else
-                current = ft_strjoin_free(current, expanded);
-            free(expanded);
-        }
-        prev_type = seg->type;
-        seg = seg->next;
-    }
-    result = append_str_array(result, current);
-    return (result);
-}
-
-
-void expand_tokens(t_token *tokens, t_data *data)
-{
-    while (tokens)
-    {
-        if (tokens->type == WORD)
-            tokens->expanded = expand_word_token(tokens, data);
-        tokens = tokens->next;
-    }
+	while (tokens)
+	{
+		if (tokens->type == WORD)
+			tokens->expanded = expand_word_token(tokens, data);
+		tokens = tokens->next;
+	}
 }

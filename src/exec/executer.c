@@ -43,14 +43,12 @@ static int	exec_parent_builtin(t_cmd *cmd, t_data *data)
 	return (1);
 }
 
-static bool is_null_command(t_cmd *cmd)
+static bool	is_null_command(t_cmd *cmd)
 {
-    if (!cmd)
-        return false;
-    return (!cmd->command &&
-           (cmd->io.infile ||
-            cmd->io.outfile ||
-            cmd->heredoc_count > 0));
+	if (!cmd)
+		return (false);
+	return (!cmd->command && (cmd->io.infile || cmd->io.outfile
+			|| cmd->heredoc_count > 0));
 }
 
 // entrada principal: delega pipelines, executa builtin no pai quando seguro
@@ -70,11 +68,11 @@ int	execute_commands(t_cmd *cmd, t_data *data)
 	if (ret == 130)
 		return (130);
 	if (is_null_command(cmd))
-    {
-        cmd->exit_status = 0;
-        data->last_exit_status = 0;
-        return (1);
-    }
+	{
+		cmd->exit_status = 0;
+		data->last_exit_status = 0;
+		return (1);
+	}
 	if (cmd->next)
 	{
 		execute_commands_piped(cmd, data);

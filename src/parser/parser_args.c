@@ -12,20 +12,19 @@
 
 #include "minishell.h"
 
-bool add_expanded_args(t_cmd *cmd, char **expanded)
+bool	add_expanded_args(t_cmd *cmd, char **expanded)
 {
-    int i;
+	int	i;
 
-    if (!expanded)
-        return (true);
-
-    i = 0;
-    while (expanded[i])
-    {
-        cmd->args = append_str_array(cmd->args, ft_strdup(expanded[i]));
-        if (!cmd->command)
-            cmd->command = ft_strdup(expanded[i]);
-        i++;
-    }
-    return (true);
+	if (!expanded)
+		return (true);
+	i = 0;
+	while (expanded[i])
+	{
+		cmd->args = append_str_array(cmd->args, ft_strdup(expanded[i]));
+		if (!cmd->command)
+			cmd->command = ft_strdup(expanded[i]);
+		i++;
+	}
+	return (true);
 }

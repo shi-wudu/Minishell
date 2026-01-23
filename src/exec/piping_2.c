@@ -81,6 +81,6 @@ void	ensure_standard_fds_open(void)
 					close(tmp);
 			}
 		}
-		fd ++;
+		fd++;
 	}
 }

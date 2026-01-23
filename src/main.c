@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:18:42 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 21:38:05 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/23 07:17:14 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static bool	init_data(t_data *data, char **envp)
 	data->parse_error = false;
 	data->in_heredoc = false;
 	data->pipe_ctx = NULL;
-	data->is_child = false; 
+	data->is_child = false;
 	data->envp = dup_env(envp);
 	if (!data->envp)
 	{
@@ -84,7 +84,7 @@ static void	minishell_loop(t_data *data)
 			data->last_exit_status = 130;
 			g_signal = 0;
 			if (!data->user_input)
-				continue;
+				continue ;
 		}
 		if (*data->user_input)
 			add_history(data->user_input);

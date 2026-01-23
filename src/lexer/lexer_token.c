@@ -57,7 +57,6 @@ void	ft_clear_token_list(t_token **lst)
 	while (tmp)
 	{
 		next = tmp->next;
-
 		if (tmp->type == WORD)
 		{
 			free_segments(tmp->segments);

@@ -18,9 +18,11 @@ SRC_FILES := \
 	parser/parser.c \
 	utils/utils.c \
 	utils/check_error.c \
-	expander/expander.c \
+	expander/expander_heredoc.c \
+	expander/expander_split.c \
 	expander/expander_utils.c \
-	expander/expand_heredoc.c \
+	expander/expander_vars.c \
+	expander/expander.c \
 	exec/executer.c \
 	exec/exec_child.c \
 	exec/exec_parent.c \
@@ -35,7 +37,7 @@ SRC_FILES := \
 	heredoc/heredoc.c \
 	heredoc/heredoc_utils.c \
 	heredoc/heredoc_write.c \
-	lexer/lexer_identifier.c \
+	lexer/lexer_segment.c \
 	lexer/lexer_separator.c \
 	lexer/lexer_token.c \
 	lexer/lexer_utils.c \

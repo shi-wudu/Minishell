@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   piping_1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 17:50:12 by user              #+#    #+#             */
-/*   Updated: 2026/01/20 21:39:04 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/23 07:17:59 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static int	*create_pipes(int n)
 	return (pipes);
 }
 
-// spawn de todos os filhos do pipeline; devolve 
+// spawn de todos os filhos do pipeline; devolve
 // quantos filhos foram criados (0..n)
-// em caso de erro devolve o numero criado ate ao 
+// em caso de erro devolve o numero criado ate ao
 // momento (pids preenchidos de 0..created-1)
 static int	spawn_all_children(t_pipe_ctx *ctx)
 {
@@ -70,10 +70,8 @@ static void	wait_and_collect(t_pipe_ctx *ctx, int count)
 	int	i;
 	int	status;
 	int	code;
-	//int	printed_quit;
 
 	i = 0;
-	//printed_quit = 0;
 	while (i < count)
 	{
 		status = 0;
@@ -89,10 +87,7 @@ static void	wait_and_collect(t_pipe_ctx *ctx, int count)
 		else if (WIFSIGNALED(status))
 		{
 			if (WTERMSIG(status) == SIGQUIT && !ctx->data->in_heredoc)
-			{
 				write(2, "Quit (core dumped)\n", 19);
-				//printed_quit = 1;
-			}
 			ctx->cmds[i]->exit_status = 128 + WTERMSIG(status);
 		}
 		i++;
@@ -110,13 +105,13 @@ static void	pipeline_cleanup_and_wait(t_pipe_ctx *ctx, int spawned)
 	free(ctx->cmds);
 }
 
-// executor principal de pipelines: coordena criacao de pipes, 
+// executor principal de pipelines: coordena criacao de pipes,
 // fork e espera
-// se nao houver comando retorna; se houver erros, limpa recursos 
+// se nao houver comando retorna; se houver erros, limpa recursos
 // antes de sair
 // inicializa pids a 0 para evitar lixo em caminhos de erro
 // spawn children: devolve quantos foram efectivamente criados
-// parent fecha todos os fds de pipes assim que os filhos foram 
+// parent fecha todos os fds de pipes assim que os filhos foram
 // criados (ou tentou criar)
 // erro no fork em algum ponto: matar e esperar apenas os spawnados
 // esperar todos os filhos normalmente

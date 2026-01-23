@@ -32,21 +32,21 @@ t_cmd	*new_cmd(t_cmd **head, t_cmd *prev)
 // WORD adiciona argumento ao comando atual.
 // PIPE termina o comando atual e cria um novo.
 
-bool handle_word_pipe(t_cmd **cmd, t_cmd **head, t_token **tk)
+bool	handle_word_pipe(t_cmd **cmd, t_cmd **head, t_token **tk)
 {
-    if ((*tk)->type == WORD)
-    {
-        if (!add_expanded_args(*cmd, (*tk)->expanded))
-            return (false);
-        *tk = (*tk)->next;
-        return (true);
-    }
-    else if ((*tk)->type == PIPE)
-    {
-        (*cmd)->pipe_output = true;
-        *cmd = new_cmd(head, *cmd);
-        *tk = (*tk)->next;
-        return (true);
-    }
-    return (false);
+	if ((*tk)->type == WORD)
+	{
+		if (!add_expanded_args(*cmd, (*tk)->expanded))
+			return (false);
+		*tk = (*tk)->next;
+		return (true);
+	}
+	else if ((*tk)->type == PIPE)
+	{
+		(*cmd)->pipe_output = true;
+		*cmd = new_cmd(head, *cmd);
+		*tk = (*tk)->next;
+		return (true);
+	}
+	return (false);
 }
