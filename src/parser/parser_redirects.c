@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirects.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:13 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/23 07:15:23 by seilkiv          ###   ########.fr       */
+/*   Updated: 2026/01/23 13:38:01 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,24 +81,18 @@ static void	apply_redirect(t_cmd *cmd, t_token *op, char *filename)
 	}
 }
 
-bool	parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data)
+static bool	heredoc_is_quoted(t_token *arg)
 {
-	t_token	*op;
-	t_token	*arg;
+	t_segment	*seg;
 
-	op = *tk;
-	arg = op->next;
-	if (!arg || arg->type != WORD || !arg->expanded || !arg->expanded[0])
+	seg = arg->segments;
+	while (seg)
 	{
-		syntax_error("newline");
-		data->parse_error = true;
-		return (false);
+		if (seg->type != UNQUOTED)
+			return (true);
+		seg = seg->next;
 	}
-	if (op->type == HEREDOC)
-		cmd->io.heredoc_expand = !heredoc_is_quoted(arg);
-	apply_redirect(cmd, op, arg->expanded[0]);
-	*tk = arg->next;
-	return (true);
+	return (false);
 }
 
 bool	parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data)
