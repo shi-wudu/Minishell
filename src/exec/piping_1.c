@@ -64,45 +64,53 @@ static int	spawn_all_children(t_pipe_ctx *ctx)
 	return (ctx->n);
 }
 
+static int	handle_signaled_status(int status, int *printed_signal)
+{
+	int	sig;
+
+	sig = WTERMSIG(status);
+	if (sig == SIGINT)
+	{
+		if (!*printed_signal)
+		{
+			write(1, "\n", 1);
+			*printed_signal = 1;
+		}
+	}
+	else if (sig == SIGQUIT)
+	{
+		if (!*printed_signal)
+		{
+			write(2, "Quit (core dumped)\n", 19);
+			*printed_signal = 1;
+		}
+	}
+	return (128 + sig);
+}
+
 // espera count filhos e grava exit_status em cada comando
-static void	wait_and_collect(t_pipe_ctx *ctx, int count)
+void	wait_and_collect(t_pipe_ctx *ctx, int count)
 {
 	int	i;
 	int	status;
-	int	code;
+	int	printed_signal;
 
 	i = 0;
+	printed_signal = 0;
 	while (i < count)
 	{
 		status = 0;
 		if (waitpid(ctx->pids[i], &status, 0) == -1)
-		{
 			ctx->cmds[i]->exit_status = 1;
-		}
 		else if (WIFEXITED(status))
-		{
-			code = WEXITSTATUS(status);
-			ctx->cmds[i]->exit_status = code;
-		}
+			ctx->cmds[i]->exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-		{
-			if (WTERMSIG(status) == SIGQUIT && !ctx->data->in_heredoc)
-				write(2, "Quit (core dumped)\n", 19);
-			ctx->cmds[i]->exit_status = 128 + WTERMSIG(status);
-		}
+			ctx->cmds[i]->exit_status = handle_signaled_status(status,
+												&printed_signal);
 		i++;
 	}
 	if (count > 0)
 		ctx->data->last_exit_status = ctx->cmds[count - 1]->exit_status;
-}
-
-static void	pipeline_cleanup_and_wait(t_pipe_ctx *ctx, int spawned)
-{
-	if (spawned != ctx->n)
-		kill_children(ctx->pids, spawned);
-	wait_and_collect(ctx, spawned);
-	free(ctx->pids);
-	free(ctx->cmds);
 }
 
 // executor principal de pipelines: coordena criacao de pipes,

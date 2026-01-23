@@ -62,7 +62,6 @@ int	builtin_echo(char **argv)
 // Implementação do builtin cd.
 // Altera o diretório de trabalho do processo atual
 
-
 static int	cd_err(const char *path)
 {
 	ft_putstr_fd("minishell: cd: ", 2);

@@ -84,3 +84,12 @@ void	ensure_standard_fds_open(void)
 		fd++;
 	}
 }
+
+void	pipeline_cleanup_and_wait(t_pipe_ctx *ctx, int spawned)
+{
+	if (spawned != ctx->n)
+		kill_children(ctx->pids, spawned);
+	wait_and_collect(ctx, spawned);
+	free(ctx->pids);
+	free(ctx->cmds);
+}

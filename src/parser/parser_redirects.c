@@ -41,20 +41,6 @@ char	**append_str_array(char **old, char *value)
 	return (new);
 }
 
-// Cria ou prepara um ficheiro de output para redirection (> ou >>).
-
-static void	touch_outfile(char *filename, bool append)
-{
-	int	fd;
-
-	if (append)
-		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else
-		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd >= 0)
-		close(fd);
-}
-
 // Aplica uma redirection ao comando atual,
 // configurando infile, outfile ou heredoc conforme o operador.
 
@@ -74,7 +60,6 @@ static void	apply_redirect(t_cmd *cmd, t_token *op, char *filename)
 	}
 	else
 	{
-		touch_outfile(filename, op->type == APPEND);
 		free(cmd->io.outfile);
 		cmd->io.outfile = ft_strdup(filename);
 		cmd->io.append = (op->type == APPEND);

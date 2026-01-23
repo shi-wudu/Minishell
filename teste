@@ -22,7 +22,7 @@ HARDER QUOTES
 echo "a'b"'"c"d'
 echo "abc$USER'def$HOME'ghi"
 echo '"; echo HACK; #'   # test if parser leaks quotes
-echo "    " | cat -e     # preserve spaces               ....................................
+echo "    " | cat -e     # preserve spaces
 echo """"hello""""       # empty quotes collapsing
 echo "$(echo hi)"  #with bonus
 
@@ -35,7 +35,7 @@ ls > file
 echo test > file >> file2
 
 REDIR FODIDAS
-cat < nofile > file                                       .................................
+cat < nofile > file                                      
 > out echo hi
 cat < in.txt > out.txt  < other.txt #TO TEST FOR SURE
 > f1 > f2 > f3 > f4 echo boom #TO TEST FOR SURE
@@ -131,7 +131,7 @@ unset PATH && ls         # should fail cleanly #with bonus
 
 
 
-HEREDOC                                                       ...........................ctrl+c e ctrl+\ durante o makev
+HEREDOC                               
 cat << EOF
 >hello
 >EOF
