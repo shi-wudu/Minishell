@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:08:39 by user              #+#    #+#             */
-/*   Updated: 2026/01/20 21:38:47 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/23 23:30:59 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,21 @@ static int	exec_parent_builtin(t_cmd *cmd, t_data *data)
 	return (1);
 }
 
-static bool	is_null_command(t_cmd *cmd)
+static int	pre_execute_checks(t_cmd *cmd, t_data *data)
 {
-	if (!cmd)
-		return (false);
-	return (!cmd->command && (cmd->io.infile || cmd->io.outfile
-			|| cmd->heredoc_count > 0));
+	int	ret;
+
+	ret = prepare_heredocs(cmd, data);
+	if (ret == 130)
+		return (130);
+	if (!cmd->command && (cmd->io.infile
+			|| cmd->io.outfile || cmd->heredoc_count > 0))
+	{
+		cmd->exit_status = 0;
+		data->last_exit_status = 0;
+		return (1);
+	}
+	return (0);
 }
 
 // entrada principal: delega pipelines, executa builtin no pai quando seguro
@@ -59,30 +68,22 @@ static bool	is_null_command(t_cmd *cmd)
 
 int	execute_commands(t_cmd *cmd, t_data *data)
 {
-	t_cmd	*current;
-	int		ret;
+	int	ret;
 
 	if (!cmd)
 		return (0);
-	ret = prepare_heredocs(cmd, data);
-	if (ret == 130)
-		return (130);
-	if (is_null_command(cmd))
-	{
-		cmd->exit_status = 0;
-		data->last_exit_status = 0;
-		return (1);
-	}
+	ret = pre_execute_checks(cmd, data);
+	if (ret != 0)
+		return (ret);
 	if (cmd->next)
 	{
 		execute_commands_piped(cmd, data);
 		return (1);
 	}
-	current = cmd;
-	if (is_parent_builtin(current))
+	if (is_parent_builtin(cmd))
 		return (exec_parent_builtin(cmd, data));
 	setup_signals_parent_exec();
-	execute_main(current, data);
+	execute_main(cmd, data);
 	setup_signals_interactive();
 	return (1);
 }

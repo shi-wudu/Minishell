@@ -106,7 +106,7 @@ void	wait_and_collect(t_pipe_ctx *ctx, int count)
 			ctx->cmds[i]->exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 			ctx->cmds[i]->exit_status = handle_signaled_status(status,
-												&printed_signal);
+					&printed_signal);
 		i++;
 	}
 	if (count > 0)
