@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: seilkiv <seilkiv@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 13:19:25 by seilkiv           #+#    #+#             */
-/*   Updated: 2026/01/20 21:39:52 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/24 15:23:38 by seilkiv          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ static int	open_heredoc_file(char **tmp_file)
 	return (fd);
 }
 
-// Prepara o ambiente para leitura de heredoc:
-// duplica stdin, cria ficheiro temporário e configura sinais.
+// Prepara o ambiente para leitura de um heredoc.
+// Guarda o stdin atual, cria o ficheiro temporário
+// e configura os sinais específicos do heredoc.
 
 static int	heredoc_setup(char **tmp_file, int *saved_stdin)
 {
@@ -48,7 +49,7 @@ static int	heredoc_setup(char **tmp_file, int *saved_stdin)
 	return (fd);
 }
 
-// Loop principal de leitura do heredoc até encontrar o delimitador
+// Loop principal de leitura do heredoc até encontrar o delimitador ou Ctrl+C.
 
 static bool	heredoc_loop(int fd, char *delimiter, bool expand, t_data *data)
 {
@@ -69,6 +70,7 @@ static bool	heredoc_loop(int fd, char *delimiter, bool expand, t_data *data)
 }
 
 // Lê um heredoc completo e devolve o nome do ficheiro temporário.
+// Em caso de Ctrl+C, apaga o ficheiro e aborta.
 
 char	*read_heredoc(char *delimiter, bool expand, t_data *data)
 {
@@ -95,7 +97,7 @@ char	*read_heredoc(char *delimiter, bool expand, t_data *data)
 }
 
 // Processa todos os heredocs antes da execução.
-// Deve ser chamada no processo pai.
+// Cria os ficheiros temporários e associa o último como infile do comando.
 
 int	prepare_heredocs(t_cmd *cmd, t_data *data)
 {

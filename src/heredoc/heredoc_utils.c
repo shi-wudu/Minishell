@@ -37,6 +37,10 @@ bool	heredoc_should_stop(char *line, char *delimiter)
 	return (false);
 }
 
+// Resolve todos os heredocs de um comando.
+// Lê cada heredoc, mantendo apenas o último.
+// Remove ficheiros temporários antigos se necessário.
+
 char	*resolve_heredocs(t_cmd *cmd, t_data *data)
 {
 	int		i;
