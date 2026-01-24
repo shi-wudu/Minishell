@@ -12,6 +12,11 @@
 
 #include "minishell.h"
 
+// Aplica a expansão de um único segmento
+// SINGLE_QUOTED: literal, sem expansão
+// DOUBLE/UNQUOTED: expande variáveis
+// UNQUOTED pode gerar word splitting (IFS)
+
 static void	apply_segment(t_segment *seg, t_expand_ctx *ctx)
 {
 	char	*expanded;
@@ -51,6 +56,8 @@ static char	**expand_word_token(t_token *tok, t_data *data)
 	}
 	return (append_str_array(result, current));
 }
+
+// Percorre a lista de tokens
 
 void	expand_tokens(t_token *tokens, t_data *data)
 {

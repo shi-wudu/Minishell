@@ -29,8 +29,8 @@ t_cmd	*new_cmd(t_cmd **head, t_cmd *prev)
 }
 
 // Trata tokens WORD e PIPE.
-// WORD adiciona argumento ao comando atual.
-// PIPE termina o comando atual e cria um novo.
+// WORD → adiciona argumentos ao comando atual.
+// PIPE → fecha comando atual e cria o próximo.
 
 bool	handle_word_pipe(t_cmd **cmd, t_cmd **head, t_token **tk)
 {

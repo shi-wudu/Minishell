@@ -85,16 +85,3 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 		return (NULL);
 	return (res);
 }
-
-// Remove aspas exteriores de uma string, se existirem.
-
-char	*strip_quotes(const char *s)
-{
-	size_t	len;
-
-	len = ft_strlen(s);
-	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'') || (s[0] == '"'
-				&& s[len - 1] == '"')))
-		return (ft_substr(s, 1, len - 2));
-	return (ft_strdup(s));
-}

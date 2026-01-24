@@ -12,6 +12,10 @@
 
 #include "minishell.h"
 
+// Decide como tratar o token atual:
+// - WORD / PIPE → argumentos ou criação de novo comando
+// - redirections → configura infile/outfile/heredoc
+
 static bool	handle_parser_token(
 	t_cmd **cmd, t_cmd **head, t_token **tk, t_data *data)
 {

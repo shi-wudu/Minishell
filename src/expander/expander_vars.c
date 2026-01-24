@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+// $$ → PID do processo
+// $? → último exit status
+
 static void	expand_special_vars(const char *s, int *i, char **res, t_data *data)
 {
 	char	*tmp;
@@ -32,6 +35,9 @@ static void	expand_special_vars(const char *s, int *i, char **res, t_data *data)
 	}
 }
 
+// Expande uma variável de ambiente simples ($VAR)
+// Lê o nome da variável e busca em envp
+
 void	expand_env_var(const char *s, char **res, int *i, t_data *data)
 {
 	int		start;
@@ -47,6 +53,9 @@ void	expand_env_var(const char *s, char **res, int *i, t_data *data)
 		*res = ft_strjoin_free(*res, val);
 	free(name);
 }
+
+// Trata variáveis no formato ${VAR}
+// Se não fechar }, mantém literal "${"
 
 static void	handle_braced_var(const char *str, int *i, char **res, t_data *data)
 {
@@ -74,6 +83,9 @@ static void	handle_braced_var(const char *str, int *i, char **res, t_data *data)
 		return ;
 	}
 }
+
+// Percorre uma string e expande variáveis ($VAR, $?, $$, ${VAR})
+// Retorna nova string expandida
 
 char	*expand_vars(const char *s, t_data *data)
 {

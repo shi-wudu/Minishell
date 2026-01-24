@@ -17,6 +17,9 @@ static int	is_ifs(char c)
 	return (c == ' ' || c == '\t' || c == '\n');
 }
 
+// Divide uma string usando IFS (espaço, tab, newline)
+// Ignora múltiplos separadores consecutivos
+
 static char	**split_ifs(const char *s)
 {
 	char	**res;
@@ -38,6 +41,10 @@ static char	**split_ifs(const char *s)
 	}
 	return (res);
 }
+
+// Aplica word splitting (IFS) em texto UNQUOTED
+// Pode transformar uma string em várias palavras
+// Usa o tipo do segmento anterior para decidir junções
 
 void	handle_unquoted(char *expanded, char ***result,
 		char **current, t_seg_type prev)

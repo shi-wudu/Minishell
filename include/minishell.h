@@ -173,7 +173,6 @@ void							init_cmd(t_cmd *cmd);
 void							free_args(char **args);
 void							free_commands(t_cmd *cmd);
 char							*ft_strjoin_free(char *s1, const char *s2);
-char							*strip_quotes(const char *s);
 char							**append_str_array(char **old, char *value);
 bool							parse_redirect_token(t_cmd *cmd, t_token **tk,
 									t_data *data);

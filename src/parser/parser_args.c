@@ -12,6 +12,10 @@
 
 #include "minishell.h"
 
+// Adiciona ao comando os argumentos expandidos.
+// Cada string em `expanded` vira um argumento.
+// O primeiro argumento define o nome do comando.
+
 bool	add_expanded_args(t_cmd *cmd, char **expanded)
 {
 	int	i;

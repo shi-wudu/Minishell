@@ -22,6 +22,9 @@ static void	expand_exit_status(char **res, int *i, t_data *data)
 	*i += 2;
 }
 
+// Expande uma linha de heredoc
+// Apenas $VAR e $? são suportados
+
 char	*expand_heredoc_line(const char *s, t_data *data)
 {
 	int		i;

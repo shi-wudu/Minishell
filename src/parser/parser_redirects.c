@@ -13,8 +13,7 @@
 #include "minishell.h"
 
 // adiciona uma string ao fim de um array NULL-terminated de strings
-// cria um novo array com +1 slot, reaproveita os pointers existentes
-// NÃO duplica as strings: apenas move os pointers
+// cria um novo array
 // liberta o array antigo (mas não o conteúdo)
 // retorna o novo array ou NULL em erro
 
@@ -42,7 +41,9 @@ char	**append_str_array(char **old, char *value)
 }
 
 // Aplica uma redirection ao comando atual,
-// configurando infile, outfile ou heredoc conforme o operador.
+// INPUT → infile
+// OUTPUT → outfile
+// HEREDOC → guarda delimitador
 
 static void	apply_redirect(t_cmd *cmd, t_token *op, char *filename)
 {
@@ -66,6 +67,9 @@ static void	apply_redirect(t_cmd *cmd, t_token *op, char *filename)
 	}
 }
 
+// Verifica se o delimitador do heredoc contém aspas.
+// Se tiver aspas, não há expansão de variáveis.
+
 static bool	heredoc_is_quoted(t_token *arg)
 {
 	t_segment	*seg;
@@ -79,6 +83,9 @@ static bool	heredoc_is_quoted(t_token *arg)
 	}
 	return (false);
 }
+
+// Processa tokens de redirection (<, >, >>, <<).
+// Valida a existência do argumento.
 
 bool	parse_redirect_token(t_cmd *cmd, t_token **tk, t_data *data)
 {
